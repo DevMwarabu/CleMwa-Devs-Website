@@ -49,6 +49,7 @@
             <x-floating-actions />
         </div>
 
+        <x-custom-dialog />
         <x-cookie-consent />
         
         <!-- Livewire Scripts -->

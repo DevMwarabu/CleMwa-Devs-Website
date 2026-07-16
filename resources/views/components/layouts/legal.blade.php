@@ -106,6 +106,9 @@
             <x-floating-actions />
         </div>
         
+        <!-- Custom Dialog -->
+        <x-custom-dialog />
+        
         <!-- Cookie Consent -->
         <x-cookie-consent />
         
