@@ -9,7 +9,7 @@
 
     <!-- Dynamic Content -->
     <section class="pb-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto relative z-10">
-        <div class="glass p-8 md:p-12 rounded-3xl gsap-reveal prose prose-invert prose-lg max-w-none prose-a:text-accent-500 hover:prose-a:text-accent2-500">
+        <div class="glass p-8 md:p-12 rounded-sm gsap-reveal prose prose-invert prose-lg max-w-none prose-a:text-accent-500 hover:prose-a:text-accent2-500">
             {!! $page->content !!}
         </div>
     </section>

@@ -22,8 +22,8 @@
             @endphp
 
             @foreach($services as $index => $service)
-                <div class="glass p-8 rounded-3xl hover:bg-slate-800/80 transition-all duration-300 group gsap-reveal" style="transition-delay: {{ $index * 100 }}ms;">
-                    <div class="w-14 h-14 rounded-2xl bg-accent2-500/10 text-accent2-500 flex items-center justify-center mb-6 group-hover:bg-accent-500 group-hover:text-white transition-all">
+                <div class="glass p-8 rounded-sm hover:bg-slate-800/80 transition-all duration-300 group gsap-reveal" style="transition-delay: {{ $index * 100 }}ms;">
+                    <div class="w-14 h-14 rounded-sm bg-accent2-500/10 text-accent2-500 flex items-center justify-center mb-6 group-hover:bg-accent-500 group-hover:text-white transition-all">
                         <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $service['icon'] }}" />
                         </svg>

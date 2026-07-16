@@ -15,7 +15,7 @@
             @foreach(['all', 'web', 'mobile', 'ai'] as $cat)
                 <button @click="filter = '{{ $cat }}'" 
                         :class="filter === '{{ $cat }}' ? 'bg-accent-500 text-white' : 'glass-light text-slate-300 hover:text-white'" 
-                        class="px-6 py-2 rounded-full font-medium transition-all capitalize">
+                        class="px-6 py-2 rounded-sm font-medium transition-all capitalize">
                     {{ $cat }}
                 </button>
             @endforeach
@@ -36,7 +36,7 @@
                      x-transition:enter="transition ease-out duration-300"
                      x-transition:enter-start="opacity-0 scale-95"
                      x-transition:enter-end="opacity-100 scale-100"
-                     class="group relative overflow-hidden rounded-3xl glass gsap-reveal">
+                     class="group relative overflow-hidden rounded-sm glass gsap-reveal">
                     
                     <img src="{{ $project['img'] }}" alt="{{ $project['title'] }}" class="w-full h-80 object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
                     

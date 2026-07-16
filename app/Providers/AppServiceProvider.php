@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\View::composer('components.footer', function ($view) {
+            $view->with('footerServices', \App\Models\Service::limit(5)->get());
+            $view->with('footerProducts', \App\Models\FlagshipProduct::limit(4)->get());
+        });
     }
 }

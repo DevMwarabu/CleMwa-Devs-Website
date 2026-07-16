@@ -24,8 +24,8 @@
         
         <!-- Aurora Background -->
         <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-            <div class="absolute -top-[30%] -left-[10%] w-[70%] h-[70%] rounded-full bg-accent-500/20 blur-[120px] animate-aurora"></div>
-            <div class="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] rounded-full bg-accent2-500/20 blur-[120px] animate-aurora" style="animation-delay: -5s;"></div>
+            <div class="absolute -top-[30%] -left-[10%] w-[70%] h-[70%] rounded-sm bg-accent-500/20 blur-[120px] animate-aurora"></div>
+            <div class="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] rounded-sm bg-accent2-500/20 blur-[120px] animate-aurora" style="animation-delay: -5s;"></div>
         </div>
 
         <x-navigation />
