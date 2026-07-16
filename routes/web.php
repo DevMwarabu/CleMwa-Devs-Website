@@ -51,6 +51,10 @@ Route::get('/terms-of-service', function () {
     return view('terms-of-service', ['title' => 'Terms of Service - CleMwa Developers']);
 });
 
+Route::get('/cookie-policy', function () {
+    return view('cookie-policy', ['title' => 'Cookie Policy - CleMwa Developers']);
+});
+
 use App\Http\Controllers\PageController;
 
 // Catch-all route for dynamic pages
