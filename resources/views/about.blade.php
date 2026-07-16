@@ -4,7 +4,7 @@
 
     <!-- Hero Section -->
     <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden bg-[#05050A]">
-        <div class="absolute inset-0 bg-[url('/img/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10"></div>
+        <div class="absolute inset-0 bg-grid-slate-400/[0.05] bg-[bottom_1px_center] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
         <div class="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-sky-500/10 to-transparent blur-3xl rounded-full"></div>
         
         <div class="container mx-auto px-4 relative z-10">
@@ -56,14 +56,14 @@
                     <h2 class="text-xs font-bold tracking-widest text-sky-500 uppercase mb-3">Company Overview</h2>
                     <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">Who We Are</h3>
                     <div class="prose prose-invert prose-lg text-slate-400 max-w-none">
-                        <p>{{ $settings->overview ?? 'We are a premier software engineering firm committed to delivering high-quality digital solutions.' }}</p>
+                        {!! $settings->overview ?? '<p>We are a premier software engineering firm committed to delivering high-quality digital solutions.</p>' !!}
                     </div>
                 </div>
                 <div>
                     <h2 class="text-xs font-bold tracking-widest text-sky-500 uppercase mb-3">Our Story</h2>
                     <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">How It Started</h3>
                     <div class="prose prose-invert prose-lg text-slate-400 max-w-none">
-                        <p>{{ $settings->our_story ?? 'Founded with a vision to transform the digital landscape, we have grown from a small team to a global technology partner.' }}</p>
+                        {!! $settings->our_story ?? '<p>Founded with a vision to transform the digital landscape, we have grown from a small team to a global technology partner.</p>' !!}
                     </div>
                 </div>
             </div>
@@ -86,9 +86,9 @@
                         </span>
                         Our Mission
                     </h3>
-                    <p class="text-xl text-slate-300 leading-relaxed relative z-10">
-                        "{{ $settings->mission ?? 'To empower businesses through innovative, secure, scalable, and intelligent software solutions that create measurable value.' }}"
-                    </p>
+                    <div class="text-xl text-slate-300 leading-relaxed relative z-10 italic">
+                        {!! $settings->mission ?? '"To empower businesses through innovative, secure, scalable, and intelligent software solutions that create measurable value."' !!}
+                    </div>
                 </div>
                 
                 <div class="p-10 md:p-12 rounded-2xl bg-gradient-to-br from-[#0B0B0F] to-indigo-900/20 border border-indigo-500/10 relative overflow-hidden group">
@@ -104,9 +104,9 @@
                         </span>
                         Our Vision
                     </h3>
-                    <p class="text-xl text-slate-300 leading-relaxed relative z-10">
-                        "{{ $settings->vision ?? 'To become a globally recognized software engineering company delivering world-class digital solutions that transform industries and improve lives.' }}"
-                    </p>
+                    <div class="text-xl text-slate-300 leading-relaxed relative z-10 italic">
+                        {!! $settings->vision ?? '"To become a globally recognized software engineering company delivering world-class digital solutions that transform industries and improve lives."' !!}
+                    </div>
                 </div>
             </div>
         </div>
@@ -145,18 +145,38 @@
 
     <!-- Statistics -->
     @if($statistics->count() > 0)
-    <section class="py-20 bg-sky-600 relative overflow-hidden">
+    <section class="py-12 bg-sky-600 relative overflow-hidden border-y border-sky-500/30">
         <div class="absolute inset-0 bg-grid-white/[0.05] bg-[bottom_1px_center]"></div>
-        <div class="container mx-auto px-4 relative z-10">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div class="relative z-10 flex overflow-hidden group">
+            <div class="flex animate-marquee group-hover:[animation-play-state:paused] whitespace-nowrap">
                 @foreach($statistics as $stat)
-                <div>
-                    <div class="text-4xl md:text-5xl font-extrabold text-white mb-2">{{ $stat->value }}{{ $stat->suffix }}</div>
-                    <div class="text-sky-100 font-medium uppercase tracking-wider text-sm">{{ $stat->label }}</div>
+                <div class="flex items-center gap-4 px-12 py-4 border-r border-white/10 shrink-0">
+                    <div class="text-3xl md:text-5xl font-extrabold text-white">{{ $stat->value }}</div>
+                    <div class="text-sky-100 font-medium uppercase tracking-wider text-xs md:text-sm whitespace-normal leading-tight max-w-[120px]">{{ $stat->label }}</div>
+                </div>
+                @endforeach
+            </div>
+            
+            <!-- Duplicate for seamless looping -->
+            <div class="flex animate-marquee group-hover:[animation-play-state:paused] whitespace-nowrap absolute top-0" style="left: 100%;">
+                @foreach($statistics as $stat)
+                <div class="flex items-center gap-4 px-12 py-4 border-r border-white/10 shrink-0">
+                    <div class="text-3xl md:text-5xl font-extrabold text-white">{{ $stat->value }}</div>
+                    <div class="text-sky-100 font-medium uppercase tracking-wider text-xs md:text-sm whitespace-normal leading-tight max-w-[120px]">{{ $stat->label }}</div>
                 </div>
                 @endforeach
             </div>
         </div>
+        
+        <style>
+            @keyframes marquee {
+                0% { transform: translateX(0%); }
+                100% { transform: translateX(-100%); }
+            }
+            .animate-marquee {
+                animation: marquee 30s linear infinite;
+            }
+        </style>
     </section>
     @endif
 
@@ -175,7 +195,7 @@
                 <div class="group relative rounded-2xl bg-[#0B0B0F] border border-white/5 overflow-hidden hover:border-sky-500/30 transition-all">
                     <div class="aspect-square overflow-hidden bg-[#12121A]">
                         @if($member->photo_url)
-                            <img src="{{ Storage::url($member->photo_url) }}" alt="{{ $member->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                            <img src="{{ Str::startsWith($member->photo_url, 'http') ? $member->photo_url : Storage::url($member->photo_url) }}" alt="{{ $member->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-slate-700">
                                 <svg class="w-20 h-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -225,7 +245,7 @@
                     <h4 class="text-2xl font-bold text-white mb-3">{{ $event->title }}</h4>
                     <p class="text-slate-400 leading-relaxed max-w-3xl">{{ $event->description }}</p>
                     @if($event->image_url)
-                        <img src="{{ Storage::url($event->image_url) }}" alt="{{ $event->title }}" class="mt-6 rounded-xl border border-white/10 max-w-md w-full" loading="lazy">
+                        <img src="{{ Str::startsWith($event->image_url, 'http') ? $event->image_url : Storage::url($event->image_url) }}" alt="{{ $event->title }}" class="mt-6 rounded-xl border border-white/10 max-w-md w-full" loading="lazy">
                     @endif
                 </div>
                 @endforeach
@@ -245,12 +265,12 @@
                 <p class="text-lg text-slate-400">We leverage modern, enterprise-grade technologies to build scalable and secure solutions.</p>
             </div>
             
-            <div class="flex flex-wrap justify-center gap-6 md:gap-10">
-                @foreach($technologies as $tech)
+            <div class="flex flex-wrap justify-center gap-6 md:gap-10 pt-8">
+                @foreach($technologies->unique('name') as $tech)
                 <div class="flex flex-col items-center gap-3 group">
                     <div class="w-20 h-20 rounded-2xl bg-[#0B0B0F] border border-white/5 flex items-center justify-center group-hover:border-sky-500/50 group-hover:-translate-y-1 transition-all shadow-lg">
                         @if($tech->icon_url)
-                            <img src="{{ Storage::url($tech->icon_url) }}" alt="{{ $tech->name }}" class="w-10 h-10 object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all" loading="lazy">
+                            <img src="{{ Str::startsWith($tech->icon_url, 'http') ? $tech->icon_url : Storage::url($tech->icon_url) }}" alt="{{ $tech->name }}" class="w-10 h-10 object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all" loading="lazy">
                         @else
                             <i class="{{ $tech->icon_class ?? 'fa-solid fa-microchip' }} text-2xl text-slate-500 group-hover:text-sky-500 transition-colors"></i>
                         @endif
@@ -290,34 +310,47 @@
     <!-- Testimonials -->
     @if($testimonials->count() > 0)
     <section class="py-24 bg-[#05050A] border-t border-white/5 overflow-hidden">
-        <div class="container mx-auto px-4">
-            <div class="text-center max-w-3xl mx-auto mb-16">
+        <div class="container mx-auto px-4 max-w-7xl">
+            <div class="text-center max-w-3xl mx-auto mb-16 relative">
                 <h2 class="text-xs font-bold tracking-widest text-sky-500 uppercase mb-3">Client Success</h2>
                 <h3 class="text-3xl md:text-5xl font-bold text-white mb-6">What Our Clients Say</h3>
+                <p class="text-lg text-slate-400">Don't just take our word for it. Here is what our partners say about working with us.</p>
             </div>
             
-            <div class="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide" style="-ms-overflow-style: none; scrollbar-width: none;">
-                @foreach($testimonials as $testimonial)
-                <div class="snap-center shrink-0 w-full md:w-[400px] p-8 rounded-2xl bg-[#0B0B0F] border border-white/5 flex flex-col justify-between">
-                    <div>
-                        <div class="flex text-sky-500 mb-4 text-sm">
-                            @for($i=0; $i<5; $i++)
-                                <i class="fa-solid fa-star"></i>
-                            @endfor
+            @php
+                $bentoClasses = [
+                    0 => 'sm:col-span-2 lg:row-span-2',
+                    1 => 'md:col-span-2',
+                    2 => '',
+                    3 => '',
+                ];
+            @endphp
+
+            <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-rows-2">
+                @foreach($testimonials as $index => $testimonial)
+                @php
+                    $class = $bentoClasses[$index % 4] ?? '';
+                @endphp
+                <div class="{{ $class }} p-6 md:p-8 rounded-2xl bg-[#0B0B0F] border border-white/5 flex flex-col justify-between group hover:border-sky-500/30 transition-all">
+                    <blockquote class="flex flex-col justify-between h-full gap-6">
+                        <p class="text-xl font-medium text-slate-300 italic leading-relaxed">"{{ $testimonial->quote }}"</p>
+
+                        <div class="flex items-center gap-4 mt-auto">
+                            <div class="w-12 h-12 rounded-full bg-slate-800 overflow-hidden shrink-0 border border-white/10">
+                                @if($testimonial->client_image_url)
+                                    <img src="{{ Str::startsWith($testimonial->client_image_url, 'http') ? $testimonial->client_image_url : Storage::url($testimonial->client_image_url) }}" alt="{{ $testimonial->client_name }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center text-slate-400 font-bold uppercase text-sm">
+                                        {{ substr($testimonial->client_name, 0, 2) }}
+                                    </div>
+                                @endif
+                            </div>
+                            <div>
+                                <cite class="text-sm font-bold text-white not-italic">{{ $testimonial->client_name }}</cite>
+                                <span class="block text-sm text-sky-500 font-medium">{{ $testimonial->client_role }}</span>
+                            </div>
                         </div>
-                        <p class="text-slate-300 italic mb-8 relative z-10">"{{ $testimonial->quote }}"</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-slate-800 overflow-hidden shrink-0">
-                            @if($testimonial->image_url)
-                                <img src="{{ Storage::url($testimonial->image_url) }}" alt="{{ $testimonial->author_name }}" class="w-full h-full object-cover">
-                            @endif
-                        </div>
-                        <div>
-                            <h5 class="text-white font-bold text-sm">{{ $testimonial->author_name }}</h5>
-                            <p class="text-sky-500 text-xs">{{ $testimonial->author_title }}{{ $testimonial->company ? ', ' . $testimonial->company : '' }}</p>
-                        </div>
-                    </div>
+                    </blockquote>
                 </div>
                 @endforeach
             </div>
@@ -434,8 +467,8 @@
                         </svg>
                     </button>
                     <div x-show="active === {{ $index }}" x-collapse>
-                        <div class="p-6 pt-0 text-slate-400 leading-relaxed border-t border-white/5 mt-2">
-                            {{ $faq->answer }}
+                        <div class="p-6 pt-0 text-slate-400 leading-relaxed border-t border-white/5 mt-2 prose prose-invert">
+                            {!! $faq->answer !!}
                         </div>
                     </div>
                 </div>
@@ -447,7 +480,7 @@
 
     <!-- CTA Section -->
     <section class="py-24 bg-sky-600 relative overflow-hidden text-center">
-        <div class="absolute inset-0 bg-[url('/img/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-20"></div>
+        <div class="absolute inset-0 bg-grid-white/[0.05] bg-[bottom_1px_center] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
         <div class="container mx-auto px-4 relative z-10 max-w-4xl">
             <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight">
                 {{ $settings->cta_heading ?? "Let's Build Something Amazing Together" }}
