@@ -9,7 +9,7 @@
                 <p class="text-slate-400">Get the latest insights on software engineering, AI, and industry trends directly to your inbox.</p>
             </div>
             <div class="relative z-10 w-full md:w-1/2 max-w-md">
-                <form action="#" method="POST" class="flex gap-2">
+                <form onsubmit="event.preventDefault(); alert('Newsletter subscription coming soon!');" class="flex gap-2">
                     <input type="email" placeholder="Enter your email address" class="w-full bg-[#0B0B0F] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all" required>
                     <button type="submit" class="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-white font-bold rounded-sm transition-all whitespace-nowrap shadow-[0_0_15px_rgba(14,165,233,0.3)]">Subscribe</button>
                 </form>
@@ -118,6 +118,7 @@
                 <a href="/privacy-policy" class="text-slate-500 hover:text-slate-300 transition-colors">Privacy Policy</a>
                 <a href="/terms-of-service" class="text-slate-500 hover:text-slate-300 transition-colors">Terms of Service</a>
                 <a href="/cookie-policy" class="text-slate-500 hover:text-slate-300 transition-colors">Cookie Policy</a>
+                <button @click.prevent="$dispatch('open-cookie-preferences')" class="text-slate-500 hover:text-slate-300 transition-colors cursor-pointer">Cookie Preferences</button>
                 <a href="/security" class="text-slate-500 hover:text-slate-300 transition-colors flex items-center gap-1">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                     Security

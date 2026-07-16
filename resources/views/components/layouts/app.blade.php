@@ -45,7 +45,11 @@
         </main>
         
         <x-footer />
-        <x-floating-actions />
+        <div class="no-print">
+            <x-floating-actions />
+        </div>
+
+        <x-cookie-consent />
         
         <!-- Livewire Scripts -->
         @livewireScripts

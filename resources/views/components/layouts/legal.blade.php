@@ -106,6 +106,9 @@
             <x-floating-actions />
         </div>
         
+        <!-- Cookie Consent -->
+        <x-cookie-consent />
+        
         @livewireScripts
     </body>
 </html>
