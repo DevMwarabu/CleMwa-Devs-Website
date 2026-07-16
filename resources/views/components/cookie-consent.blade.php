@@ -56,94 +56,94 @@
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             
             <!-- Background overlay -->
-            <div class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity" @click="closePreferences()" aria-hidden="true"></div>
+            <div class="fixed inset-0 bg-slate-900/60 dark:bg-slate-900/80 backdrop-blur-sm transition-opacity" @click="closePreferences()" aria-hidden="true"></div>
 
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             
             <!-- Modal panel -->
-            <div class="relative inline-block align-bottom bg-[#0f172a] border border-slate-700 rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full">
+            <div class="relative inline-block align-bottom bg-[#f0f4f8] dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full">
                 
                 <!-- Header -->
-                <div class="px-6 py-5 border-b border-slate-800 flex items-center justify-between bg-[#1e293b]/50">
+                <div class="px-6 py-6 flex items-start justify-between bg-transparent dark:bg-[#1e293b]/50 dark:border-b dark:border-slate-800">
                     <div>
-                        <h3 class="text-xl font-bold text-white" id="modal-title">Cookie Preferences</h3>
-                        <p class="text-sm text-slate-400 mt-1">Manage how we use cookies on your device.</p>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white tracking-tight" id="modal-title">Cookie Preferences</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage how we use cookies on your device.</p>
                     </div>
-                    <button @click="closePreferences()" class="text-slate-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <button @click="closePreferences()" class="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors bg-transparent dark:bg-white/5 border border-slate-900 dark:border-transparent p-1.5 dark:p-2 rounded-full hover:bg-slate-200 dark:hover:bg-white/10">
+                        <svg class="w-4 h-4 dark:w-5 dark:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
 
                 <!-- Body - Scrollable -->
-                <div class="px-6 py-6 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+                <div class="px-6 pb-6 dark:pt-6 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent">
                     
-                    <div class="space-y-6">
+                    <div class="space-y-4 dark:space-y-6">
                         <!-- Essential -->
-                        <div class="flex items-start gap-4 p-4 rounded-lg bg-[#1e293b]/30 border border-slate-800">
+                        <div class="flex items-start gap-4 p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-transparent dark:bg-[#1e293b]/30">
                             <div class="flex-grow">
                                 <div class="flex items-center justify-between mb-1">
-                                    <h4 class="text-base font-bold text-white">Essential Cookies</h4>
-                                    <span class="text-xs font-semibold px-2.5 py-1 bg-slate-800 text-slate-300 rounded-sm">Always Active</span>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white tracking-tight">Essential Cookies</h4>
+                                    <span class="hidden dark:inline-block text-xs font-semibold px-2.5 py-1 bg-slate-800 text-slate-300 rounded-sm">Always Active</span>
                                 </div>
-                                <p class="text-sm text-slate-400 mb-2">These cookies are required for core website functionality and cannot be disabled. Examples include authentication, security, session management, and CSRF protection.</p>
+                                <p class="text-[13px] dark:text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-0 dark:mb-2">These cookies are required for core website functionality and cannot be disabled. Examples include authentication, security, session management, and CSRF protection.</p>
                             </div>
                         </div>
 
                         <!-- Functional -->
-                        <div class="flex items-start gap-4 p-4 rounded-lg border border-slate-800 transition-colors" :class="preferences.functional ? 'bg-accent-500/5 border-accent-500/20' : 'bg-transparent'">
+                        <div class="flex items-start gap-4 p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-transparent transition-colors" :class="preferences.functional ? 'dark:bg-accent-500/5 dark:border-accent-500/20' : ''">
                             <div class="flex-grow">
                                 <div class="flex items-center justify-between mb-1">
-                                    <h4 class="text-base font-bold text-white">Functional Cookies</h4>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white tracking-tight">Functional Cookies</h4>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" x-model="preferences.functional" class="sr-only peer">
-                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-500"></div>
+                                        <div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 dark:after:border-transparent after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black dark:peer-checked:bg-accent-500"></div>
                                     </label>
                                 </div>
-                                <p class="text-sm text-slate-400">These cookies enhance website functionality and personalization. Examples include language preference, theme (Light/Dark Mode), and recently viewed pages.</p>
+                                <p class="text-[13px] dark:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">These cookies enhance website functionality and personalization. Examples include language preference, theme (Light/Dark Mode), and recently viewed pages.</p>
                             </div>
                         </div>
 
                         <!-- Analytics -->
-                        <div class="flex items-start gap-4 p-4 rounded-lg border border-slate-800 transition-colors" :class="preferences.analytics ? 'bg-accent-500/5 border-accent-500/20' : 'bg-transparent'">
+                        <div class="flex items-start gap-4 p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-transparent transition-colors" :class="preferences.analytics ? 'dark:bg-accent-500/5 dark:border-accent-500/20' : ''">
                             <div class="flex-grow">
                                 <div class="flex items-center justify-between mb-1">
-                                    <h4 class="text-base font-bold text-white">Analytics Cookies</h4>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white tracking-tight">Analytics Cookies</h4>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" x-model="preferences.analytics" class="sr-only peer">
-                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-500"></div>
+                                        <div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 dark:after:border-transparent after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black dark:peer-checked:bg-accent-500"></div>
                                     </label>
                                 </div>
-                                <p class="text-sm text-slate-400">These cookies help us understand how visitors interact with our website. Examples include page visits, user journeys, and performance metrics. Data is aggregated.</p>
+                                <p class="text-[13px] dark:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">These cookies help us understand how visitors interact with our website. Examples include page visits, user journeys, and performance metrics. Data is aggregated.</p>
                             </div>
                         </div>
 
                         <!-- Performance -->
-                        <div class="flex items-start gap-4 p-4 rounded-lg border border-slate-800 transition-colors" :class="preferences.performance ? 'bg-accent-500/5 border-accent-500/20' : 'bg-transparent'">
+                        <div class="flex items-start gap-4 p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-transparent transition-colors" :class="preferences.performance ? 'dark:bg-accent-500/5 dark:border-accent-500/20' : ''">
                             <div class="flex-grow">
                                 <div class="flex items-center justify-between mb-1">
-                                    <h4 class="text-base font-bold text-white">Performance Cookies</h4>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white tracking-tight">Performance Cookies</h4>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" x-model="preferences.performance" class="sr-only peer">
-                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-500"></div>
+                                        <div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 dark:after:border-transparent after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black dark:peer-checked:bg-accent-500"></div>
                                     </label>
                                 </div>
-                                <p class="text-sm text-slate-400">These cookies help improve website speed and reliability. Examples include resource caching, error monitoring, and load optimization.</p>
+                                <p class="text-[13px] dark:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">These cookies help improve website speed and reliability. Examples include resource caching, error monitoring, and load optimization.</p>
                             </div>
                         </div>
 
                         <!-- Marketing -->
-                        <div class="flex items-start gap-4 p-4 rounded-lg border border-slate-800 transition-colors" :class="preferences.marketing ? 'bg-accent-500/5 border-accent-500/20' : 'bg-transparent'">
+                        <div class="flex items-start gap-4 p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-transparent transition-colors" :class="preferences.marketing ? 'dark:bg-accent-500/5 dark:border-accent-500/20' : ''">
                             <div class="flex-grow">
                                 <div class="flex items-center justify-between mb-1">
-                                    <h4 class="text-base font-bold text-white">Marketing Cookies</h4>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white tracking-tight">Marketing Cookies</h4>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" x-model="preferences.marketing" class="sr-only peer">
-                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-500"></div>
+                                        <div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 dark:after:border-transparent after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black dark:peer-checked:bg-accent-500"></div>
                                     </label>
                                 </div>
-                                <p class="text-sm text-slate-400">Used only if marketing campaigns are enabled. Examples include campaign attribution and advertisement measurement. We do not sell your personal information.</p>
+                                <p class="text-[13px] dark:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Used only if marketing campaigns are enabled. Examples include campaign attribution and advertisement measurement. We do not sell your personal information.</p>
                             </div>
                         </div>
                     </div>
@@ -151,14 +151,14 @@
                 </div>
 
                 <!-- Footer -->
-                <div class="px-6 py-5 border-t border-slate-800 bg-[#1e293b]/50 flex flex-col sm:flex-row gap-3 sm:justify-end items-center">
-                    <button @click="resetPreferences()" class="w-full sm:w-auto sm:mr-auto px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
+                <div class="px-6 py-5 border-t border-slate-200 dark:border-slate-800 bg-[#e2e8f0]/30 dark:bg-[#1e293b]/50 flex flex-col sm:flex-row gap-3 sm:justify-end items-center">
+                    <button @click="resetPreferences()" class="w-full sm:w-auto sm:mr-auto px-4 py-2 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors">
                         Reset
                     </button>
-                    <button @click="rejectOptional()" class="w-full sm:w-auto px-5 py-2.5 bg-[#0f172a] hover:bg-slate-800 text-white font-medium rounded-sm border border-slate-600 transition-colors text-sm">
+                    <button @click="rejectOptional()" class="w-full sm:w-auto px-5 py-2.5 bg-transparent dark:bg-[#0f172a] hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-white font-medium rounded dark:rounded-sm border border-slate-300 dark:border-slate-600 transition-colors text-sm">
                         Reject Optional
                     </button>
-                    <button @click="savePreferences()" class="w-full sm:w-auto px-6 py-2.5 bg-accent-500 hover:bg-accent-400 text-slate-900 font-bold rounded-sm transition-colors text-sm shadow-lg hover:shadow-accent-500/25">
+                    <button @click="savePreferences()" class="w-full sm:w-auto px-6 py-2.5 bg-[#8bb4f6] dark:bg-accent-500 hover:bg-[#7aa3e5] dark:hover:bg-accent-400 text-white dark:text-slate-900 font-semibold dark:font-bold rounded dark:rounded-sm transition-colors text-sm shadow-sm dark:shadow-lg dark:hover:shadow-accent-500/25">
                         Save Preferences
                     </button>
                 </div>

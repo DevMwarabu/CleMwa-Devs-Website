@@ -9,7 +9,7 @@
                 <p class="text-slate-400">Get the latest insights on software engineering, AI, and industry trends directly to your inbox.</p>
             </div>
             <div class="relative z-10 w-full md:w-1/2 max-w-md">
-                <form onsubmit="event.preventDefault(); $dispatch('show-dialog', { title: 'Newsletter', message: 'Newsletter subscription is coming soon! Stay tuned.', type: 'info' });" class="flex gap-2">
+                <form x-data @submit.prevent="$dispatch('show-dialog', { title: 'Newsletter', message: 'Newsletter subscription is coming soon! Stay tuned.', type: 'info' })" class="flex gap-2">
                     <input type="email" placeholder="Enter your email address" class="w-full bg-[#0B0B0F] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all" required>
                     <button type="submit" class="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-white font-bold rounded-sm transition-all whitespace-nowrap shadow-[0_0_15px_rgba(14,165,233,0.3)]">Subscribe</button>
                 </form>
