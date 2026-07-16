@@ -15,7 +15,7 @@
             
             <div class="flex-grow">
                 <div class="flex items-center gap-3 mb-3">
-                    <span class="text-2xl">🍪</span>
+                    <span class="text-2xl text-accent-500"><i class="fa-solid fa-cookie-bite"></i></span>
                     <h3 class="text-white font-bold text-lg sm:text-xl">We Value Your Privacy</h3>
                 </div>
                 <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-2">
