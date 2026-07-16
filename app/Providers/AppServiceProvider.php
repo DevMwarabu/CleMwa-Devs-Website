@@ -22,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\View::composer('components.footer', function ($view) {
             $view->with('footerServices', \App\Models\Service::limit(5)->get());
             $view->with('footerProducts', \App\Models\FlagshipProduct::limit(4)->get());
+            $view->with('isHiring', \App\Models\JobListing::count() > 0);
         });
     }
 }

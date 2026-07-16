@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +19,16 @@
         <!-- GSAP Core & Plugins -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+        
+        <!-- Theme Initialization -->
+        <script>
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+            }
+        </script>
+        
+        <!-- Alpine.js -->
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     </head>
     <body class="bg-primary-500 text-white font-sans antialiased selection:bg-accent-500 selection:text-white min-h-screen flex flex-col relative overflow-x-hidden">
         
@@ -35,6 +45,7 @@
         </main>
         
         <x-footer />
+        <x-floating-actions />
         
         <!-- Livewire Scripts -->
         @livewireScripts

@@ -220,7 +220,7 @@ export const Lid = ({
               <div>
                  <a 
                    href="/services" 
-                   className="pointer-events-auto inline-flex items-center justify-center rounded-full bg-accent-500 px-20 py-10 text-[2rem] md:text-[2.5rem] font-semibold text-white transition-all hover:bg-accent-600 hover:scale-105 shadow-2xl"
+                   className="pointer-events-auto inline-flex items-center justify-center rounded-sm bg-accent-500 px-20 py-10 text-[2rem] md:text-[2.5rem] font-semibold text-white transition-all hover:bg-accent-600 hover:scale-105 shadow-2xl"
                  >
                     View Project Details
                  </a>

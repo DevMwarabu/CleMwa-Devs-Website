@@ -42,6 +42,11 @@ Route::get('/projects/{id}', function ($id) {
 Route::get('/contact', function () {
     return view('contact');
 });
+
+Route::get('/privacy-policy', function () {
+    return view('privacy-policy', ['title' => 'Privacy Policy - CleMwa Developers']);
+});
+
 use App\Http\Controllers\PageController;
 
 // Catch-all route for dynamic pages

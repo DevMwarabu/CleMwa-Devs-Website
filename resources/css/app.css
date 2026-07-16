@@ -40,6 +40,18 @@
     h1, h2, h3, h4, h5, h6 {
         @apply font-heading tracking-tight;
     }
+
+    /* Light Mode Magic Trick */
+    html:not(.dark) {
+        filter: invert(1) hue-rotate(180deg);
+        background-color: white; /* ensures body invert works on a solid base */
+    }
+    
+    html:not(.dark) img,
+    html:not(.dark) video,
+    html:not(.dark) .keep-colors {
+        filter: invert(1) hue-rotate(180deg);
+    }
 }
 
 /* Glassmorphism utility */
