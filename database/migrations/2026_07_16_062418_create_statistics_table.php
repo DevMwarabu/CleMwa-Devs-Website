@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('testimonials', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->text('quote');
-            $table->string('client_name');
-            $table->string('client_role');
-            $table->string('client_image_url')->nullable();
+        Schema::create('statistics', function (Blueprint $table) {
+            $table->id();
+            $table->string('value');
+            $table->string('label');
+            $table->string('theme_color')->default('sky');
             $table->integer('delay')->default(0);
             $table->timestamps();
         });
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('testimonials');
+        Schema::dropIfExists('statistics');
     }
 };

@@ -3,7 +3,7 @@ import { MacbookScroll } from "./ui/macbook-scroll";
 
 export default function MacbookScrollDemo() {
   return (
-    <div className="w-full overflow-hidden bg-black dark:bg-[#0B0B0F] text-white">
+    <div className="w-full bg-transparent text-white relative">
       <MacbookScroll
         title={
           <span className="text-white">
@@ -17,6 +17,8 @@ export default function MacbookScrollDemo() {
         }
         src={`/images/admin_login_bg.png`}
         showGradient={false}
+        projectTitle="CleMwa POS Cloud"
+        projectDescription="An enterprise-grade point of sale ecosystem built for modern retail."
       />
     </div>
   );

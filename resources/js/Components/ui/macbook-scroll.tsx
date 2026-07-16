@@ -30,11 +30,15 @@ export const MacbookScroll = ({
   showGradient,
   title,
   badge,
+  projectTitle,
+  projectDescription,
 }: {
   src?: string;
   showGradient?: boolean;
   title?: string | React.ReactNode;
   badge?: React.ReactNode;
+  projectTitle?: string;
+  projectDescription?: string;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -50,70 +54,88 @@ export const MacbookScroll = ({
     }
   }, []);
 
+  // Scale the lid massively in the second phase of scrolling
   const scaleX = useTransform(
     scrollYProgress,
-    [0, 0.3],
-    [1.2, isMobile ? 1 : 1.5],
+    [0, 0.3, 0.9],
+    [1.2, isMobile ? 1 : 1.5, isMobile ? 3.5 : 4.5]
   );
   const scaleY = useTransform(
     scrollYProgress,
-    [0, 0.3],
-    [0.6, isMobile ? 1 : 1.5],
+    [0, 0.3, 0.9],
+    [0.6, isMobile ? 1 : 1.5, isMobile ? 3.5 : 4.5]
   );
-  const translate = useTransform(scrollYProgress, [0, 1], [0, 1500]);
-  const rotate = useTransform(scrollYProgress, [0.1, 0.12, 0.3], [-28, -28, 0]);
+  // We no longer need translate since we use sticky positioning
+  const translate = useTransform(scrollYProgress, [0, 1], [0, 0]);
+  const rotate = useTransform(scrollYProgress, [0.1, 0.3], [-28, 0]);
   const textTransform = useTransform(scrollYProgress, [0, 0.3], [0, 100]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
+  // Base area fading out
+  const baseOpacity = useTransform(scrollYProgress, [0.3, 0.5], [1, 0]);
+  
+  // Clean dark gradient from bottom fading in
+  const darkGradientOpacity = useTransform(scrollYProgress, [0.4, 0.7], [0, 1]);
+
+  // Image project details fading in
+  const projectDetailsOpacity = useTransform(scrollYProgress, [0.5, 0.8], [0, 1]);
+  const projectDetailsTranslateY = useTransform(scrollYProgress, [0.5, 0.8], [40, 0]);
+
   return (
-    <div
-      ref={ref}
-      className="flex min-h-[200vh] shrink-0 scale-[0.35] transform flex-col items-center justify-start py-0 [perspective:800px] sm:scale-50 md:scale-100 md:py-80"
-    >
-      <motion.h2
-        style={{
-          translateY: textTransform,
-          opacity: textOpacity,
-        }}
-        className="mb-20 text-center text-3xl font-bold text-neutral-800 dark:text-white"
-      >
-        {title || (
-          <span>
-            This Macbook is built with Tailwindcss. <br /> No kidding.
-          </span>
-        )}
-      </motion.h2>
-      {/* Lid */}
-      <Lid
-        src={src}
-        scaleX={scaleX}
-        scaleY={scaleY}
-        rotate={rotate}
-        translate={translate}
-      />
-      {/* Base area */}
-      <div className="relative -z-10 h-[22rem] w-[32rem] overflow-hidden rounded-2xl bg-gray-200 dark:bg-[#272729]">
-        {/* above keyboard bar */}
-        <div className="relative h-10 w-full">
-          <div className="absolute inset-x-0 mx-auto h-4 w-[80%] bg-[#050505]" />
+    <div ref={ref} className="relative min-h-[175vh] w-full">
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden [perspective:800px]">
+        <div className="flex shrink-0 scale-[0.35] transform flex-col items-center justify-center sm:scale-50 md:scale-100">
+          <motion.h2
+            style={{
+              translateY: textTransform,
+              opacity: textOpacity,
+            }}
+            className="mb-20 text-center text-3xl font-bold text-neutral-800 dark:text-white"
+          >
+            {title || (
+              <span>
+                This Macbook is built with Tailwindcss. <br /> No kidding.
+              </span>
+            )}
+          </motion.h2>
+          
+          {/* Lid */}
+          <Lid
+            src={src}
+            scaleX={scaleX}
+            scaleY={scaleY}
+            rotate={rotate}
+            translate={translate}
+            projectTitle={projectTitle}
+            projectDescription={projectDescription}
+            projectDetailsOpacity={projectDetailsOpacity}
+          />
+          
+          {/* Base area */}
+          <motion.div style={{ opacity: baseOpacity }} className="relative -z-10 h-[22rem] w-[32rem] overflow-hidden rounded-2xl bg-gray-200 dark:bg-[#272729]">
+            {/* above keyboard bar */}
+            <div className="relative h-10 w-full">
+              <div className="absolute inset-x-0 mx-auto h-4 w-[80%] bg-[#050505]" />
+            </div>
+            <div className="relative flex">
+              <div className="mx-auto h-full w-[10%] overflow-hidden">
+                <SpeakerGrid />
+              </div>
+              <div className="mx-auto h-full w-[80%]">
+                <Keypad />
+              </div>
+              <div className="mx-auto h-full w-[10%] overflow-hidden">
+                <SpeakerGrid />
+              </div>
+            </div>
+            <Trackpad />
+            <div className="absolute inset-x-0 bottom-0 mx-auto h-2 w-20 rounded-tl-3xl rounded-tr-3xl bg-gradient-to-t from-[#272729] to-[#050505]" />
+            {showGradient && (
+              <div className="absolute inset-x-0 bottom-0 z-50 h-40 w-full bg-gradient-to-t from-white via-white to-transparent dark:from-[#0B0B0F] dark:via-[#0B0B0F]"></div>
+            )}
+            {badge && <div className="absolute bottom-4 left-4">{badge}</div>}
+          </motion.div>
         </div>
-        <div className="relative flex">
-          <div className="mx-auto h-full w-[10%] overflow-hidden">
-            <SpeakerGrid />
-          </div>
-          <div className="mx-auto h-full w-[80%]">
-            <Keypad />
-          </div>
-          <div className="mx-auto h-full w-[10%] overflow-hidden">
-            <SpeakerGrid />
-          </div>
-        </div>
-        <Trackpad />
-        <div className="absolute inset-x-0 bottom-0 mx-auto h-2 w-20 rounded-tl-3xl rounded-tr-3xl bg-gradient-to-t from-[#272729] to-[#050505]" />
-        {showGradient && (
-          <div className="absolute inset-x-0 bottom-0 z-50 h-40 w-full bg-gradient-to-t from-white via-white to-transparent dark:from-black dark:via-black"></div>
-        )}
-        {badge && <div className="absolute bottom-4 left-4">{badge}</div>}
       </div>
     </div>
   );
@@ -125,12 +147,18 @@ export const Lid = ({
   rotate,
   translate,
   src,
+  projectTitle,
+  projectDescription,
+  projectDetailsOpacity,
 }: {
   scaleX: MotionValue<number>;
   scaleY: MotionValue<number>;
   rotate: MotionValue<number>;
   translate: MotionValue<number>;
   src?: string;
+  projectTitle?: string;
+  projectDescription?: string;
+  projectDetailsOpacity?: MotionValue<number>;
 }) => {
   return (
     <div className="relative [perspective:800px]">
@@ -140,13 +168,13 @@ export const Lid = ({
           transformOrigin: "bottom",
           transformStyle: "preserve-3d",
         }}
-        className="relative h-[12rem] w-[32rem] rounded-2xl bg-[#010101] p-2"
+        className="relative h-[12rem] w-[32rem] rounded-2xl bg-[#0B0B0F] p-2"
       >
         <div
           style={{
             boxShadow: "0px 2px 0px 2px #171717 inset",
           }}
-          className="absolute inset-0 flex items-center justify-center rounded-lg bg-[#010101]"
+          className="absolute inset-0 flex items-center justify-center rounded-lg bg-[#0B0B0F]"
         >
           <span className="text-white">
             <AceternityLogo />
@@ -162,7 +190,7 @@ export const Lid = ({
           transformStyle: "preserve-3d",
           transformOrigin: "top",
         }}
-        className="absolute inset-0 h-96 w-[32rem] rounded-2xl bg-[#010101] p-2"
+        className="absolute inset-0 h-96 w-[32rem] rounded-2xl bg-[#0B0B0F] p-2 overflow-hidden"
       >
         <div className="absolute inset-0 rounded-lg bg-[#272729]" />
         <img
@@ -170,6 +198,35 @@ export const Lid = ({
           alt="aceternity logo"
           className="absolute inset-0 h-full w-full rounded-lg object-cover object-left-top"
         />
+        {/* Project Details properly embedded in the 3D screen */}
+        <div className="absolute inset-0 z-20 pointer-events-none rounded-lg overflow-hidden">
+           {/* Dark Gradient - Taller and darker for better text overlay */}
+           <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] from-10% via-[#0B0B0F]/95 via-40% to-transparent" />
+           
+           {/* Scaled container to bypass browser min-font-size and stay sharp! 
+               It is 4.5x the size, and scaled down by 1/4.5, so when the Lid zooms 4.5x, 
+               these elements perfectly reach their declared px sizes! */}
+           <div 
+              style={{
+                 width: "450%",
+                 height: "450%",
+                 transform: "scale(0.222222)",
+                 transformOrigin: "top left"
+              }}
+              className="absolute top-0 left-0 flex flex-col justify-end p-20 md:p-32"
+           >
+              <h3 className="text-white text-[5rem] md:text-[7rem] leading-tight font-bold mb-8 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">{projectTitle}</h3>
+              <p className="text-gray-200 text-[2.5rem] md:text-[3rem] leading-relaxed max-w-6xl drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] mb-16">{projectDescription}</p>
+              <div>
+                 <a 
+                   href="/services" 
+                   className="pointer-events-auto inline-flex items-center justify-center rounded-full bg-accent-500 px-20 py-10 text-[2rem] md:text-[2.5rem] font-semibold text-white transition-all hover:bg-accent-600 hover:scale-105 shadow-2xl"
+                 >
+                    View Project Details
+                 </a>
+              </div>
+           </div>
+        </div>
       </motion.div>
     </div>
   );
