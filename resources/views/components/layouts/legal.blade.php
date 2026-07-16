@@ -96,23 +96,15 @@
             {{ $slot }}
         </main>
         
-        <!-- Minimal Footer -->
-        <footer class="bg-[#0b1120] border-t border-slate-800 py-8 no-print">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="text-sm text-slate-500">
-                        &copy; {{ date('Y') }} CleMwa Developers. All Rights Reserved.
-                    </div>
-                    <div class="flex flex-wrap items-center justify-center gap-6 text-sm">
-                        <a href="/privacy-policy" class="text-slate-400 hover:text-white transition-colors">Privacy Policy</a>
-                        <a href="#" class="text-slate-400 hover:text-white transition-colors">Terms & Conditions</a>
-                        <a href="#" class="text-slate-400 hover:text-white transition-colors">Cookie Policy</a>
-                        <a href="#" class="text-slate-400 hover:text-white transition-colors">Licenses</a>
-                        <a href="/contact" class="text-slate-400 hover:text-white transition-colors">Contact</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        <!-- Footer -->
+        <div class="no-print">
+            <x-footer />
+        </div>
+        
+        <!-- Floating Actions -->
+        <div class="no-print">
+            <x-floating-actions />
+        </div>
         
         @livewireScripts
     </body>
