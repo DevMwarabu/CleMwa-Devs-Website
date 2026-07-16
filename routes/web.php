@@ -59,6 +59,10 @@ Route::get('/security', function () {
     return view('security', ['title' => 'Security - CleMwa Developers']);
 });
 
+use App\Http\Controllers\AboutController;
+
+Route::get('/about', [AboutController::class, 'index']);
+
 use App\Http\Controllers\PageController;
 
 // Catch-all route for dynamic pages
