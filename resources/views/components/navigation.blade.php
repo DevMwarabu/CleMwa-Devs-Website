@@ -33,7 +33,7 @@
             <!-- CTA & Client Portal -->
             <div class="hidden md:flex items-center space-x-4">
                 <a href="/client-portal" class="text-slate-300 hover:text-white text-sm font-medium transition-colors">Client Portal</a>
-                <a href="/request-quote" class="bg-white text-primary-500 hover:bg-slate-200 px-5 py-2.5 rounded-sm text-sm font-bold transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
+                <a href="/quote" class="bg-white text-primary-500 hover:bg-slate-200 px-5 py-2.5 rounded-sm text-sm font-bold transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
                     Request Quote
                 </a>
             </div>
@@ -71,7 +71,7 @@
                 <a href="/client-portal" class="block text-center px-3 py-3 rounded-sm text-base font-medium text-slate-300 border border-slate-700 hover:bg-slate-800/50">
                     Client Portal
                 </a>
-                <a href="/request-quote" class="block text-center px-3 py-3 rounded-sm text-base font-bold text-primary-500 bg-white hover:bg-slate-200 shadow-lg">
+                <a href="/quote" class="block text-center px-3 py-3 rounded-sm text-base font-bold text-primary-500 bg-white hover:bg-slate-200 shadow-lg">
                     Request Quote
                 </a>
             </div>

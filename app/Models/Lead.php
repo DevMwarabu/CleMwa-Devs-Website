@@ -9,5 +9,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 class Lead extends Model
 {
     use HasUuids;
-    //
+
+    protected $guarded = [];
 }

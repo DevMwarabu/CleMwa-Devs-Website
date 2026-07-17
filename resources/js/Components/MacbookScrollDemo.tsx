@@ -1,13 +1,16 @@
 import React from "react";
 import { MacbookScroll } from "./ui/macbook-scroll";
 
-export default function MacbookScrollDemo() {
+export default function MacbookScrollDemo({ settings }: { settings?: any }) {
+  const headline = settings?.hero_headline || "Engineering Digital Excellence.";
+  const highlight = settings?.hero_headline_highlight || "CleMwa Developers.";
+
   return (
     <div className="w-full bg-transparent text-white relative">
       <MacbookScroll
         title={
           <span className="text-white">
-            Engineering Digital Excellence. <br /> CleMwa Developers.
+            {headline} <br /> <span className="text-accent-400">{highlight}</span>
           </span>
         }
         badge={

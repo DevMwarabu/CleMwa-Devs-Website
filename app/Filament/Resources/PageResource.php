@@ -17,7 +17,9 @@ class PageResource extends Resource
 {
     protected static ?string $model = Page::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
+    protected static ?string $navigationGroup = 'Content';
 
     public static function form(Form $form): Form
     {
@@ -29,7 +31,7 @@ class PageResource extends Resource
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('content')
+                Forms\Components\RichEditor::make('content')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('meta_description')
                     ->columnSpanFull(),

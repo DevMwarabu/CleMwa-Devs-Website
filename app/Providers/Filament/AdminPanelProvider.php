@@ -27,6 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->spa()
             ->brandName('CleMwa CMS')
             ->font('Inter')
             ->colors([
@@ -36,6 +37,10 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 'panels::body.start',
                 fn (): string => request()->routeIs('filament.admin.auth.login') ? view('filament.login-background')->render() : '',
+            )
+            ->renderHook(
+                'panels::head.end',
+                fn (): string => !request()->routeIs('filament.admin.auth.login') ? view('filament.sidebar-theme')->render() : '',
             )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

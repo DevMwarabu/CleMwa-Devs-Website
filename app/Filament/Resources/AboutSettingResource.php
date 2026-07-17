@@ -17,7 +17,9 @@ class AboutSettingResource extends Resource
 {
     protected static ?string $model = AboutSetting::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-information-circle';
+
+    protected static ?string $navigationGroup = 'About';
 
     public static function form(Form $form): Form
     {

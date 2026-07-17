@@ -17,7 +17,9 @@ class OfficeLocationResource extends Resource
 {
     protected static ?string $model = OfficeLocation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+
+    protected static ?string $navigationGroup = 'About';
 
     public static function form(Form $form): Form
     {

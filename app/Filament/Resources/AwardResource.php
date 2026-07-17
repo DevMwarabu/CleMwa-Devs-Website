@@ -17,7 +17,9 @@ class AwardResource extends Resource
 {
     protected static ?string $model = Award::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-trophy';
+
+    protected static ?string $navigationGroup = 'About';
 
     public static function form(Form $form): Form
     {

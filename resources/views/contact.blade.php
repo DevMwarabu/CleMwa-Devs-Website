@@ -1,188 +1,390 @@
 <x-layouts.app>
-    <x-slot:title>
-        Contact Us - CleMwa Developers
-    </x-slot:title>
+    <x-slot name="title">{{ $settings->seo_title ?? 'Contact Us - CleMwa Developers' }}</x-slot>
+    <x-slot name="meta_description">{{ $settings->seo_description ?? 'Reach out to CleMwa Developers for consultations, support, or partnership opportunities. Let\'s build something amazing together.' }}</x-slot>
 
-    <div class="relative pt-32 pb-20 min-h-screen bg-[#050507]">
-        <!-- Background glows (kept circular since they are just blurry background effects) -->
-        <div class="absolute top-1/4 left-0 w-[500px] h-[500px] bg-sky-500/20 rounded-full blur-[120px] pointer-events-none animate-pulse" style="animation-duration: 4s;"></div>
-        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-violet-500/20 rounded-full blur-[120px] pointer-events-none animate-pulse" style="animation-duration: 6s; animation-delay: 2s;"></div>
+    {{-- ===================== HERO ===================== --}}
+    <section class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 overflow-hidden bg-[#05050A]">
+        <div class="absolute inset-0 bg-grid-slate-400/[0.05] bg-[bottom_1px_center] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+        <div class="absolute top-1/4 left-0 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <!-- Header -->
-            <div class="text-center max-w-3xl mx-auto mb-16 gsap-reveal">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-sky-500/10 border border-sky-500/20 text-sky-400 text-sm font-bold uppercase tracking-widest mb-6 hover:bg-sky-500/20 transition-colors cursor-default">
-                    <svg class="w-4 h-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    Get In Touch
-                </div>
-                <h1 class="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight leading-tight">Let's build the <br><span class="text-sky-400">future together.</span></h1>
-                <p class="text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
-                    Have a project in mind? We'd love to hear about it. Send us a message and our experts will respond as soon as possible.
-                </p>
+        <div class="container mx-auto px-4 relative z-10 text-center max-w-4xl">
+            {{-- Breadcrumb --}}
+            <nav class="flex justify-center mb-8 text-sm text-slate-400" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="/" class="hover:text-white transition-colors">Home</a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <svg class="w-3 h-3 mx-1 text-slate-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                            </svg>
+                            <span class="ml-1 md:ml-2 text-white">Contact</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-400 text-xs font-semibold tracking-widest uppercase mb-6">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse"></span>
+                Get In Touch
             </div>
 
-            <!-- Contact Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start max-w-6xl mx-auto">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+                {!! $settings->hero_title ?? 'Let\'s Build Something<br><span class="text-sky-400">Amazing Together</span>' !!}
+            </h1>
+
+            <p class="text-lg md:text-xl text-slate-400 leading-relaxed mb-10 mx-auto max-w-2xl">
+                {{ $settings->hero_subtitle ?? 'Have a project in mind? We\'d love to hear from you. Reach out to our team for consultations, support, or partnership opportunities.' }}
+            </p>
+        </div>
+    </section>
+
+    {{-- ===================== CONTACT CARDS ===================== --}}
+    <section class="py-12 bg-[#0B0B0F] border-t border-b border-white/5 relative z-20 -mt-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                 
-                <!-- Contact Information -->
-                <div class="space-y-8">
-                    <div class="glass p-8 rounded-sm border border-white/10 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-500 gsap-reveal" style="transition-delay: 100ms;">
-                        <div class="absolute inset-0 bg-sky-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div class="relative z-10 flex items-start gap-6">
-                            <div class="w-14 h-14 rounded-sm bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(14,165,233,0.2)] group-hover:shadow-[0_0_25px_rgba(14,165,233,0.4)]">
-                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold text-white mb-2">Email Us</h3>
-                                <p class="text-slate-400 mb-3">Our friendly team is here to help.</p>
-                                <a href="mailto:hello@clemwadevs.com" class="text-sky-400 hover:text-sky-300 font-bold tracking-wide transition-colors flex items-center gap-2 group/link">
-                                    hello@clemwadevs.com
-                                    <svg class="w-4 h-4 opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                                </a>
-                            </div>
-                        </div>
+                {{-- General Inquiries --}}
+                <div class="p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
+                    <div class="w-12 h-12 rounded bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-envelope text-xl"></i>
                     </div>
-
-                    <div class="glass p-8 rounded-sm border border-white/10 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-500 gsap-reveal" style="transition-delay: 200ms;">
-                        <div class="absolute inset-0 bg-violet-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div class="relative z-10 flex items-start gap-6">
-                            <div class="w-14 h-14 rounded-sm bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(139,92,246,0.2)] group-hover:shadow-[0_0_25px_rgba(139,92,246,0.4)]">
-                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold text-white mb-2">Visit Us</h3>
-                                <p class="text-slate-400 mb-3">Come say hello at our office HQ.</p>
-                                <p class="text-violet-400 font-bold tracking-wide">Nairobi, Kenya</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="glass p-8 rounded-sm border border-white/10 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-500 gsap-reveal" style="transition-delay: 300ms;">
-                        <div class="absolute inset-0 bg-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div class="relative z-10 flex items-start gap-6">
-                            <div class="w-14 h-14 rounded-sm bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(16,185,129,0.2)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.4)]">
-                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold text-white mb-2">Call Us</h3>
-                                <p class="text-slate-400 mb-3">Mon-Fri from 8am to 5pm.</p>
-                                <a href="tel:+254700000000" class="text-emerald-400 hover:text-emerald-300 font-bold tracking-wide transition-colors flex items-center gap-2 group/link">
-                                    +254 700 000 000
-                                    <svg class="w-4 h-4 opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">General Inquiries</h3>
+                    @if($settings->general_email)
+                    <a href="mailto:{{ $settings->general_email }}" class="block text-sm text-slate-400 hover:text-sky-400 transition-colors mb-1">{{ $settings->general_email }}</a>
+                    @endif
+                    @if($settings->general_phone)
+                    <a href="tel:{{ str_replace(' ', '', $settings->general_phone) }}" class="block text-sm text-slate-400 hover:text-sky-400 transition-colors">{{ $settings->general_phone }}</a>
+                    @endif
                 </div>
 
-                <!-- Contact Form -->
-                <div class="glass p-10 md:p-12 rounded-sm border border-white/10 shadow-2xl relative gsap-reveal" style="transition-delay: 400ms;">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/20 rounded-full blur-[60px] pointer-events-none"></div>
-                    <form action="#" method="POST" class="space-y-6 relative z-10">
-                        @csrf
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="space-y-2 group">
-                                <label for="first_name" class="block text-sm font-bold tracking-wider text-slate-400 uppercase group-focus-within:text-sky-400 transition-colors">First Name</label>
-                                <input type="text" id="first_name" name="first_name" class="w-full bg-[#050507]/50 backdrop-blur-sm border border-white/10 rounded-sm px-5 py-4 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all hover:bg-[#050507]" required placeholder="John">
-                            </div>
-                            <div class="space-y-2 group">
-                                <label for="last_name" class="block text-sm font-bold tracking-wider text-slate-400 uppercase group-focus-within:text-sky-400 transition-colors">Last Name</label>
-                                <input type="text" id="last_name" name="last_name" class="w-full bg-[#050507]/50 backdrop-blur-sm border border-white/10 rounded-sm px-5 py-4 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all hover:bg-[#050507]" required placeholder="Doe">
-                            </div>
-                        </div>
+                {{-- Sales --}}
+                <div class="p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
+                    <div class="w-12 h-12 rounded bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-chart-line text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Sales</h3>
+                    @if($settings->sales_email)
+                    <a href="mailto:{{ $settings->sales_email }}" class="block text-sm text-slate-400 hover:text-sky-400 transition-colors mb-1">{{ $settings->sales_email }}</a>
+                    @endif
+                    @if($settings->sales_phone)
+                    <a href="tel:{{ str_replace(' ', '', $settings->sales_phone) }}" class="block text-sm text-slate-400 hover:text-sky-400 transition-colors">{{ $settings->sales_phone }}</a>
+                    @endif
+                </div>
 
-                        <div class="space-y-2 group">
-                            <label for="email" class="block text-sm font-bold tracking-wider text-slate-400 uppercase group-focus-within:text-sky-400 transition-colors">Email Address</label>
-                            <input type="email" id="email" name="email" class="w-full bg-[#050507]/50 backdrop-blur-sm border border-white/10 rounded-sm px-5 py-4 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all hover:bg-[#050507]" required placeholder="john@example.com">
-                        </div>
+                {{-- Technical Support --}}
+                <div class="p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
+                    <div class="w-12 h-12 rounded bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-headset text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Technical Support</h3>
+                    @if($settings->support_email)
+                    <a href="mailto:{{ $settings->support_email }}" class="block text-sm text-slate-400 hover:text-sky-400 transition-colors mb-1">{{ $settings->support_email }}</a>
+                    @endif
+                    @if($settings->help_desk_url)
+                    <a href="{{ $settings->help_desk_url }}" target="_blank" rel="noopener" class="block text-sm text-sky-400 font-semibold hover:underline">Visit Help Desk &rarr;</a>
+                    @endif
+                </div>
 
-                        <div class="space-y-2 group">
-                            <label for="subject" class="block text-sm font-bold tracking-wider text-slate-400 uppercase group-focus-within:text-sky-400 transition-colors">Subject</label>
-                            <input type="text" id="subject" name="subject" value="{{ request('subject') ? Str::title(str_replace('-', ' ', request('subject'))) : '' }}" class="w-full bg-[#050507]/50 backdrop-blur-sm border border-white/10 rounded-sm px-5 py-4 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all hover:bg-[#050507]" required placeholder="How can we help?">
-                        </div>
+                {{-- Partnerships --}}
+                <div class="p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
+                    <div class="w-12 h-12 rounded bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-handshake text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Partnerships</h3>
+                    @if($settings->partnership_email)
+                    <a href="mailto:{{ $settings->partnership_email }}" class="block text-sm text-slate-400 hover:text-sky-400 transition-colors mb-1">{{ $settings->partnership_email }}</a>
+                    @endif
+                    @if($settings->careers_email)
+                    <div class="mt-3 pt-3 border-t border-white/5">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-widest block mb-1">Careers</span>
+                        <a href="mailto:{{ $settings->careers_email }}" class="block text-sm text-slate-400 hover:text-sky-400 transition-colors">{{ $settings->careers_email }}</a>
+                    </div>
+                    @endif
+                </div>
 
-                        <div class="space-y-2 group">
-                            <label for="message" class="block text-sm font-bold tracking-wider text-slate-400 uppercase group-focus-within:text-sky-400 transition-colors">Message</label>
-                            <textarea id="message" name="message" rows="5" class="w-full bg-[#050507]/50 backdrop-blur-sm border border-white/10 rounded-sm px-5 py-4 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all hover:bg-[#050507] resize-none" required placeholder="Tell us about your project..."></textarea>
-                        </div>
+            </div>
+        </div>
+    </section>
 
-                        <button type="submit" class="w-full py-5 bg-sky-500 hover:bg-sky-400 text-white font-black tracking-widest uppercase rounded-sm transition-all shadow-[0_0_20px_rgba(14,165,233,0.2)] hover:shadow-[0_0_40px_rgba(14,165,233,0.4)] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 group">
-                            <span>Send Message</span>
-                            <svg class="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+    {{-- ===================== FORM & MAP SECTION ===================== --}}
+    <section class="py-24 bg-[#05050A]" x-data="{
+        formType: 'inquiry',
+        submitting: false,
+        async submitForm(event, type) {
+            this.submitting = true;
+            const form = event.target;
+            const formData = new FormData(form);
+            formData.set('type', type);
+            try {
+                const res = await fetch('/contact', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: formData,
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    const firstError = data.errors ? Object.values(data.errors)[0][0] : (data.message || 'Something went wrong. Please try again.');
+                    this.$dispatch('show-dialog', { title: 'Something went wrong', message: firstError, type: 'error' });
+                } else {
+                    this.$dispatch('show-dialog', { title: 'Message Sent', message: data.message, type: 'success' });
+                    form.reset();
+                }
+            } catch (e) {
+                this.$dispatch('show-dialog', { title: 'Something went wrong', message: 'Please check your connection and try again.', type: 'error' });
+            } finally {
+                this.submitting = false;
+            }
+        }
+    }">
+        <div class="container mx-auto px-4 max-w-7xl">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-16">
+                
+                {{-- Form Area --}}
+                <div class="lg:col-span-3 order-2 lg:order-1">
+                    <div class="flex gap-4 mb-8">
+                        <button @click="formType = 'inquiry'" 
+                            :class="formType === 'inquiry' ? 'bg-sky-500 text-white' : 'bg-[#0B0B0F] text-slate-400 hover:text-white hover:bg-white/5'"
+                            class="px-6 py-3 rounded-sm font-bold text-sm transition-colors border border-white/5 flex-1">
+                            Project Inquiry
                         </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- What Happens Next Section -->
-            <div class="mt-32 max-w-6xl mx-auto">
-                <div class="text-center mb-16 gsap-reveal">
-                    <h2 class="text-3xl md:text-4xl font-black text-white mb-4">What happens next?</h2>
-                    <p class="text-slate-400 max-w-2xl mx-auto">We value your time. Here is our streamlined process to get your project moving quickly and efficiently.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-                    <!-- Connecting line for desktop -->
-                    <div class="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 bg-sky-500/20"></div>
-
-                    <!-- Step 1 -->
-                    <div class="text-center relative z-10 gsap-reveal" style="transition-delay: 100ms;">
-                        <div class="w-24 h-24 mx-auto bg-[#050507] border-4 border-sky-500/20 rounded-sm flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(14,165,233,0.1)] relative">
-                            <span class="text-3xl font-black text-sky-400">1</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">Discovery Call</h3>
-                        <p class="text-slate-400 leading-relaxed">Within 24 hours, our technical lead will reach out to schedule a brief call to understand your core requirements.</p>
+                        <button @click="formType = 'consultation'" 
+                            :class="formType === 'consultation' ? 'bg-indigo-500 text-white' : 'bg-[#0B0B0F] text-slate-400 hover:text-white hover:bg-white/5'"
+                            class="px-6 py-3 rounded-sm font-bold text-sm transition-colors border border-white/5 flex-1">
+                            Book Consultation
+                        </button>
                     </div>
 
-                    <!-- Step 2 -->
-                    <div class="text-center relative z-10 gsap-reveal" style="transition-delay: 200ms;">
-                        <div class="w-24 h-24 mx-auto bg-[#050507] border-4 border-violet-500/20 rounded-sm flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(139,92,246,0.1)] relative">
-                            <span class="text-3xl font-black text-violet-400">2</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">Technical Proposal</h3>
-                        <p class="text-slate-400 leading-relaxed">We will draft a comprehensive proposal outlining architecture, timelines, and an accurate project estimate.</p>
-                    </div>
+                    <div class="p-8 md:p-10 rounded-sm bg-[#0B0B0F] border border-white/5 shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-sky-500/5 rounded-full blur-[80px] pointer-events-none"></div>
+                        
+                        {{-- Inquiry Form --}}
+                        <form x-show="formType === 'inquiry'" @submit.prevent="submitForm($event, 'inquiry')" class="space-y-6 relative z-10" x-transition>
+                            @csrf
+                            <h3 class="text-2xl font-bold text-white mb-6">Tell us about your project</h3>
 
-                    <!-- Step 3 -->
-                    <div class="text-center relative z-10 gsap-reveal" style="transition-delay: 300ms;">
-                        <div class="w-24 h-24 mx-auto bg-[#050507] border-4 border-emerald-500/20 rounded-sm flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(16,185,129,0.1)] relative">
-                            <span class="text-3xl font-black text-emerald-400">3</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">Project Kickoff</h3>
-                        <p class="text-slate-400 leading-relaxed">Once approved, we assemble your dedicated engineering team and begin executing agile development sprints.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Full Name *</label>
+                                    <input type="text" name="name" required class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-sky-500 transition-colors">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Company Name</label>
+                                    <input type="text" name="company" class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-sky-500 transition-colors">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Email Address *</label>
+                                    <input type="email" name="email" required class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-sky-500 transition-colors">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Phone Number</label>
+                                    <input type="tel" name="phone" class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-sky-500 transition-colors">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Service Interested In</label>
+                                    <select name="service" class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-sky-500 transition-colors appearance-none">
+                                        <option value="">Select a service...</option>
+                                        <option value="custom_software">Custom Software Development</option>
+                                        <option value="web_app">Web Application</option>
+                                        <option value="mobile_app">Mobile Application</option>
+                                        <option value="enterprise">Enterprise Solution (ERP/POS)</option>
+                                        <option value="consulting">IT Consulting</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Budget Range</label>
+                                    <select name="budget" class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-sky-500 transition-colors appearance-none">
+                                        <option value="">Select a range...</option>
+                                        <option value="<5k">Less than $5,000</option>
+                                        <option value="5k-10k">$5,000 - $10,000</option>
+                                        <option value="10k-25k">$10,000 - $25,000</option>
+                                        <option value="25k-50k">$25,000 - $50,000</option>
+                                        <option value="50k+">$50,000+</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Message *</label>
+                                <textarea name="message" rows="4" required class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-sky-500 transition-colors resize-none">{{ $prefillSubject ? 'Regarding: '.\Illuminate\Support\Str::title(str_replace('-', ' ', $prefillSubject)) : '' }}</textarea>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <input type="checkbox" id="privacy" required class="mt-1 bg-[#05050A] border-white/20 rounded text-sky-500 focus:ring-sky-500 focus:ring-offset-[#0B0B0F]">
+                                <label for="privacy" class="text-sm text-slate-400">I agree to the <a href="/privacy-policy" class="text-sky-400 hover:underline">Privacy Policy</a> and consent to having my information processed to respond to this inquiry. *</label>
+                            </div>
+
+                            {{-- Honeypot --}}
+                            <div class="hidden">
+                                <input type="text" name="honeypot_field" value="">
+                            </div>
+
+                            <div class="pt-4 flex items-center justify-between">
+                                <button type="reset" class="text-sm text-slate-500 hover:text-slate-300 font-semibold transition-colors">Reset Form</button>
+                                <button type="submit" :disabled="submitting" class="px-8 py-4 bg-sky-500 hover:bg-sky-400 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold rounded-sm transition-all shadow-lg shadow-sky-500/20">
+                                    <span x-text="submitting ? 'Sending...' : 'Send Message'"></span>
+                                </button>
+                            </div>
+                        </form>
+
+                        {{-- Consultation Form --}}
+                        <form x-show="formType === 'consultation'" @submit.prevent="submitForm($event, 'consultation')" class="space-y-6 relative z-10" x-transition style="display: none;">
+                            @csrf
+                            <h3 class="text-2xl font-bold text-white mb-6">Schedule a Meeting</h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Full Name *</label>
+                                    <input type="text" name="name" required class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Email Address *</label>
+                                    <input type="email" name="email" required class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Preferred Date</label>
+                                    <input type="date" name="preferred_date" class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Preferred Time</label>
+                                    <input type="time" name="preferred_time" class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">Meeting Type</label>
+                                    <select name="meeting_type" class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors appearance-none">
+                                        <option value="google_meet">Google Meet</option>
+                                        <option value="zoom">Zoom</option>
+                                        <option value="phone">Phone Call</option>
+                                        <option value="in_person">In-Person (HQ)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold tracking-wider text-slate-400 uppercase">What would you like to discuss? *</label>
+                                <textarea name="message" rows="3" required class="w-full bg-[#05050A] border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
+                            </div>
+
+                            {{-- Honeypot --}}
+                            <div class="hidden">
+                                <input type="text" name="honeypot_field" value="">
+                            </div>
+
+                            <div class="pt-4 flex items-center justify-end">
+                                <button type="submit" :disabled="submitting" class="px-8 py-4 bg-indigo-500 hover:bg-indigo-400 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold rounded-sm transition-all shadow-lg shadow-indigo-500/20">
+                                    <span x-text="submitting ? 'Sending...' : 'Request Appointment'"></span>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
 
-            <!-- FAQ Section -->
-            <div class="mt-32 max-w-4xl mx-auto mb-20">
-                <div class="text-center mb-16 gsap-reveal">
-                    <h2 class="text-3xl md:text-4xl font-black text-white mb-4">Frequently Asked Questions</h2>
-                    <p class="text-slate-400 max-w-2xl mx-auto">Have a quick question? We might have already answered it below.</p>
-                </div>
-
-                <div class="space-y-6">
-                    <!-- FAQ 1 -->
-                    <div class="glass p-8 rounded-sm border border-white/10 gsap-reveal hover:bg-white/5 transition-colors" style="transition-delay: 100ms;">
-                        <h3 class="text-xl font-bold text-white mb-3">Do you take on equity-based partnerships?</h3>
-                        <p class="text-slate-400 leading-relaxed">Currently, we operate purely on a fee-for-service model to ensure our engineering teams remain completely dedicated and unbiased to your project's success without complicated equity negotiations.</p>
-                    </div>
+                {{-- Locations & Socials --}}
+                <div class="lg:col-span-2 order-1 lg:order-2 space-y-10">
                     
-                    <!-- FAQ 2 -->
-                    <div class="glass p-8 rounded-sm border border-white/10 gsap-reveal hover:bg-white/5 transition-colors" style="transition-delay: 200ms;">
-                        <h3 class="text-xl font-bold text-white mb-3">Will I own the source code?</h3>
-                        <p class="text-slate-400 leading-relaxed">Absolutely. Upon final payment, all intellectual property, source code, and assets are fully transferred to you. We believe in transparency and complete client ownership.</p>
+                    {{-- Offices --}}
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-6">Our Offices</h3>
+                        <div class="space-y-6">
+                            @foreach($offices as $office)
+                            <div class="p-6 rounded-sm {{ $office->is_primary ? 'bg-sky-500/5 border-sky-500/20' : 'bg-[#0B0B0F] border-white/5' }} border relative">
+                                @if($office->is_primary)
+                                <div class="absolute top-4 right-4 text-[10px] font-bold tracking-widest uppercase text-sky-400 bg-sky-500/10 px-2 py-1 rounded">Headquarters</div>
+                                @endif
+                                <h4 class="text-xl font-bold text-white mb-1">{{ $office->name }}</h4>
+                                <div class="text-sm text-slate-400 mb-4">{{ $office->city ? $office->city . ', ' : '' }}{{ $office->country }}</div>
+                                
+                                <ul class="space-y-3 text-sm text-slate-300">
+                                    <li class="flex items-start gap-3">
+                                        <i class="fa-solid fa-location-dot mt-1 text-sky-400 shrink-0"></i>
+                                        <span>{{ $office->address }}</span>
+                                    </li>
+                                    @if($office->phone)
+                                    <li class="flex items-center gap-3">
+                                        <i class="fa-solid fa-phone text-sky-400 shrink-0"></i>
+                                        <span>{{ $office->phone }}</span>
+                                    </li>
+                                    @endif
+                                    @if($office->working_hours || $office->office_hours)
+                                    <li class="flex items-start gap-3">
+                                        <i class="fa-solid fa-clock mt-1 text-sky-400 shrink-0"></i>
+                                        <span class="whitespace-pre-line">{{ $office->working_hours ?? $office->office_hours }}</span>
+                                    </li>
+                                    @endif
+                                </ul>
+
+                                @if($office->map_embed_code)
+                                <div class="mt-6 aspect-video rounded overflow-hidden border border-white/10 grayscale hover:grayscale-0 transition-all duration-500">
+                                    {!! $office->map_embed_code !!}
+                                </div>
+                                @endif
+                            </div>
+                            @endforeach
+                        </div>
                     </div>
 
-                    <!-- FAQ 3 -->
-                    <div class="glass p-8 rounded-sm border border-white/10 gsap-reveal hover:bg-white/5 transition-colors" style="transition-delay: 300ms;">
-                        <h3 class="text-xl font-bold text-white mb-3">Do you provide ongoing support after launch?</h3>
-                        <p class="text-slate-400 leading-relaxed">Yes. We offer flexible Service Level Agreements (SLAs) ranging from standard monitoring and maintenance to dedicated engineering retainers for continuous feature development.</p>
+                    {{-- Social Media --}}
+                    @if($settings->social_links && count($settings->social_links) > 0)
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-4">Connect With Us</h3>
+                        <div class="flex flex-wrap gap-3">
+                            @foreach($settings->social_links as $social)
+                            <a href="{{ $social['url'] ?? '#' }}" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-sm bg-[#0B0B0F] border border-white/5 flex items-center justify-center text-slate-400 hover:text-sky-400 hover:border-sky-500/30 hover:bg-sky-500/5 transition-all group" aria-label="{{ $social['platform'] ?? '' }}">
+                                @if(!empty($social['icon']))
+                                <i class="{{ $social['icon'] }} text-xl group-hover:scale-110 transition-transform"></i>
+                                @else
+                                <span class="text-xs font-bold">{{ substr($social['platform'] ?? 'S', 0, 1) }}</span>
+                                @endif
+                            </a>
+                            @endforeach
+                        </div>
                     </div>
+                    @endif
+
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    {{-- ===================== FAQS ===================== --}}
+    @if($faqs->count() > 0)
+    <section class="py-24 bg-[#0B0B0F] border-t border-white/5">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+                <p class="text-lg text-slate-400">Find quick answers to common questions about working with us.</p>
+            </div>
+
+            <div class="space-y-4" x-data="{ openFaq: null }">
+                @foreach($faqs as $i => $faq)
+                <div class="rounded-sm bg-[#05050A] border border-white/5 overflow-hidden transition-all duration-300 hover:border-sky-500/20" :class="openFaq === {{ $i }} ? 'ring-1 ring-sky-500/20' : ''">
+                    <button @click="openFaq = openFaq === {{ $i }} ? null : {{ $i }}" class="w-full flex items-center justify-between p-6 text-left">
+                        <span class="font-bold text-white pr-8 text-lg">{{ $faq->question }}</span>
+                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 transition-transform duration-300" :class="openFaq === {{ $i }} ? 'rotate-180 bg-sky-500/10 text-sky-400' : 'text-slate-400'">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                    </button>
+                    <div x-show="openFaq === {{ $i }}" x-collapse>
+                        <div class="px-6 pb-6 pt-0 text-slate-400 leading-relaxed border-t border-white/5 mt-2 pt-4">
+                            {!! nl2br(e($faq->answer)) !!}
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
 </x-layouts.app>

@@ -17,7 +17,9 @@ class TechnologyResource extends Resource
 {
     protected static ?string $model = Technology::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-code-bracket';
+
+    protected static ?string $navigationGroup = 'Marketing';
 
     public static function form(Form $form): Form
     {
@@ -28,8 +30,8 @@ class TechnologyResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Textarea::make('icon_svg')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('icon_url')
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('icon_url')
+                    ->image(),
                 Forms\Components\TextInput::make('delay')
                     ->required()
                     ->numeric()
@@ -43,8 +45,7 @@ class TechnologyResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('icon_url')
-                    ->searchable(),
+                Tables\Columns\ImageColumn::make('icon_url'),
                 Tables\Columns\TextColumn::make('delay')
                     ->numeric()
                     ->sortable(),

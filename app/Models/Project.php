@@ -10,26 +10,16 @@ class Project extends Model
 {
     use HasUuids;
     
-    protected $fillable = [
-        'title',
-        'subtitle',
-        'description',
-        'content',
-        'challenge',
-        'solution',
-        'results',
-        'client_name',
-        'industry',
-        'project_type',
-        'image_url',
-        'tags',
-        'requires_quote',
-        'color_theme',
-        'delay',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'tags' => 'array',
         'requires_quote' => 'boolean',
+        'gallery' => 'array',
+        'technologies' => 'array',
+        'features_delivered' => 'array',
+        'stats' => 'array',
+        'is_featured' => 'boolean',
+        'completion_date' => 'date',
     ];
 }

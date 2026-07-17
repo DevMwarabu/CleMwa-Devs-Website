@@ -10,14 +10,16 @@ class Service extends Model
 {
     use HasUuids;
 
-    protected $fillable = [
-        'slug',
-        'title',
-        'description',
-        'content',
-        'icon_svg',
-        'color_theme',
-        'image_url',
-        'delay'
+    protected $guarded = [];
+
+    protected $casts = [
+        'key_features' => 'array',
+        'business_benefits' => 'array',
+        'is_featured' => 'boolean',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(ServiceCategory::class, 'service_category_id');
+    }
 }

@@ -17,7 +17,9 @@ class TeamMemberResource extends Resource
 {
     protected static ?string $model = TeamMember::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
+    protected static ?string $navigationGroup = 'About';
 
     public static function form(Form $form): Form
     {
@@ -35,10 +37,12 @@ class TeamMemberResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('experience_years')
                     ->numeric(),
-                Forms\Components\TextInput::make('expertise'),
-                Forms\Components\TextInput::make('social_links'),
-                Forms\Components\TextInput::make('photo_url')
-                    ->maxLength(255),
+                Forms\Components\TagsInput::make('expertise')
+                    ->columnSpanFull(),
+                Forms\Components\KeyValue::make('social_links')
+                    ->columnSpanFull(),
+                Forms\Components\FileUpload::make('photo_url')
+                    ->image(),
                 Forms\Components\TextInput::make('order_column')
                     ->required()
                     ->numeric()
@@ -59,8 +63,7 @@ class TeamMemberResource extends Resource
                 Tables\Columns\TextColumn::make('experience_years')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('photo_url')
-                    ->searchable(),
+                Tables\Columns\ImageColumn::make('photo_url'),
                 Tables\Columns\TextColumn::make('order_column')
                     ->numeric()
                     ->sortable(),

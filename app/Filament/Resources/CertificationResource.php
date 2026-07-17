@@ -17,7 +17,9 @@ class CertificationResource extends Resource
 {
     protected static ?string $model = Certification::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-shield-check';
+
+    protected static ?string $navigationGroup = 'About';
 
     public static function form(Form $form): Form
     {

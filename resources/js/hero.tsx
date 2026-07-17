@@ -5,6 +5,9 @@ import MacbookScrollDemo from './Components/MacbookScrollDemo';
 
 const rootElement = document.getElementById('react-hero-background');
 if (rootElement) {
+    const settingsRaw = rootElement.getAttribute('data-settings');
+    const settings = settingsRaw ? JSON.parse(settingsRaw) : {};
+    
     const root = createRoot(rootElement);
     root.render(
         <div className="relative w-full h-full min-h-screen bg-black">
@@ -15,7 +18,7 @@ if (rootElement) {
             <div className="absolute inset-x-0 top-0 h-[10vh] bg-gradient-to-b from-black to-transparent z-0 pointer-events-none" />
             
             <div className="relative z-10 w-full">
-               <MacbookScrollDemo />
+               <MacbookScrollDemo settings={settings} />
             </div>
         </div>
     );
