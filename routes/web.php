@@ -75,6 +75,9 @@ Route::get('/security', function () {
     return view('security', ['title' => 'Security - CleMwa Developers']);
 });
 
+// Redirect old /admin URL → React dashboard
+Route::redirect('/admin', '/dashboard', 301);
+
 Route::get('/dashboard', function () {
     $publishedPosts = \App\Models\Post::where('is_published', true)->count();
     $pendingTestimonials = \App\Models\Testimonial::where('is_approved', false)->count();
