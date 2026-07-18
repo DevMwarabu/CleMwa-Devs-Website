@@ -75,32 +75,10 @@ Route::get('/security', function () {
     return view('security', ['title' => 'Security - CleMwa Developers']);
 });
 
-// Redirect old /admin URL → React dashboard
-Route::redirect('/admin', '/dashboard', 301);
+// Redirect old /admin URL → the standalone React admin app (separate origin/dev server)
+Route::get('/admin', fn () => redirect()->away(env('FRONTEND_URL', 'http://localhost:5173').'/dashboard', 301));
 
-Route::get('/dashboard', function () {
-    $publishedPosts = \App\Models\Post::where('is_published', true)->count();
-    $pendingTestimonials = \App\Models\Testimonial::where('is_approved', false)->count();
-    $totalProjects = \App\Models\Project::count();
-    $totalServices = \App\Models\Service::count();
 
-    $leadsThisMonth = \App\Models\Lead::whereMonth('created_at', now()->month)
-        ->whereYear('created_at', now()->year)
-        ->count();
-
-    $recentLeads = \App\Models\Lead::latest()->take(5)->get();
-
-    return Inertia::render('Dashboard', [
-        'stats' => [
-            'published_posts' => $publishedPosts,
-            'pending_testimonials' => $pendingTestimonials,
-            'total_projects' => $totalProjects,
-            'total_services' => $totalServices,
-            'leads_this_month' => $leadsThisMonth,
-        ],
-        'recentLeads' => $recentLeads,
-    ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -108,7 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 use App\Http\Controllers\PageController;
 

@@ -9,6 +9,7 @@
         "skipLibCheck": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
+        "noEmit": true,
         "baseUrl": ".",
         "paths": {
             "@/*": ["resources/js/*"],

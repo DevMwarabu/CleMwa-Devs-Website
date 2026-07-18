@@ -3,19 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class Post extends Model
+class DropdownOption extends Model
 {
     use HasUuids;
 
     protected $guarded = [];
 
     protected $casts = [
-        'tags' => 'array',
-        'is_published' => 'boolean',
-        'published_at' => 'datetime',
+        'is_active' => 'boolean',
+        'sort_order' => 'integer',
     ];
-
 }
