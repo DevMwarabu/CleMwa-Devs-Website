@@ -98,4 +98,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/team-members/{teamMember}', [\App\Http\Controllers\Api\TeamMemberController::class, 'show']);
     Route::put('/team-members/{teamMember}', [\App\Http\Controllers\Api\TeamMemberController::class, 'update']);
     Route::delete('/team-members/{teamMember}', [\App\Http\Controllers\Api\TeamMemberController::class, 'destroy']);
+
+    // Users — full CRUD
+    Route::get('/users', [\App\Http\Controllers\Api\UserController::class, 'index']);
+    Route::post('/users', [\App\Http\Controllers\Api\UserController::class, 'store']);
+    Route::get('/users/{user}', [\App\Http\Controllers\Api\UserController::class, 'show']);
+    Route::put('/users/{user}', [\App\Http\Controllers\Api\UserController::class, 'update']);
+    Route::delete('/users/{user}', [\App\Http\Controllers\Api\UserController::class, 'destroy']);
 });
