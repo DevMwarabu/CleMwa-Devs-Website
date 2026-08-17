@@ -4,6 +4,7 @@ import { MacbookScroll } from "./ui/macbook-scroll";
 export default function MacbookScrollDemo({ settings }: { settings?: any }) {
   const headline = settings?.hero_headline || "Engineering Digital Excellence.";
   const highlight = settings?.hero_headline_highlight || "CleMwa Developers.";
+  const featuredProject = settings?.featured_project;
 
   return (
     <div className="w-full bg-transparent text-white relative">
@@ -18,10 +19,10 @@ export default function MacbookScrollDemo({ settings }: { settings?: any }) {
             <span className="text-white font-bold text-xs">Cle</span>
           </div>
         }
-        src={`/images/admin_login_bg.png`}
+        src={featuredProject?.image_url || `/images/admin_login_bg.png`}
         showGradient={false}
-        projectTitle="CleMwa POS Cloud"
-        projectDescription="An enterprise-grade point of sale ecosystem built for modern retail."
+        projectTitle={featuredProject?.title || "Featured Work"}
+        projectDescription={featuredProject?.short_description || "See our latest projects in the portfolio."}
       />
     </div>
   );

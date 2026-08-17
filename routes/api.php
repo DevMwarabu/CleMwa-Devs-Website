@@ -23,6 +23,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Leads
     Route::get('/leads', [LeadController::class, 'index']);
+    Route::get('/leads/{lead}', [LeadController::class, 'show']);
+    Route::put('/leads/{lead}', [LeadController::class, 'update']);
+    Route::delete('/leads/{lead}', [LeadController::class, 'destroy']);
 
     // Projects — full CRUD
     Route::get('/projects', [ProjectController::class, 'index']);
@@ -52,6 +55,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/testimonials/{testimonial}', [\App\Http\Controllers\Api\TestimonialController::class, 'update']);
     Route::delete('/testimonials/{testimonial}', [\App\Http\Controllers\Api\TestimonialController::class, 'destroy']);
 
+    // Flagship Products — full CRUD
+    Route::get('/products', [\App\Http\Controllers\Api\FlagshipProductController::class, 'index']);
+    Route::post('/products', [\App\Http\Controllers\Api\FlagshipProductController::class, 'store']);
+    Route::get('/products/{flagshipProduct}', [\App\Http\Controllers\Api\FlagshipProductController::class, 'show']);
+    Route::put('/products/{flagshipProduct}', [\App\Http\Controllers\Api\FlagshipProductController::class, 'update']);
+    Route::delete('/products/{flagshipProduct}', [\App\Http\Controllers\Api\FlagshipProductController::class, 'destroy']);
+
     // File uploads
     Route::post('/upload/image', [UploadController::class, 'image']);
 
@@ -66,4 +76,26 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Page Settings (Customize Site)
     Route::get('/page-settings/{page}', [\App\Http\Controllers\Api\PageSettingsController::class, 'show']);
     Route::put('/page-settings/{page}', [\App\Http\Controllers\Api\PageSettingsController::class, 'update']);
+
+    // Office Locations — full CRUD
+    Route::get('/office-locations', [\App\Http\Controllers\Api\OfficeLocationController::class, 'index']);
+    Route::post('/office-locations', [\App\Http\Controllers\Api\OfficeLocationController::class, 'store']);
+    Route::get('/office-locations/{officeLocation}', [\App\Http\Controllers\Api\OfficeLocationController::class, 'show']);
+    Route::put('/office-locations/{officeLocation}', [\App\Http\Controllers\Api\OfficeLocationController::class, 'update']);
+    Route::delete('/office-locations/{officeLocation}', [\App\Http\Controllers\Api\OfficeLocationController::class, 'destroy']);
+
+    // Newsletter Subscribers — read + remove (created via the public site)
+    Route::get('/newsletter-subscribers', [\App\Http\Controllers\Api\NewsletterSubscriberController::class, 'index']);
+    Route::delete('/newsletter-subscribers/{newsletterSubscriber}', [\App\Http\Controllers\Api\NewsletterSubscriberController::class, 'destroy']);
+
+    // Presence (who's online, and on which admin page)
+    Route::post('/presence/heartbeat', [\App\Http\Controllers\Api\PresenceController::class, 'heartbeat']);
+    Route::get('/presence', [\App\Http\Controllers\Api\PresenceController::class, 'index']);
+
+    // Team Members — full CRUD
+    Route::get('/team-members', [\App\Http\Controllers\Api\TeamMemberController::class, 'index']);
+    Route::post('/team-members', [\App\Http\Controllers\Api\TeamMemberController::class, 'store']);
+    Route::get('/team-members/{teamMember}', [\App\Http\Controllers\Api\TeamMemberController::class, 'show']);
+    Route::put('/team-members/{teamMember}', [\App\Http\Controllers\Api\TeamMemberController::class, 'update']);
+    Route::delete('/team-members/{teamMember}', [\App\Http\Controllers\Api\TeamMemberController::class, 'destroy']);
 });

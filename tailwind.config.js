@@ -71,12 +71,12 @@ export default {
         function ({ addUtilities }) {
             addUtilities({
                 '.glass': {
-                    background: 'rgba(255, 255, 255, 0.04)',
+                    background: 'var(--glass-bg, rgba(255, 255, 255, 0.04))',
                     'backdrop-filter': 'blur(12px)',
                     '-webkit-backdrop-filter': 'blur(12px)',
                 },
                 '.glass-dark': {
-                    background: 'rgba(0, 0, 0, 0.3)',
+                    background: 'var(--glass-dark-bg, rgba(0, 0, 0, 0.3))',
                     'backdrop-filter': 'blur(12px)',
                     '-webkit-backdrop-filter': 'blur(12px)',
                 },

@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth dark">
     <head>
+        @include('partials.gtag-head')
+        @include('partials.gtm-head')
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <title>{{ $title ?? 'CleMwa Developers - Engineering Digital Excellence' }}</title>
         <meta name="description" content="We build secure, scalable and intelligent software solutions that transform businesses.">
-        
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+        <link rel="alternate icon" href="/favicon.ico">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
         <!-- Fonts Preconnect -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         
@@ -33,7 +41,8 @@
 
     </head>
     <body class="bg-primary-500 text-white font-sans antialiased selection:bg-accent-500 selection:text-white min-h-screen flex flex-col relative overflow-x-hidden">
-        
+        @include('partials.gtm-body')
+
         <!-- Aurora Background -->
         <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
             <div class="absolute -top-[30%] -left-[10%] w-[70%] h-[70%] rounded-sm bg-accent-500/20 blur-[120px] animate-aurora"></div>

@@ -190,9 +190,9 @@
                 <p class="text-lg text-slate-400">The brilliant minds behind our innovative solutions.</p>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div class="flex flex-wrap justify-center gap-8">
                 @foreach($teamMembers as $member)
-                <div class="group relative rounded-2xl bg-[#0B0B0F] border border-white/5 overflow-hidden hover:border-sky-500/30 transition-all">
+                <div class="group relative rounded-2xl bg-[#0B0B0F] border border-white/5 overflow-hidden hover:border-sky-500/30 transition-all w-full max-w-[300px] text-center">
                     <div class="aspect-square overflow-hidden bg-[#12121A]">
                         @if($member->photo_url)
                             <img src="{{ Str::startsWith($member->photo_url, 'http') ? $member->photo_url : Storage::url($member->photo_url) }}" alt="{{ $member->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
@@ -210,9 +210,9 @@
                         @if($member->biography)
                             <p class="text-slate-400 text-sm mb-4 line-clamp-3">{{ $member->biography }}</p>
                         @endif
-                        
+
                         @if($member->social_links)
-                        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-white/5">
+                        <div class="flex items-center justify-center gap-3 mt-4 pt-4 border-t border-white/5">
                             @foreach($member->social_links as $link)
                                 <a href="{{ $link['url'] ?? '#' }}" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-white transition-colors">
                                     <i class="{{ $link['icon'] ?? 'fa-solid fa-link' }}"></i>

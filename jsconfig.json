@@ -1,11 +1,11 @@
 {
-    "extends": "./tsconfig.json",
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "@/*": ["resources/js/*"],
-            "ziggy-js": ["./vendor/tightenco/ziggy"]
+            "@/*": ["resources/js/*"]
         }
     },
-    "exclude": ["node_modules", "public"]
+    "include": [
+        "resources/js/**/*"
+    ]
 }

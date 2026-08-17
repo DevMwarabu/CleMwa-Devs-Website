@@ -16,4 +16,26 @@ class LeadController extends Controller
         $leads = Lead::orderBy('created_at', 'desc')->paginate(15);
         return response()->json($leads);
     }
+
+    public function show(Lead $lead)
+    {
+        return response()->json($lead);
+    }
+
+    public function update(Request $request, Lead $lead)
+    {
+        $validated = $request->validate([
+            'status' => 'nullable|string|in:new,contacted,converted,archived',
+            'notes'  => 'nullable|string',
+        ]);
+
+        $lead->update($validated);
+        return response()->json($lead);
+    }
+
+    public function destroy(Lead $lead)
+    {
+        $lead->delete();
+        return response()->json(['message' => 'Lead deleted successfully.']);
+    }
 }

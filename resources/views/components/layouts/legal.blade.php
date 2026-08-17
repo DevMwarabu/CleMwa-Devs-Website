@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth dark">
     <head>
+        @include('partials.gtag-head')
+        @include('partials.gtm-head')
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <title>{{ $title ?? 'Legal Documents - CleMwa Developers' }}</title>
         <meta name="description" content="{{ $description ?? 'Legal documentation for CleMwa Developers.' }}">
         <link rel="canonical" href="{{ url()->current() }}">
-        
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+        <link rel="alternate icon" href="/favicon.ico">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
         <!-- Open Graph Tags -->
         <meta property="og:title" content="{{ $title ?? 'Legal Documents - CleMwa Developers' }}">
         <meta property="og:description" content="{{ $description ?? 'Legal documentation for CleMwa Developers.' }}">
@@ -56,7 +64,8 @@
             scrollProgress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
             scrolled = window.scrollY > 20;
           ">
-        
+        @include('partials.gtm-body')
+
         <!-- Reading Progress Bar -->
         <div class="fixed top-0 left-0 h-1 bg-accent-500 z-[60] transition-all duration-150 ease-out no-print" 
              :style="`width: ${scrollProgress}%`"></div>
@@ -69,9 +78,7 @@
                     <!-- Logo -->
                     <div class="flex-shrink-0">
                         <a href="/" class="flex items-center gap-2 group">
-                            <div class="w-8 h-8 rounded-sm bg-gradient-to-tr from-accent-500 to-accent2-500 flex items-center justify-center text-white font-bold text-lg">
-                                C
-                            </div>
+                            <img src="/favicon.svg" alt="CleMwa Developers" class="w-8 h-8 rounded-sm">
                             <span class="font-heading font-bold text-lg text-white tracking-tight print-text-black">CleMwa<span class="text-slate-400 print-text-black">Devs</span></span>
                         </a>
                     </div>

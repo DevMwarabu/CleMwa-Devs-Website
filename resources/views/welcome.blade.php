@@ -1,7 +1,14 @@
 <x-layouts.app>
     @viteReactRefresh
     @vite('resources/js/hero.tsx')
-    <div id="react-hero-background" class="w-full"></div>
+    <div id="react-hero-background" class="w-full" data-settings="{{ json_encode([
+        'featured_project' => $featuredProject ? [
+            'title' => $featuredProject->title,
+            'short_description' => $featuredProject->short_description,
+            'image_url' => $featuredProject->image_url ? (Str::startsWith($featuredProject->image_url, 'http') ? $featuredProject->image_url : Storage::url($featuredProject->image_url)) : null,
+            'slug' => $featuredProject->slug,
+        ] : null,
+    ]) }}"></div>
 
     <!-- Trusted By Section -->
     <section class="py-12 relative z-10 bg-[#0B0B0F] border-b border-white/5">
@@ -166,7 +173,7 @@
                         <h3 class="text-lg font-bold text-white mb-2 leading-tight">{{ $project->title }}</h3>
                         <p class="text-sm text-slate-400 mb-5 line-clamp-3 flex-grow">{{ $project->description }}</p>
                         <div class="flex items-center justify-between mt-auto">
-                            <a href="/projects/{{ $project->id }}" class="inline-flex items-center text-sm text-white font-medium group-hover:text-{{ $project->color_theme }}-400 transition-colors">
+                            <a href="/projects/{{ $project->slug }}" class="inline-flex items-center text-sm text-white font-medium group-hover:text-{{ $project->color_theme }}-400 transition-colors">
                                 View Study <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                             </a>
                             @if($project->requires_quote)

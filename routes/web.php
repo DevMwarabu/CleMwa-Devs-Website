@@ -15,6 +15,7 @@ Route::get('/', function () {
         'technologies' => \App\Models\Technology::orderBy('delay')->get(),
         'statistics' => \App\Models\Statistic::orderBy('delay')->take(4)->get(),
         'testimonials' => \App\Models\Testimonial::latest()->take(3)->get(),
+        'featuredProject' => \App\Models\Project::where('is_featured', true)->orderBy('delay')->first(),
     ]);
 });
 
@@ -44,6 +45,10 @@ use App\Http\Controllers\ContactController;
 
 Route::get('/contact', [ContactController::class, 'index']);
 Route::post('/contact', [ContactController::class, 'store']);
+
+use App\Http\Controllers\NewsletterController;
+
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'store']);
 
 use App\Http\Controllers\AboutController;
 
