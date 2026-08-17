@@ -32,20 +32,28 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', Password::defaults()],
+            'password' => ['nullable', Password::defaults()],
             'role' => 'nullable|string|in:admin,editor',
+            'send_reset_link' => 'boolean',
         ]);
+
+        $password = $validated['password'] ?? \Illuminate\Support\Str::random(16);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'password' => Hash::make($password),
         ]);
 
         if (isset($validated['role'])) {
             $user->assignRole($validated['role']);
         } else {
             $user->assignRole('admin'); // default role
+        }
+
+        if ($request->boolean('send_reset_link')) {
+            $token = \Illuminate\Support\Facades\Password::getRepository()->create($user);
+            $user->sendPasswordResetNotification($token);
         }
 
         return response()->json($user, 201);
@@ -106,5 +114,15 @@ class UserController extends Controller
 
         $user->delete();
         return response()->json(null, 204);
+    }
+
+    /**
+     * Send a password reset link to the user.
+     */
+    public function sendResetLink(User $user)
+    {
+        $token = \Illuminate\Support\Facades\Password::getRepository()->create($user);
+        $user->sendPasswordResetNotification($token);
+        return response()->json(['message' => 'Password reset link sent.']);
     }
 }

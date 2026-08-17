@@ -105,4 +105,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/users/{user}', [\App\Http\Controllers\Api\UserController::class, 'show']);
     Route::put('/users/{user}', [\App\Http\Controllers\Api\UserController::class, 'update']);
     Route::delete('/users/{user}', [\App\Http\Controllers\Api\UserController::class, 'destroy']);
+    Route::post('/users/{user}/send-reset-link', [\App\Http\Controllers\Api\UserController::class, 'sendResetLink']);
 });
