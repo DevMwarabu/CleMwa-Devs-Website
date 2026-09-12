@@ -5,19 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Server;
 use App\Support\AuditLogger;
+use App\Support\MetricRangeQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ServerController extends Controller
 {
-    private const RANGES = [
-        '1h' => ['minutes' => 60, 'bucket' => null],
-        '6h' => ['minutes' => 360, 'bucket' => null],
-        '24h' => ['minutes' => 1440, 'bucket' => 'hour'],
-        '7d' => ['minutes' => 10080, 'bucket' => 'day'],
-    ];
-
     /**
      * Display a listing of the resource.
      */
@@ -104,10 +98,9 @@ class ServerController extends Controller
      */
     public function metricsHistory(Request $request, Server $server)
     {
-        $requestedRange = (string) $request->query('range', '1h');
-        $range = array_key_exists($requestedRange, self::RANGES) ? $requestedRange : '1h';
-        $config = self::RANGES[$range];
-        $since = now()->subMinutes($config['minutes']);
+        $range = MetricRangeQuery::resolve($request->query('range'));
+        $config = MetricRangeQuery::config($range);
+        $since = MetricRangeQuery::since($range);
 
         if ($config['bucket'] === null) {
             $rows = DB::table('server_metric_history')
@@ -119,37 +112,29 @@ class ServerController extends Controller
                 ->reverse()
                 ->values();
         } else {
+            // "Last observed row per bucket" via a window function rather
+            // than Postgres's DISTINCT ON — this app runs Postgres in
+            // production but SQLite in tests, and ROW_NUMBER() is portable
+            // to both, where DISTINCT ON only exists in Postgres.
+            $bucketExpr = MetricRangeQuery::bucketExpr('collected_at', $config['bucket']);
             $rows = collect(DB::select(
-                'select distinct on (bucket) date_trunc(?, collected_at) as bucket, cpu, memory, disk, collected_at
-                 from server_metric_history
-                 where server_id = ? and collected_at >= ?
-                 order by bucket, collected_at desc',
-                [$config['bucket'], $server->id, $since]
-            ))->sortBy('bucket')->values();
+                "select bucket, cpu, memory, disk, collected_at from (
+                    select {$bucketExpr} as bucket, cpu, memory, disk, collected_at,
+                           row_number() over (partition by {$bucketExpr} order by collected_at desc) as rn
+                    from server_metric_history
+                    where server_id = ? and collected_at >= ?
+                 ) ranked
+                 where rn = 1
+                 order by bucket",
+                [$server->id, $since]
+            ));
         }
 
         $points = $rows->map(function ($row) {
-            $cpu = json_decode($row->cpu ?? 'null', true);
-            $memory = json_decode($row->memory ?? 'null', true);
-            $disk = json_decode($row->disk ?? 'null', true);
-
-            $memoryPercent = null;
-            if (! empty($memory['total_mb'])) {
-                $memoryPercent = round(100 * $memory['used_mb'] / $memory['total_mb'], 1);
-            }
-
-            $diskPercent = null;
-            if (! empty($disk['filesystems'])) {
-                $root = collect($disk['filesystems'])->firstWhere('mount', '/') ?? $disk['filesystems'][0];
-                $diskPercent = $root['usage_percent'] ?? null;
-            }
-
-            return [
-                'collected_at' => Carbon::parse($row->collected_at)->toIso8601String(),
-                'cpu_percent' => $cpu['usage_percent'] ?? null,
-                'memory_percent' => $memoryPercent,
-                'disk_percent' => $diskPercent,
-            ];
+            return array_merge(
+                ['collected_at' => Carbon::parse($row->collected_at)->toIso8601String()],
+                MetricRangeQuery::extractPercentages($row->cpu, $row->memory, $row->disk)
+            );
         });
 
         return response()->json(['range' => $range, 'points' => $points]);
