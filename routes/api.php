@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\MaintenanceWindowController;
 use App\Http\Controllers\Api\MonitoringOverviewController;
 use App\Http\Controllers\Api\MonitoringSettingController;
 use App\Http\Controllers\Api\NewsletterSubscriberController;
+use App\Http\Controllers\Api\NotificationDeliveryController;
+use App\Http\Controllers\Api\NotificationPolicyController;
 use App\Http\Controllers\Api\NotificationSettingController;
 use App\Http\Controllers\Api\OfficeLocationController;
 use App\Http\Controllers\Api\PageSettingsController;
@@ -175,6 +177,10 @@ Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
         Route::get('/alert-events', [AlertEventController::class, 'index']);
         Route::get('/alert-silences', [AlertSilenceController::class, 'index']);
         Route::get('/maintenance-windows', [MaintenanceWindowController::class, 'index']);
+
+        // Notifications — monitoring platform Phase 7
+        Route::get('/notification-policies', [NotificationPolicyController::class, 'index']);
+        Route::get('/notification-deliveries', [NotificationDeliveryController::class, 'index']);
     });
     Route::middleware('permission:alerts.create')->post('/alert-rules', [AlertRuleController::class, 'store']);
     Route::middleware('permission:alerts.edit')->group(function () {
@@ -182,6 +188,9 @@ Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
         Route::post('/maintenance-windows', [MaintenanceWindowController::class, 'store']);
         Route::put('/maintenance-windows/{maintenanceWindow}', [MaintenanceWindowController::class, 'update']);
         Route::delete('/maintenance-windows/{maintenanceWindow}', [MaintenanceWindowController::class, 'destroy']);
+        Route::post('/notification-policies', [NotificationPolicyController::class, 'store']);
+        Route::put('/notification-policies/{notificationPolicy}', [NotificationPolicyController::class, 'update']);
+        Route::delete('/notification-policies/{notificationPolicy}', [NotificationPolicyController::class, 'destroy']);
     });
     Route::middleware('permission:alerts.delete')->delete('/alert-rules/{alertRule}', [AlertRuleController::class, 'destroy']);
     Route::middleware('permission:alerts.silence')->group(function () {

@@ -12,6 +12,7 @@ class AlertState extends Model
         'breach_started_at' => 'datetime',
         'fired_at' => 'datetime',
         'resolved_at' => 'datetime',
+        'last_notified_at' => 'datetime',
         'last_evaluated_at' => 'datetime',
         'current_value' => 'float',
     ];
