@@ -6,9 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Server;
 use App\Support\AuditLogger;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ServerController extends Controller
 {
+    private const RANGES = [
+        '1h' => ['minutes' => 60, 'bucket' => null],
+        '6h' => ['minutes' => 360, 'bucket' => null],
+        '24h' => ['minutes' => 1440, 'bucket' => 'hour'],
+        '7d' => ['minutes' => 10080, 'bucket' => 'day'],
+    ];
+
     /**
      * Display a listing of the resource.
      */
@@ -81,6 +90,69 @@ class ServerController extends Controller
         AuditLogger::log('server.token_rotated', 'Server', $server->id);
 
         return response()->json(['token' => $token]);
+    }
+
+    /**
+     * Historical CPU/memory/disk trend for a server. Short ranges (1h/6h)
+     * return raw points (capped at the most recent 500, chronological
+     * order); long ranges (24h/7d) return one "last observed" point per
+     * bucket (hour/day) via a DB-level DISTINCT ON, not a full row dump —
+     * this only ever computes the three scalar metrics actually charted
+     * (cpu.usage_percent, memory used %, root-filesystem used %). A fully
+     * generic arbitrary-metric query engine is deferred until dashboard
+     * panels need one.
+     */
+    public function metricsHistory(Request $request, Server $server)
+    {
+        $requestedRange = (string) $request->query('range', '1h');
+        $range = array_key_exists($requestedRange, self::RANGES) ? $requestedRange : '1h';
+        $config = self::RANGES[$range];
+        $since = now()->subMinutes($config['minutes']);
+
+        if ($config['bucket'] === null) {
+            $rows = DB::table('server_metric_history')
+                ->where('server_id', $server->id)
+                ->where('collected_at', '>=', $since)
+                ->orderByDesc('collected_at')
+                ->limit(500)
+                ->get(['cpu', 'memory', 'disk', 'collected_at'])
+                ->reverse()
+                ->values();
+        } else {
+            $rows = collect(DB::select(
+                'select distinct on (bucket) date_trunc(?, collected_at) as bucket, cpu, memory, disk, collected_at
+                 from server_metric_history
+                 where server_id = ? and collected_at >= ?
+                 order by bucket, collected_at desc',
+                [$config['bucket'], $server->id, $since]
+            ))->sortBy('bucket')->values();
+        }
+
+        $points = $rows->map(function ($row) {
+            $cpu = json_decode($row->cpu ?? 'null', true);
+            $memory = json_decode($row->memory ?? 'null', true);
+            $disk = json_decode($row->disk ?? 'null', true);
+
+            $memoryPercent = null;
+            if (! empty($memory['total_mb'])) {
+                $memoryPercent = round(100 * $memory['used_mb'] / $memory['total_mb'], 1);
+            }
+
+            $diskPercent = null;
+            if (! empty($disk['filesystems'])) {
+                $root = collect($disk['filesystems'])->firstWhere('mount', '/') ?? $disk['filesystems'][0];
+                $diskPercent = $root['usage_percent'] ?? null;
+            }
+
+            return [
+                'collected_at' => Carbon::parse($row->collected_at)->toIso8601String(),
+                'cpu_percent' => $cpu['usage_percent'] ?? null,
+                'memory_percent' => $memoryPercent,
+                'disk_percent' => $diskPercent,
+            ];
+        });
+
+        return response()->json(['range' => $range, 'points' => $points]);
     }
 
     private function validated(Request $request, ?Server $server = null): array
