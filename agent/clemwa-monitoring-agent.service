@@ -1,0 +1,9 @@
+[Unit]
+Description=CleMwa Devs monitoring agent (one-shot metrics push)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/bin/clemwa-monitoring-agent.py /etc/clemwa-monitoring-agent/config.json
+User=root
