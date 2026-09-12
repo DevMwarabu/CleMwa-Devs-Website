@@ -1,12 +1,17 @@
 <?php
 
 use App\Http\Controllers\Api\AgentController;
+use App\Http\Controllers\Api\AlertController;
+use App\Http\Controllers\Api\AlertEventController;
+use App\Http\Controllers\Api\AlertRuleController;
+use App\Http\Controllers\Api\AlertSilenceController;
 use App\Http\Controllers\Api\AuditLogController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DropdownOptionController;
 use App\Http\Controllers\Api\FlagshipProductController;
 use App\Http\Controllers\Api\LeadController;
+use App\Http\Controllers\Api\MaintenanceWindowController;
 use App\Http\Controllers\Api\MonitoringOverviewController;
 use App\Http\Controllers\Api\MonitoringSettingController;
 use App\Http\Controllers\Api\NewsletterSubscriberController;
@@ -161,4 +166,26 @@ Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
         Route::post('/servers/{server}/rotate-token', [ServerController::class, 'rotateToken']);
     });
     Route::middleware('permission:servers.delete')->delete('/servers/{server}', [ServerController::class, 'destroy']);
+
+    // Alert Engine — monitoring platform Phase 6
+    Route::middleware('permission:alerts.view')->group(function () {
+        Route::get('/alerts', [AlertController::class, 'index']);
+        Route::get('/alert-rules', [AlertRuleController::class, 'index']);
+        Route::get('/alert-rules/{alertRule}', [AlertRuleController::class, 'show']);
+        Route::get('/alert-events', [AlertEventController::class, 'index']);
+        Route::get('/alert-silences', [AlertSilenceController::class, 'index']);
+        Route::get('/maintenance-windows', [MaintenanceWindowController::class, 'index']);
+    });
+    Route::middleware('permission:alerts.create')->post('/alert-rules', [AlertRuleController::class, 'store']);
+    Route::middleware('permission:alerts.edit')->group(function () {
+        Route::put('/alert-rules/{alertRule}', [AlertRuleController::class, 'update']);
+        Route::post('/maintenance-windows', [MaintenanceWindowController::class, 'store']);
+        Route::put('/maintenance-windows/{maintenanceWindow}', [MaintenanceWindowController::class, 'update']);
+        Route::delete('/maintenance-windows/{maintenanceWindow}', [MaintenanceWindowController::class, 'destroy']);
+    });
+    Route::middleware('permission:alerts.delete')->delete('/alert-rules/{alertRule}', [AlertRuleController::class, 'destroy']);
+    Route::middleware('permission:alerts.silence')->group(function () {
+        Route::post('/alert-silences', [AlertSilenceController::class, 'store']);
+        Route::delete('/alert-silences/{alertSilence}', [AlertSilenceController::class, 'destroy']);
+    });
 });

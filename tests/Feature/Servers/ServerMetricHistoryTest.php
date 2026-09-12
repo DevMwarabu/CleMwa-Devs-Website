@@ -6,6 +6,7 @@ use App\Models\ServerMetricHistory;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
@@ -17,6 +18,15 @@ class ServerMetricHistoryTest extends TestCase
     {
         parent::setUp();
         $this->seed(RolePermissionSeeder::class);
+        // Pinned mid-hour so hour-bucket tests below can't flake depending
+        // on what minute the real clock happens to be at when the suite runs.
+        Carbon::setTestNow(Carbon::parse('2026-01-01 12:30:00'));
+    }
+
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow();
+        parent::tearDown();
     }
 
     private function registerServer(): array
