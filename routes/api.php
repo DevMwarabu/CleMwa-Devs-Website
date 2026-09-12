@@ -160,12 +160,14 @@ Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
     // Servers — monitoring platform Phase 2
     Route::middleware('permission:servers.view')->group(function () {
         Route::get('/servers', [ServerController::class, 'index']);
+        Route::get('/servers/compare/history', [ServerController::class, 'compareHistory']);
         Route::get('/servers/{server}', [ServerController::class, 'show']);
         Route::get('/servers/{server}/metrics/history', [ServerController::class, 'metricsHistory']);
 
         // Fleet-wide overview — monitoring platform Phase 5
         Route::get('/monitoring/overview', [MonitoringOverviewController::class, 'summary']);
         Route::get('/monitoring/overview/history', [MonitoringOverviewController::class, 'history']);
+        Route::get('/monitoring/overview/top', [MonitoringOverviewController::class, 'topN']);
     });
     Route::middleware('permission:servers.create')->post('/servers', [ServerController::class, 'store']);
     Route::middleware('permission:servers.edit')->group(function () {

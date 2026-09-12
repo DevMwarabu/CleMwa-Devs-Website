@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\HealthScoreCalculator;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
@@ -12,7 +13,7 @@ class Server extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['status'];
+    protected $appends = ['status', 'health_score'];
 
     protected $casts = [
         'tags' => 'array',
@@ -48,5 +49,10 @@ class Server extends Model
         }
 
         return $this->last_heartbeat_at->gt(now()->subSeconds(90)) ? 'online' : 'offline';
+    }
+
+    public function getHealthScoreAttribute(): array
+    {
+        return HealthScoreCalculator::calculate($this);
     }
 }

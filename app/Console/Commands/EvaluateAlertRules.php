@@ -10,6 +10,7 @@ use App\Models\NotificationDelivery;
 use App\Models\NotificationPolicy;
 use App\Models\NotificationSetting;
 use App\Models\Server;
+use App\Models\ServerMetricHistory;
 use App\Models\UptimeCheck;
 use App\Support\MetricRangeQuery;
 use App\Support\NotificationDispatcher;
@@ -22,6 +23,21 @@ class EvaluateAlertRules extends Command
     protected $description = 'Evaluate all enabled alert rules and dispatch notifications for anything notification-worthy';
 
     private const SERVER_METRIC_KEYS = ['cpu_percent', 'memory_percent', 'disk_percent'];
+
+    // Maps an anomaly rule's metric string to the percentage key it watches.
+    private const ANOMALY_METRIC_KEYS = [
+        'anomaly_cpu_percent' => 'cpu_percent',
+        'anomaly_memory_percent' => 'memory_percent',
+        'anomaly_disk_percent' => 'disk_percent',
+    ];
+
+    private const ANOMALY_WINDOW_MINUTES = 60;
+
+    private const ANOMALY_MIN_SAMPLES = 5;
+
+    // Default sensitivity when a rule doesn't set its own threshold — number
+    // of standard deviations from the recent mean before flagging a breach.
+    private const ANOMALY_DEFAULT_STDDEV_MULTIPLIER = 3.0;
 
     /** @var int[] AlertEvent ids created during this run */
     private array $newEventIds = [];
@@ -117,7 +133,61 @@ class EvaluateAlertRules extends Command
             return ['breached' => $this->compare($value, $rule->condition, (float) $rule->threshold), 'value' => $value];
         }
 
+        if (array_key_exists($rule->metric, self::ANOMALY_METRIC_KEYS)) {
+            return $this->evaluateAnomaly($rule, $server, self::ANOMALY_METRIC_KEYS[$rule->metric]);
+        }
+
         return null;
+    }
+
+    /**
+     * Statistical anomaly detection: flags a breach when the server's
+     * current reading is more than `threshold` standard deviations from the
+     * mean of its own recent history — no fixed percentage threshold, no ML
+     * infrastructure, just a moving mean/stddev over already-retained rows.
+     */
+    private function evaluateAnomaly(AlertRule $rule, Server $server, string $percentKey): ?array
+    {
+        $history = ServerMetricHistory::where('server_id', $server->id)
+            ->where('collected_at', '>=', now()->subMinutes(self::ANOMALY_WINDOW_MINUTES))
+            ->get(['cpu', 'memory', 'disk']);
+
+        $values = $history->map(function ($row) use ($percentKey) {
+            return MetricRangeQuery::extractPercentages(
+                json_encode($row->cpu),
+                json_encode($row->memory),
+                json_encode($row->disk),
+            )[$percentKey] ?? null;
+        })->filter(fn ($v) => $v !== null)->values();
+
+        if ($values->count() < self::ANOMALY_MIN_SAMPLES) {
+            return null; // not enough history yet to establish a baseline — don't fabricate a breach
+        }
+
+        $server->loadMissing('metric');
+        if (! $server->metric) {
+            return null;
+        }
+        $current = MetricRangeQuery::extractPercentages(
+            json_encode($server->metric->cpu),
+            json_encode($server->metric->memory),
+            json_encode($server->metric->disk),
+        )[$percentKey] ?? null;
+        if ($current === null) {
+            return null;
+        }
+
+        $mean = $values->avg();
+        $stddev = sqrt($values->map(fn ($v) => ($v - $mean) ** 2)->avg());
+
+        if ($stddev < 0.01) {
+            return ['breached' => false, 'value' => $current]; // flatlined history — nothing to compare against, avoid false positives
+        }
+
+        $multiplier = $rule->threshold ?: self::ANOMALY_DEFAULT_STDDEV_MULTIPLIER;
+        $zScore = abs($current - $mean) / $stddev;
+
+        return ['breached' => $zScore > $multiplier, 'value' => $current];
     }
 
     /**
