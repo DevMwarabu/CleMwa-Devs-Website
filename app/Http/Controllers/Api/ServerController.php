@@ -162,6 +162,8 @@ class ServerController extends Controller
             'tags.*' => 'string|max:100',
             'critical_services' => 'nullable|array',
             'critical_services.*' => 'string|max:100',
+            'log_files' => 'nullable|array',
+            'log_files.*' => 'string|max:255',
         ]);
     }
 }

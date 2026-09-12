@@ -17,6 +17,7 @@ class Server extends Model
     protected $casts = [
         'tags' => 'array',
         'critical_services' => 'array',
+        'log_files' => 'array',
         'last_heartbeat_at' => 'datetime',
     ];
 
@@ -28,6 +29,11 @@ class Server extends Model
     public function metricHistory()
     {
         return $this->hasMany(ServerMetricHistory::class);
+    }
+
+    public function logs()
+    {
+        return $this->hasMany(ServerLog::class);
     }
 
     /**

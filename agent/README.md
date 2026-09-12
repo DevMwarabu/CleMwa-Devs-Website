@@ -18,10 +18,13 @@ pushes it to the monitoring API. No pip installs required.
    sudo AGENT_TOKEN="<token from step 1>" \
         API_URL="https://clemwadevelopers.com" \
         CRITICAL_SERVICES="nginx,postgresql" \
+        LOG_FILES="/var/log/nginx/error.log,/var/log/syslog" \
         ./install.sh
    ```
    `CRITICAL_SERVICES` is optional — a comma-separated list of systemd unit
-   names this host should be checked for.
+   names this host should be checked for (also tailed via `journalctl` for
+   log collection). `LOG_FILES` is optional — a comma-separated list of
+   absolute log file paths this host should tail.
 
 This installs the script to `/usr/local/bin/clemwa-monitoring-agent.py`,
 writes `/etc/clemwa-monitoring-agent/config.json`, and enables a systemd

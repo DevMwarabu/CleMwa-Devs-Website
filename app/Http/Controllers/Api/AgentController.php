@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\ServerLog;
+use App\Support\LogLevelParser;
 use Illuminate\Http\Request;
 
 class AgentController extends Controller
@@ -45,6 +47,9 @@ class AgentController extends Controller
             'processes' => 'nullable|array',
             'services' => 'nullable|array',
             'docker' => 'nullable|array',
+            'logs' => 'nullable|array',
+            'logs.*.source' => 'required_with:logs|string|max:255',
+            'logs.*.message' => 'required_with:logs|string',
         ]);
 
         $server = $request->user();
@@ -71,6 +76,16 @@ class AgentController extends Controller
             'network' => $validated['network'] ?? null,
             'collected_at' => $collectedAt,
         ]);
+
+        foreach ($validated['logs'] ?? [] as $entry) {
+            ServerLog::create([
+                'server_id' => $server->id,
+                'source' => $entry['source'],
+                'level' => LogLevelParser::guess($entry['message']),
+                'message' => $entry['message'],
+                'logged_at' => $collectedAt,
+            ]);
+        }
 
         $server->update([
             'last_heartbeat_at' => $collectedAt,

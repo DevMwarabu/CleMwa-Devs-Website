@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\PresenceController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\ServerController;
+use App\Http\Controllers\Api\ServerLogController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\TeamMemberController;
 use App\Http\Controllers\Api\TestimonialController;
@@ -221,4 +222,8 @@ Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
     Route::middleware('permission:servers.create')->post('/uptime-checks', [UptimeCheckController::class, 'store']);
     Route::middleware('permission:servers.edit')->put('/uptime-checks/{uptimeCheck}', [UptimeCheckController::class, 'update']);
     Route::middleware('permission:servers.delete')->delete('/uptime-checks/{uptimeCheck}', [UptimeCheckController::class, 'destroy']);
+
+    // Logs — monitoring platform Phase 10
+    Route::middleware('permission:logs.view')->get('/servers/{server}/logs', [ServerLogController::class, 'index']);
+    Route::middleware('permission:logs.export')->get('/servers/{server}/logs/export', [ServerLogController::class, 'export']);
 });
