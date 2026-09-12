@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\AlertEvent;
 use App\Models\AlertRule;
 use App\Models\AlertState;
+use App\Models\Incident;
 use App\Models\NotificationDelivery;
 use App\Models\NotificationPolicy;
 use App\Models\NotificationSetting;
@@ -170,6 +171,38 @@ class EvaluateAlertRules extends Command
         ]);
 
         $this->newEventIds[] = $event->id;
+
+        if ($rule->severity === 'critical') {
+            $this->syncIncident($rule, $server, $to, $event, $occurredAt);
+        }
+    }
+
+    /**
+     * One incident per (rule, server) pair, auto-created on firing and
+     * auto-resolved when that same alert clears — not a cross-rule
+     * correlation engine (a deliberate scope line, see the Phase 8 plan).
+     */
+    private function syncIncident(AlertRule $rule, Server $server, string $to, AlertEvent $event, $occurredAt): void
+    {
+        $openIncident = Incident::where('alert_rule_id', $rule->id)
+            ->where('server_id', $server->id)
+            ->whereIn('status', ['open', 'acknowledged', 'investigating'])
+            ->first();
+
+        if ($to === 'firing') {
+            $incident = $openIncident ?? Incident::create([
+                'title' => "{$rule->name} — {$server->name}",
+                'severity' => $rule->severity,
+                'server_id' => $server->id,
+                'alert_rule_id' => $rule->id,
+                'status' => 'open',
+                'started_at' => $occurredAt,
+            ]);
+            $incident->alertEvents()->syncWithoutDetaching([$event->id]);
+        } elseif ($to === 'resolved' && $openIncident) {
+            $openIncident->update(['status' => 'resolved', 'resolved_at' => $occurredAt]);
+            $openIncident->alertEvents()->syncWithoutDetaching([$event->id]);
+        }
     }
 
     // -----------------------------------------------------------------

@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DropdownOptionController;
 use App\Http\Controllers\Api\FlagshipProductController;
+use App\Http\Controllers\Api\IncidentController;
 use App\Http\Controllers\Api\LeadController;
 use App\Http\Controllers\Api\MaintenanceWindowController;
 use App\Http\Controllers\Api\MonitoringOverviewController;
@@ -196,5 +197,15 @@ Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
     Route::middleware('permission:alerts.silence')->group(function () {
         Route::post('/alert-silences', [AlertSilenceController::class, 'store']);
         Route::delete('/alert-silences/{alertSilence}', [AlertSilenceController::class, 'destroy']);
+    });
+
+    // Incidents — monitoring platform Phase 8 (auto-created, not admin-created)
+    Route::middleware('permission:incidents.view')->group(function () {
+        Route::get('/incidents', [IncidentController::class, 'index']);
+        Route::get('/incidents/{incident}', [IncidentController::class, 'show']);
+    });
+    Route::middleware('permission:incidents.manage')->group(function () {
+        Route::put('/incidents/{incident}', [IncidentController::class, 'update']);
+        Route::post('/incidents/{incident}/notes', [IncidentController::class, 'addNote']);
     });
 });
