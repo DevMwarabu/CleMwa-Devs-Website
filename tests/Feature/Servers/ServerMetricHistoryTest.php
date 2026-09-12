@@ -68,6 +68,25 @@ class ServerMetricHistoryTest extends TestCase
         $this->assertSame(42, $points[0]['disk_percent']);
     }
 
+    public function test_history_endpoint_returns_bucketed_points_for_long_range(): void
+    {
+        [$serverId, , $admin] = $this->registerServer();
+
+        ServerMetricHistory::create(['server_id' => $serverId, 'cpu' => ['usage_percent' => 10], 'collected_at' => now()->subHours(2)]);
+        ServerMetricHistory::create(['server_id' => $serverId, 'cpu' => ['usage_percent' => 20], 'collected_at' => now()->subHours(2)->addMinutes(10)]);
+        ServerMetricHistory::create(['server_id' => $serverId, 'cpu' => ['usage_percent' => 30], 'collected_at' => now()->subHour()]);
+
+        $response = $this->actingAs($admin)->getJson("/api/servers/{$serverId}/metrics/history?range=24h");
+
+        $response->assertOk();
+        $response->assertJsonPath('range', '24h');
+        $points = $response->json('points');
+        // Two distinct hour-buckets: the first keeps its LAST observed value (20), the second its only value (30).
+        $this->assertCount(2, $points);
+        $this->assertEquals(20, $points[0]['cpu_percent']);
+        $this->assertEquals(30, $points[1]['cpu_percent']);
+    }
+
     public function test_history_endpoint_defaults_to_1h_for_invalid_range(): void
     {
         [$serverId, , $admin] = $this->registerServer();

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DropdownOptionController;
 use App\Http\Controllers\Api\FlagshipProductController;
 use App\Http\Controllers\Api\LeadController;
+use App\Http\Controllers\Api\MonitoringOverviewController;
 use App\Http\Controllers\Api\MonitoringSettingController;
 use App\Http\Controllers\Api\NewsletterSubscriberController;
 use App\Http\Controllers\Api\NotificationSettingController;
@@ -149,6 +150,10 @@ Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
         Route::get('/servers', [ServerController::class, 'index']);
         Route::get('/servers/{server}', [ServerController::class, 'show']);
         Route::get('/servers/{server}/metrics/history', [ServerController::class, 'metricsHistory']);
+
+        // Fleet-wide overview — monitoring platform Phase 5
+        Route::get('/monitoring/overview', [MonitoringOverviewController::class, 'summary']);
+        Route::get('/monitoring/overview/history', [MonitoringOverviewController::class, 'history']);
     });
     Route::middleware('permission:servers.create')->post('/servers', [ServerController::class, 'store']);
     Route::middleware('permission:servers.edit')->group(function () {
