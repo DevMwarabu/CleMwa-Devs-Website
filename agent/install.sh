@@ -3,11 +3,14 @@
 #
 # Usage (run as root, from inside this agent/ directory):
 #   sudo AGENT_TOKEN="..." API_URL="https://clemwadevelopers.com" \
-#        CRITICAL_SERVICES="nginx,postgresql" ./install.sh
+#        CRITICAL_SERVICES="nginx,postgresql" \
+#        LOG_FILES="/var/log/nginx/error.log,/var/log/syslog" ./install.sh
 #
 # AGENT_TOKEN and API_URL are shown once when you register the server in
 # the admin panel (Servers > Register Server). CRITICAL_SERVICES is optional,
-# comma-separated systemd unit names this host should be checked for.
+# comma-separated systemd unit names this host should be checked for (also
+# tailed via journalctl for Phase 10 log collection). LOG_FILES is optional,
+# comma-separated absolute paths to log files this host should tail.
 
 set -euo pipefail
 
@@ -37,11 +40,16 @@ CRITICAL_SERVICES_JSON="[]"
 if [ -n "${CRITICAL_SERVICES:-}" ]; then
   CRITICAL_SERVICES_JSON=$(python3 -c "import json,sys; print(json.dumps([s.strip() for s in sys.argv[1].split(',') if s.strip()]))" "$CRITICAL_SERVICES")
 fi
+LOG_FILES_JSON="[]"
+if [ -n "${LOG_FILES:-}" ]; then
+  LOG_FILES_JSON=$(python3 -c "import json,sys; print(json.dumps([s.strip() for s in sys.argv[1].split(',') if s.strip()]))" "$LOG_FILES")
+fi
 cat > /etc/clemwa-monitoring-agent/config.json <<CONFIG
 {
   "api_url": "${API_URL}",
   "token": "${AGENT_TOKEN}",
-  "critical_services": ${CRITICAL_SERVICES_JSON}
+  "critical_services": ${CRITICAL_SERVICES_JSON},
+  "log_files": ${LOG_FILES_JSON}
 }
 CONFIG
 chmod 600 /etc/clemwa-monitoring-agent/config.json

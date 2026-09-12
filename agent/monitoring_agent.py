@@ -22,7 +22,7 @@ import urllib.error
 import urllib.request
 
 DEFAULT_CONFIG_PATH = "/etc/clemwa-monitoring-agent/config.json"
-AGENT_VERSION = "0.2.0"
+AGENT_VERSION = "0.3.0"
 CPU_SAMPLE_INTERVAL = 0.2  # seconds between the two /proc/stat samples
 
 
@@ -439,6 +439,48 @@ def _parse_percent(value):
 
 
 # ---------------------------------------------------------------------------
+# Logs (Phase 10) — tail of admin-configured file paths plus journalctl for
+# admin-configured critical services. Level parsing happens server-side
+# (App\Support\LogLevelParser), not here — the agent just ships raw lines.
+# ---------------------------------------------------------------------------
+
+LOG_TAIL_LINES = 50
+
+
+def _tail_file(path, lines):
+    try:
+        with open(path, "r", errors="replace") as fh:
+            return fh.readlines()[-lines:]
+    except OSError:
+        return []
+
+
+def collect_logs(log_files, critical_services):
+    entries = []
+
+    for path in (log_files or []):
+        for line in _tail_file(path, LOG_TAIL_LINES):
+            line = line.rstrip("\n")
+            if line:
+                entries.append({"source": path, "message": line})
+
+    for service in (critical_services or []):
+        try:
+            result = subprocess.run(
+                ["journalctl", "-n", str(LOG_TAIL_LINES), "-u", service, "--no-pager"],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=10,
+            )
+            source = "journalctl:%s" % service
+            for line in result.stdout.decode(errors="replace").splitlines():
+                if line:
+                    entries.append({"source": source, "message": line})
+        except (OSError, subprocess.SubprocessError):
+            continue
+
+    return entries
+
+
+# ---------------------------------------------------------------------------
 # Payload + transport
 # ---------------------------------------------------------------------------
 
@@ -468,6 +510,13 @@ def build_payload(config):
             payload["docker"] = docker
     except Exception as exc:  # noqa: BLE001
         log("failed to collect docker: %s" % exc)
+
+    try:
+        logs = collect_logs(config.get("log_files"), config.get("critical_services"))
+        if logs:
+            payload["logs"] = logs
+    except Exception as exc:  # noqa: BLE001
+        log("failed to collect logs: %s" % exc)
 
     return payload
 
