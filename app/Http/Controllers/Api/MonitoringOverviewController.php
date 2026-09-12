@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\AlertEvent;
+use App\Models\Incident;
 use App\Models\Server;
 use App\Support\MetricRangeQuery;
 use Illuminate\Http\Request;
@@ -82,6 +84,80 @@ class MonitoringOverviewController extends Controller
         ]);
 
         return response()->json(['range' => $range, 'points' => $points]);
+    }
+
+    /**
+     * Top-N problem servers by resource usage, firing-alert count, and
+     * cumulative incident downtime — pure aggregation over data already
+     * collected by earlier phases, no new storage.
+     */
+    public function topN(Request $request)
+    {
+        $limit = max(1, min((int) $request->query('limit', 5), 20));
+
+        return response()->json([
+            'top_cpu' => $this->topByMetric('cpu_percent', $limit),
+            'top_memory' => $this->topByMetric('memory_percent', $limit),
+            'top_disk' => $this->topByMetric('disk_percent', $limit),
+            'most_alerts' => $this->mostAlerts($limit),
+            'most_downtime' => $this->mostDowntime($limit),
+        ]);
+    }
+
+    private function topByMetric(string $key, int $limit): array
+    {
+        return Server::with('metric')->get()
+            ->filter(fn ($s) => $s->metric !== null)
+            ->map(function ($s) use ($key) {
+                $percentages = MetricRangeQuery::extractPercentages(
+                    json_encode($s->metric->cpu),
+                    json_encode($s->metric->memory),
+                    json_encode($s->metric->disk),
+                );
+
+                return ['server_id' => $s->id, 'server_name' => $s->name, 'value' => $percentages[$key]];
+            })
+            ->filter(fn ($row) => $row['value'] !== null)
+            ->sortByDesc('value')
+            ->take($limit)
+            ->values()
+            ->toArray();
+    }
+
+    private function mostAlerts(int $limit): array
+    {
+        $rows = AlertEvent::where('to_state', 'firing')
+            ->whereNotNull('server_id')
+            ->selectRaw('server_id, count(*) as alert_count')
+            ->groupBy('server_id')
+            ->orderByDesc('alert_count')
+            ->limit($limit)
+            ->get();
+
+        $servers = Server::whereIn('id', $rows->pluck('server_id'))->get()->keyBy('id');
+
+        return $rows->map(fn ($row) => [
+            'server_id' => $row->server_id,
+            'server_name' => $servers->get($row->server_id)?->name ?? 'unknown',
+            'value' => (int) $row->alert_count,
+        ])->values()->toArray();
+    }
+
+    private function mostDowntime(int $limit): array
+    {
+        $downtimeSeconds = Incident::all(['server_id', 'started_at', 'resolved_at'])
+            ->groupBy('server_id')
+            ->map(fn ($incidents) => $incidents->sum(fn ($i) => $i->started_at->diffInSeconds($i->resolved_at ?? now())))
+            ->sortDesc()
+            ->take($limit);
+
+        $servers = Server::whereIn('id', $downtimeSeconds->keys())->get()->keyBy('id');
+
+        return $downtimeSeconds->map(fn ($seconds, $serverId) => [
+            'server_id' => $serverId,
+            'server_name' => $servers->get($serverId)?->name ?? 'unknown',
+            'value' => (int) $seconds,
+        ])->values()->toArray();
     }
 
     private function average($values): ?float

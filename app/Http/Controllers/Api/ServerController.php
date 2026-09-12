@@ -99,6 +99,36 @@ class ServerController extends Controller
     public function metricsHistory(Request $request, Server $server)
     {
         $range = MetricRangeQuery::resolve($request->query('range'));
+
+        return response()->json(['range' => $range, 'points' => $this->historyPoints($server, $range)]);
+    }
+
+    /**
+     * Server comparison (Phase 12) — same bucketed history as
+     * metricsHistory(), just for up to 4 servers at once so the frontend
+     * can show parallel sparklines over the same time buckets.
+     */
+    public function compareHistory(Request $request)
+    {
+        $range = MetricRangeQuery::resolve($request->query('range'));
+        $ids = array_slice(array_filter(explode(',', (string) $request->query('server_ids', ''))), 0, 4);
+        $servers = Server::whereIn('id', $ids)->get()->keyBy('id');
+
+        $series = collect($ids)
+            ->map(fn ($id) => $servers->get($id))
+            ->filter()
+            ->map(fn (Server $server) => [
+                'server_id' => $server->id,
+                'server_name' => $server->name,
+                'points' => $this->historyPoints($server, $range),
+            ])
+            ->values();
+
+        return response()->json(['range' => $range, 'series' => $series]);
+    }
+
+    private function historyPoints(Server $server, string $range)
+    {
         $config = MetricRangeQuery::config($range);
         $since = MetricRangeQuery::since($range);
 
@@ -130,14 +160,12 @@ class ServerController extends Controller
             ));
         }
 
-        $points = $rows->map(function ($row) {
+        return $rows->map(function ($row) {
             return array_merge(
                 ['collected_at' => Carbon::parse($row->collected_at)->toIso8601String()],
                 MetricRangeQuery::extractPercentages($row->cpu, $row->memory, $row->disk)
             );
-        });
-
-        return response()->json(['range' => $range, 'points' => $points]);
+        })->values();
     }
 
     private function validated(Request $request, ?Server $server = null): array
