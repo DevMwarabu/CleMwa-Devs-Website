@@ -1,19 +1,34 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AgentController;
+use App\Http\Controllers\Api\AuditLogController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
-use App\Http\Controllers\Api\SearchController;
-use App\Http\Controllers\Api\LeadController;
-use App\Http\Controllers\Api\ProjectController;
-use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\DropdownOptionController;
+use App\Http\Controllers\Api\FlagshipProductController;
+use App\Http\Controllers\Api\LeadController;
+use App\Http\Controllers\Api\MonitoringSettingController;
+use App\Http\Controllers\Api\NewsletterSubscriberController;
+use App\Http\Controllers\Api\NotificationSettingController;
+use App\Http\Controllers\Api\OfficeLocationController;
+use App\Http\Controllers\Api\PageSettingsController;
+use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\PresenceController;
+use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\ServerController;
+use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\TeamMemberController;
+use App\Http\Controllers\Api\TestimonialController;
+use App\Http\Controllers\Api\UploadController;
+use App\Http\Controllers\Api\UserController;
+use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
 Route::middleware(['auth:sanctum', 'server.token'])->group(function () {
-    Route::post('/agent/heartbeat', [\App\Http\Controllers\Api\AgentController::class, 'heartbeat']);
-    Route::post('/agent/metrics', [\App\Http\Controllers\Api\AgentController::class, 'metrics']);
+    Route::post('/agent/heartbeat', [AgentController::class, 'heartbeat']);
+    Route::post('/agent/metrics', [AgentController::class, 'metrics']);
 });
 
 Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
@@ -37,32 +52,32 @@ Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
 
     // Services — full CRUD
-    Route::get('/services', [\App\Http\Controllers\Api\ServiceController::class, 'index']);
-    Route::post('/services', [\App\Http\Controllers\Api\ServiceController::class, 'store']);
-    Route::get('/services/{service}', [\App\Http\Controllers\Api\ServiceController::class, 'show']);
-    Route::put('/services/{service}', [\App\Http\Controllers\Api\ServiceController::class, 'update']);
-    Route::delete('/services/{service}', [\App\Http\Controllers\Api\ServiceController::class, 'destroy']);
+    Route::get('/services', [ServiceController::class, 'index']);
+    Route::post('/services', [ServiceController::class, 'store']);
+    Route::get('/services/{service}', [ServiceController::class, 'show']);
+    Route::put('/services/{service}', [ServiceController::class, 'update']);
+    Route::delete('/services/{service}', [ServiceController::class, 'destroy']);
 
     // Posts — full CRUD
-    Route::get('/posts', [\App\Http\Controllers\Api\PostController::class, 'index']);
-    Route::post('/posts', [\App\Http\Controllers\Api\PostController::class, 'store']);
-    Route::get('/posts/{post}', [\App\Http\Controllers\Api\PostController::class, 'show']);
-    Route::put('/posts/{post}', [\App\Http\Controllers\Api\PostController::class, 'update']);
-    Route::delete('/posts/{post}', [\App\Http\Controllers\Api\PostController::class, 'destroy']);
+    Route::get('/posts', [PostController::class, 'index']);
+    Route::post('/posts', [PostController::class, 'store']);
+    Route::get('/posts/{post}', [PostController::class, 'show']);
+    Route::put('/posts/{post}', [PostController::class, 'update']);
+    Route::delete('/posts/{post}', [PostController::class, 'destroy']);
 
     // Testimonials — full CRUD
-    Route::get('/testimonials', [\App\Http\Controllers\Api\TestimonialController::class, 'index']);
-    Route::post('/testimonials', [\App\Http\Controllers\Api\TestimonialController::class, 'store']);
-    Route::get('/testimonials/{testimonial}', [\App\Http\Controllers\Api\TestimonialController::class, 'show']);
-    Route::put('/testimonials/{testimonial}', [\App\Http\Controllers\Api\TestimonialController::class, 'update']);
-    Route::delete('/testimonials/{testimonial}', [\App\Http\Controllers\Api\TestimonialController::class, 'destroy']);
+    Route::get('/testimonials', [TestimonialController::class, 'index']);
+    Route::post('/testimonials', [TestimonialController::class, 'store']);
+    Route::get('/testimonials/{testimonial}', [TestimonialController::class, 'show']);
+    Route::put('/testimonials/{testimonial}', [TestimonialController::class, 'update']);
+    Route::delete('/testimonials/{testimonial}', [TestimonialController::class, 'destroy']);
 
     // Flagship Products — full CRUD
-    Route::get('/products', [\App\Http\Controllers\Api\FlagshipProductController::class, 'index']);
-    Route::post('/products', [\App\Http\Controllers\Api\FlagshipProductController::class, 'store']);
-    Route::get('/products/{flagshipProduct}', [\App\Http\Controllers\Api\FlagshipProductController::class, 'show']);
-    Route::put('/products/{flagshipProduct}', [\App\Http\Controllers\Api\FlagshipProductController::class, 'update']);
-    Route::delete('/products/{flagshipProduct}', [\App\Http\Controllers\Api\FlagshipProductController::class, 'destroy']);
+    Route::get('/products', [FlagshipProductController::class, 'index']);
+    Route::post('/products', [FlagshipProductController::class, 'store']);
+    Route::get('/products/{flagshipProduct}', [FlagshipProductController::class, 'show']);
+    Route::put('/products/{flagshipProduct}', [FlagshipProductController::class, 'update']);
+    Route::delete('/products/{flagshipProduct}', [FlagshipProductController::class, 'destroy']);
 
     // File uploads
     Route::post('/upload/image', [UploadController::class, 'image']);
@@ -76,62 +91,69 @@ Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
     Route::delete('/dropdown-options/{dropdownOption}', [DropdownOptionController::class, 'destroy']);
 
     // Page Settings (Customize Site)
-    Route::get('/page-settings/{page}', [\App\Http\Controllers\Api\PageSettingsController::class, 'show']);
-    Route::put('/page-settings/{page}', [\App\Http\Controllers\Api\PageSettingsController::class, 'update']);
+    Route::get('/page-settings/{page}', [PageSettingsController::class, 'show']);
+    Route::put('/page-settings/{page}', [PageSettingsController::class, 'update']);
 
     // Office Locations — full CRUD
-    Route::get('/office-locations', [\App\Http\Controllers\Api\OfficeLocationController::class, 'index']);
-    Route::post('/office-locations', [\App\Http\Controllers\Api\OfficeLocationController::class, 'store']);
-    Route::get('/office-locations/{officeLocation}', [\App\Http\Controllers\Api\OfficeLocationController::class, 'show']);
-    Route::put('/office-locations/{officeLocation}', [\App\Http\Controllers\Api\OfficeLocationController::class, 'update']);
-    Route::delete('/office-locations/{officeLocation}', [\App\Http\Controllers\Api\OfficeLocationController::class, 'destroy']);
+    Route::get('/office-locations', [OfficeLocationController::class, 'index']);
+    Route::post('/office-locations', [OfficeLocationController::class, 'store']);
+    Route::get('/office-locations/{officeLocation}', [OfficeLocationController::class, 'show']);
+    Route::put('/office-locations/{officeLocation}', [OfficeLocationController::class, 'update']);
+    Route::delete('/office-locations/{officeLocation}', [OfficeLocationController::class, 'destroy']);
 
     // Newsletter Subscribers — read + remove (created via the public site)
-    Route::get('/newsletter-subscribers', [\App\Http\Controllers\Api\NewsletterSubscriberController::class, 'index']);
-    Route::delete('/newsletter-subscribers/{newsletterSubscriber}', [\App\Http\Controllers\Api\NewsletterSubscriberController::class, 'destroy']);
+    Route::get('/newsletter-subscribers', [NewsletterSubscriberController::class, 'index']);
+    Route::delete('/newsletter-subscribers/{newsletterSubscriber}', [NewsletterSubscriberController::class, 'destroy']);
 
     // Presence (who's online, and on which admin page)
-    Route::post('/presence/heartbeat', [\App\Http\Controllers\Api\PresenceController::class, 'heartbeat']);
-    Route::get('/presence', [\App\Http\Controllers\Api\PresenceController::class, 'index']);
+    Route::post('/presence/heartbeat', [PresenceController::class, 'heartbeat']);
+    Route::get('/presence', [PresenceController::class, 'index']);
 
     // Team Members — full CRUD
-    Route::get('/team-members', [\App\Http\Controllers\Api\TeamMemberController::class, 'index']);
-    Route::post('/team-members', [\App\Http\Controllers\Api\TeamMemberController::class, 'store']);
-    Route::get('/team-members/{teamMember}', [\App\Http\Controllers\Api\TeamMemberController::class, 'show']);
-    Route::put('/team-members/{teamMember}', [\App\Http\Controllers\Api\TeamMemberController::class, 'update']);
-    Route::delete('/team-members/{teamMember}', [\App\Http\Controllers\Api\TeamMemberController::class, 'destroy']);
+    Route::get('/team-members', [TeamMemberController::class, 'index']);
+    Route::post('/team-members', [TeamMemberController::class, 'store']);
+    Route::get('/team-members/{teamMember}', [TeamMemberController::class, 'show']);
+    Route::put('/team-members/{teamMember}', [TeamMemberController::class, 'update']);
+    Route::delete('/team-members/{teamMember}', [TeamMemberController::class, 'destroy']);
 
     // Users — full CRUD
-    Route::get('/users', [\App\Http\Controllers\Api\UserController::class, 'index']);
-    Route::post('/users', [\App\Http\Controllers\Api\UserController::class, 'store']);
-    Route::get('/users/{user}', [\App\Http\Controllers\Api\UserController::class, 'show']);
-    Route::put('/users/{user}', [\App\Http\Controllers\Api\UserController::class, 'update']);
-    Route::delete('/users/{user}', [\App\Http\Controllers\Api\UserController::class, 'destroy']);
-    Route::post('/users/{user}/send-reset-link', [\App\Http\Controllers\Api\UserController::class, 'sendResetLink']);
+    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    Route::post('/users/{user}/send-reset-link', [UserController::class, 'sendResetLink']);
 
     // Audit Log — read-only
     Route::middleware('permission:audit.view')->group(function () {
-        Route::get('/audit-logs', [\App\Http\Controllers\Api\AuditLogController::class, 'index']);
-        Route::get('/audit-logs/{auditLog}', [\App\Http\Controllers\Api\AuditLogController::class, 'show']);
+        Route::get('/audit-logs', [AuditLogController::class, 'index']);
+        Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show']);
     });
 
     // Notification Settings (SMTP + Telegram) — monitoring platform foundation
     Route::middleware('permission:settings.manage')->group(function () {
-        Route::get('/notification-settings', [\App\Http\Controllers\Api\NotificationSettingController::class, 'show']);
-        Route::put('/notification-settings', [\App\Http\Controllers\Api\NotificationSettingController::class, 'update']);
-        Route::post('/notification-settings/test-email', [\App\Http\Controllers\Api\NotificationSettingController::class, 'testEmail']);
-        Route::post('/notification-settings/test-telegram', [\App\Http\Controllers\Api\NotificationSettingController::class, 'testTelegram']);
+        Route::get('/notification-settings', [NotificationSettingController::class, 'show']);
+        Route::put('/notification-settings', [NotificationSettingController::class, 'update']);
+        Route::post('/notification-settings/test-email', [NotificationSettingController::class, 'testEmail']);
+        Route::post('/notification-settings/test-telegram', [NotificationSettingController::class, 'testTelegram']);
+    });
+
+    // Monitoring Settings (retention, ...) — monitoring platform Phase 4
+    Route::middleware('permission:settings.manage')->group(function () {
+        Route::get('/monitoring-settings', [MonitoringSettingController::class, 'show']);
+        Route::put('/monitoring-settings', [MonitoringSettingController::class, 'update']);
     });
 
     // Servers — monitoring platform Phase 2
     Route::middleware('permission:servers.view')->group(function () {
-        Route::get('/servers', [\App\Http\Controllers\Api\ServerController::class, 'index']);
-        Route::get('/servers/{server}', [\App\Http\Controllers\Api\ServerController::class, 'show']);
+        Route::get('/servers', [ServerController::class, 'index']);
+        Route::get('/servers/{server}', [ServerController::class, 'show']);
+        Route::get('/servers/{server}/metrics/history', [ServerController::class, 'metricsHistory']);
     });
-    Route::middleware('permission:servers.create')->post('/servers', [\App\Http\Controllers\Api\ServerController::class, 'store']);
+    Route::middleware('permission:servers.create')->post('/servers', [ServerController::class, 'store']);
     Route::middleware('permission:servers.edit')->group(function () {
-        Route::put('/servers/{server}', [\App\Http\Controllers\Api\ServerController::class, 'update']);
-        Route::post('/servers/{server}/rotate-token', [\App\Http\Controllers\Api\ServerController::class, 'rotateToken']);
+        Route::put('/servers/{server}', [ServerController::class, 'update']);
+        Route::post('/servers/{server}/rotate-token', [ServerController::class, 'rotateToken']);
     });
-    Route::middleware('permission:servers.delete')->delete('/servers/{server}', [\App\Http\Controllers\Api\ServerController::class, 'destroy']);
+    Route::middleware('permission:servers.delete')->delete('/servers/{server}', [ServerController::class, 'destroy']);
 });

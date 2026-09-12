@@ -29,9 +29,10 @@ class AgentController extends Controller
     }
 
     /**
-     * Record a full metrics snapshot from the real monitoring agent. This is
-     * a current-state upsert, not a historical append — one row per server,
-     * overwritten each push. Historical storage is a later phase.
+     * Record a full metrics snapshot from the real monitoring agent. Updates
+     * the current-state row (overwritten each push) and appends a history
+     * row (cpu/memory/disk/network only — processes/services are
+     * current-state-only concerns, not worth per-tick history for).
      */
     public function metrics(Request $request)
     {
@@ -46,6 +47,7 @@ class AgentController extends Controller
         ]);
 
         $server = $request->user();
+        $collectedAt = now();
 
         $server->metric()->updateOrCreate(
             ['server_id' => $server->id],
@@ -56,12 +58,20 @@ class AgentController extends Controller
                 'network' => $validated['network'] ?? null,
                 'processes' => $validated['processes'] ?? null,
                 'services' => $validated['services'] ?? null,
-                'collected_at' => now(),
+                'collected_at' => $collectedAt,
             ]
         );
 
+        $server->metricHistory()->create([
+            'cpu' => $validated['cpu'] ?? null,
+            'memory' => $validated['memory'] ?? null,
+            'disk' => $validated['disk'] ?? null,
+            'network' => $validated['network'] ?? null,
+            'collected_at' => $collectedAt,
+        ]);
+
         $server->update([
-            'last_heartbeat_at' => now(),
+            'last_heartbeat_at' => $collectedAt,
             'agent_version' => $validated['agent_version'] ?? $server->agent_version,
         ]);
 

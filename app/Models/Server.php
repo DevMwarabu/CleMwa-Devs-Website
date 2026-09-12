@@ -25,6 +25,11 @@ class Server extends Model
         return $this->hasOne(ServerMetric::class);
     }
 
+    public function metricHistory()
+    {
+        return $this->hasMany(ServerMetricHistory::class);
+    }
+
     /**
      * Servers with no heartbeat yet are `unknown`. `warning`/`critical` are
      * not computed here — they depend on resource metrics and the health
