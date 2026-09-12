@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\NotificationSetting;
 use App\Support\AuditLogger;
+use App\Support\NotificationDispatcher;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
 
 class NotificationSettingController extends Controller
 {
@@ -30,6 +29,7 @@ class NotificationSettingController extends Controller
             'telegram_enabled' => 'boolean',
             'telegram_bot_token' => 'nullable|string',
             'telegram_chat_id' => 'nullable|string|max:255',
+            'alert_email_recipients' => 'nullable|string',
         ]);
 
         $settings = NotificationSetting::getSettings();
@@ -64,22 +64,11 @@ class NotificationSettingController extends Controller
         $to = $request->input('to', $request->user()->email);
 
         try {
-            config(['mail.mailers.monitoring_smtp' => [
-                'transport' => 'smtp',
-                'host' => $settings->smtp_host,
-                'port' => $settings->smtp_port ?? 587,
-                'encryption' => $settings->smtp_encryption === 'none' ? null : $settings->smtp_encryption,
-                'username' => $settings->smtp_username,
-                'password' => $settings->smtp_password,
-            ]]);
-
-            Mail::mailer('monitoring_smtp')->raw(
+            NotificationDispatcher::sendEmail(
+                $settings,
+                [$to],
+                'Monitoring: Test Email',
                 'This is a test email from the CleMwa Devs monitoring platform. If you received this, SMTP is configured correctly.',
-                function ($message) use ($settings, $to) {
-                    $message->to($to)
-                        ->subject('Monitoring: Test Email')
-                        ->from($settings->smtp_from_address ?? $settings->smtp_username, $settings->smtp_from_name ?? 'Monitoring');
-                }
             );
 
             AuditLogger::log('settings.test_email', 'NotificationSetting', (string) $settings->id, [], ['to' => $to]);
@@ -101,14 +90,7 @@ class NotificationSettingController extends Controller
         }
 
         try {
-            $response = Http::post("https://api.telegram.org/bot{$settings->telegram_bot_token}/sendMessage", [
-                'chat_id' => $settings->telegram_chat_id,
-                'text' => "\u{2705} Test message from the CleMwa Devs monitoring platform.",
-            ]);
-
-            if (! $response->successful()) {
-                throw new \RuntimeException($response->json('description') ?? 'Telegram API error.');
-            }
+            NotificationDispatcher::sendTelegram($settings, "\u{2705} Test message from the CleMwa Devs monitoring platform.");
 
             AuditLogger::log('settings.test_telegram', 'NotificationSetting', (string) $settings->id);
 
