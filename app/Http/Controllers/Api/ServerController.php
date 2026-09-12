@@ -14,7 +14,7 @@ class ServerController extends Controller
      */
     public function index()
     {
-        return response()->json(Server::latest()->get());
+        return response()->json(Server::with('metric')->latest()->get());
     }
 
     /**
@@ -38,7 +38,7 @@ class ServerController extends Controller
      */
     public function show(Server $server)
     {
-        return response()->json($server);
+        return response()->json($server->load('metric'));
     }
 
     /**
@@ -103,6 +103,8 @@ class ServerController extends Controller
             'location' => 'nullable|string|max:255',
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:100',
+            'critical_services' => 'nullable|array',
+            'critical_services.*' => 'string|max:100',
         ]);
     }
 }

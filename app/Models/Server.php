@@ -16,8 +16,14 @@ class Server extends Model
 
     protected $casts = [
         'tags' => 'array',
+        'critical_services' => 'array',
         'last_heartbeat_at' => 'datetime',
     ];
+
+    public function metric()
+    {
+        return $this->hasOne(ServerMetric::class);
+    }
 
     /**
      * Servers with no heartbeat yet are `unknown`. `warning`/`critical` are

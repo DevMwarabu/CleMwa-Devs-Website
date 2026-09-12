@@ -13,6 +13,7 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:lo
 
 Route::middleware(['auth:sanctum', 'server.token'])->group(function () {
     Route::post('/agent/heartbeat', [\App\Http\Controllers\Api\AgentController::class, 'heartbeat']);
+    Route::post('/agent/metrics', [\App\Http\Controllers\Api\AgentController::class, 'metrics']);
 });
 
 Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
