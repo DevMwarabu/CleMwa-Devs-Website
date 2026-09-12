@@ -11,7 +11,11 @@ use App\Http\Controllers\Api\DropdownOptionController;
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'server.token'])->group(function () {
+    Route::post('/agent/heartbeat', [\App\Http\Controllers\Api\AgentController::class, 'heartbeat']);
+});
+
+Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
     Route::get('/user', [AuthController::class, 'me']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -117,4 +121,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/notification-settings/test-email', [\App\Http\Controllers\Api\NotificationSettingController::class, 'testEmail']);
         Route::post('/notification-settings/test-telegram', [\App\Http\Controllers\Api\NotificationSettingController::class, 'testTelegram']);
     });
+
+    // Servers — monitoring platform Phase 2
+    Route::middleware('permission:servers.view')->group(function () {
+        Route::get('/servers', [\App\Http\Controllers\Api\ServerController::class, 'index']);
+        Route::get('/servers/{server}', [\App\Http\Controllers\Api\ServerController::class, 'show']);
+    });
+    Route::middleware('permission:servers.create')->post('/servers', [\App\Http\Controllers\Api\ServerController::class, 'store']);
+    Route::middleware('permission:servers.edit')->group(function () {
+        Route::put('/servers/{server}', [\App\Http\Controllers\Api\ServerController::class, 'update']);
+        Route::post('/servers/{server}/rotate-token', [\App\Http\Controllers\Api\ServerController::class, 'rotateToken']);
+    });
+    Route::middleware('permission:servers.delete')->delete('/servers/{server}', [\App\Http\Controllers\Api\ServerController::class, 'destroy']);
 });
