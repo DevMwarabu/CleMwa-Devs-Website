@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
@@ -10,12 +9,10 @@ use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\DropdownOptionController;
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    Route::get('/user', [AuthController::class, 'me']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/dashboard', [DashboardController::class, 'stats']);
@@ -106,4 +103,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/users/{user}', [\App\Http\Controllers\Api\UserController::class, 'update']);
     Route::delete('/users/{user}', [\App\Http\Controllers\Api\UserController::class, 'destroy']);
     Route::post('/users/{user}/send-reset-link', [\App\Http\Controllers\Api\UserController::class, 'sendResetLink']);
+
+    // Audit Log — read-only
+    Route::middleware('permission:audit.view')->group(function () {
+        Route::get('/audit-logs', [\App\Http\Controllers\Api\AuditLogController::class, 'index']);
+        Route::get('/audit-logs/{auditLog}', [\App\Http\Controllers\Api\AuditLogController::class, 'show']);
+    });
+
+    // Notification Settings (SMTP + Telegram) — monitoring platform foundation
+    Route::middleware('permission:settings.manage')->group(function () {
+        Route::get('/notification-settings', [\App\Http\Controllers\Api\NotificationSettingController::class, 'show']);
+        Route::put('/notification-settings', [\App\Http\Controllers\Api\NotificationSettingController::class, 'update']);
+        Route::post('/notification-settings/test-email', [\App\Http\Controllers\Api\NotificationSettingController::class, 'testEmail']);
+        Route::post('/notification-settings/test-telegram', [\App\Http\Controllers\Api\NotificationSettingController::class, 'testTelegram']);
+    });
 });

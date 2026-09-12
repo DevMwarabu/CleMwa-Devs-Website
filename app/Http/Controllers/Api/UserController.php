@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\AuditLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
+    private const ROLES = ['Super Admin', 'Administrator', 'Monitoring Engineer', 'Operator', 'Viewer', 'admin', 'editor'];
+
     /**
      * Display a listing of the resource.
      */
@@ -33,7 +37,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['nullable', Password::defaults()],
-            'role' => 'nullable|string|in:admin,editor',
+            'role' => ['nullable', 'string', Rule::in(self::ROLES)],
             'send_reset_link' => 'boolean',
         ]);
 
@@ -78,7 +82,7 @@ class UserController extends Controller
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
             'password' => ['nullable', Password::defaults()],
-            'role' => 'nullable|string|in:admin,editor',
+            'role' => ['nullable', 'string', Rule::in(self::ROLES)],
         ]);
 
         if (isset($validated['name'])) {
@@ -96,7 +100,18 @@ class UserController extends Controller
         $user->save();
 
         if (isset($validated['role'])) {
-            $user->syncRoles([$validated['role']]);
+            $previousRole = $user->roles->first()?->name;
+
+            if ($previousRole !== $validated['role']) {
+                $user->syncRoles([$validated['role']]);
+                AuditLogger::log(
+                    'user.role_changed',
+                    'User',
+                    $user->id,
+                    ['role' => $previousRole],
+                    ['role' => $validated['role']],
+                );
+            }
         }
 
         return response()->json($user);
