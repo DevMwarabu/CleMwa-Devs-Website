@@ -45,6 +45,15 @@ class ReportApiTest extends TestCase
         $this->actingAs($viewer)->getJson('/api/reports/export')->assertForbidden();
     }
 
+    public function test_malformed_from_param_returns_a_validation_error_not_a_server_error(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $response = $this->actingAs($admin)->getJson('/api/reports/summary?from=not-a-date');
+        $response->assertStatus(422);
+    }
+
     public function test_summary_computes_uptime_percent_from_check_results(): void
     {
         $check = UptimeCheck::create(['name' => 'homepage', 'url' => 'https://example.com']);

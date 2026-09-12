@@ -71,6 +71,13 @@ class ReportController extends Controller
 
     private function range(Request $request): array
     {
+        // Validated up front so a malformed from/to returns a clean 422
+        // rather than an uncaught Carbon\Exceptions\InvalidFormatException.
+        $request->validate([
+            'from' => 'nullable|date',
+            'to' => 'nullable|date',
+        ]);
+
         $to = $request->filled('to') ? Carbon::parse($request->string('to')->toString())->endOfDay() : now();
         $from = $request->filled('from') ? Carbon::parse($request->string('from')->toString())->startOfDay() : $to->copy()->subDays(7)->startOfDay();
 

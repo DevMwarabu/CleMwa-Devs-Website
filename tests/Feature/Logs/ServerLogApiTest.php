@@ -110,6 +110,17 @@ class ServerLogApiTest extends TestCase
         $this->assertStringContainsString('hello', $content);
     }
 
+    public function test_malformed_date_from_returns_a_validation_error_not_a_server_error(): void
+    {
+        $server = $this->server();
+
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $response = $this->actingAs($admin)->getJson("/api/servers/{$server->id}/logs?date_from=not-a-date");
+        $response->assertStatus(422);
+    }
+
     public function test_logs_are_scoped_to_their_own_server(): void
     {
         $serverA = $this->server();

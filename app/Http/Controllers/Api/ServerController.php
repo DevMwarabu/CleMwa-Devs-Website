@@ -17,7 +17,9 @@ class ServerController extends Controller
      */
     public function index()
     {
-        return response()->json(Server::with('metric')->latest()->get());
+        // firingAlertStates.rule eager-loaded so HealthScoreCalculator (via
+        // Server::$appends) doesn't issue two extra queries per server.
+        return response()->json(Server::with(['metric', 'firingAlertStates.rule'])->latest()->get());
     }
 
     /**
