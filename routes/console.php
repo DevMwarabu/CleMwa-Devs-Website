@@ -11,3 +11,4 @@ Artisan::command('inspire', function () {
 Schedule::command('metrics:prune')->daily();
 Schedule::command('alerts:evaluate')->everyMinute();
 Schedule::command('uptime:check')->everyMinute();
+Schedule::command('reports:send-scheduled')->daily();

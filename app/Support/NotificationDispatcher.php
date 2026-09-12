@@ -17,8 +17,9 @@ class NotificationDispatcher
 {
     /**
      * @param  string[]  $to
+     * @param  array<int, array{data: string, name: string, options?: array}>  $attachments  Raw attachment data (e.g. a rendered PDF) — not file paths.
      */
-    public static function sendEmail(NotificationSetting $settings, array $to, string $subject, string $textBody, ?string $htmlBody = null): void
+    public static function sendEmail(NotificationSetting $settings, array $to, string $subject, string $textBody, ?string $htmlBody = null, array $attachments = []): void
     {
         config(['mail.mailers.monitoring_smtp' => [
             'transport' => 'smtp',
@@ -32,8 +33,11 @@ class NotificationDispatcher
         $from = $settings->smtp_from_address ?? $settings->smtp_username;
         $fromName = $settings->smtp_from_name ?? 'Monitoring';
 
-        $callback = function ($message) use ($to, $subject, $from, $fromName) {
+        $callback = function ($message) use ($to, $subject, $from, $fromName, $attachments) {
             $message->to($to)->subject($subject)->from($from, $fromName);
+            foreach ($attachments as $attachment) {
+                $message->attachData($attachment['data'], $attachment['name'], $attachment['options'] ?? []);
+            }
         };
 
         // html() always sets a plain-text alternative from the same string when

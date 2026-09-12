@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\PageSettingsController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\PresenceController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\ServerController;
 use App\Http\Controllers\Api\ServerLogController;
@@ -226,4 +227,14 @@ Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
     // Logs — monitoring platform Phase 10
     Route::middleware('permission:logs.view')->get('/servers/{server}/logs', [ServerLogController::class, 'index']);
     Route::middleware('permission:logs.export')->get('/servers/{server}/logs/export', [ServerLogController::class, 'export']);
+
+    // Reporting — monitoring platform Phase 11
+    Route::middleware('permission:reports.view')->group(function () {
+        Route::get('/reports/summary', [ReportController::class, 'summary']);
+        Route::get('/report-schedule', [ReportController::class, 'schedule']);
+    });
+    Route::middleware('permission:reports.generate')->group(function () {
+        Route::get('/reports/export', [ReportController::class, 'export']);
+        Route::put('/report-schedule', [ReportController::class, 'updateSchedule']);
+    });
 });
