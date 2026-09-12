@@ -39,7 +39,12 @@ class HealthScoreCalculator
             [$score, $reasons] = self::applyResourcePenalty($score, $reasons, 'Disk', $percentages['disk_percent']);
         }
 
-        $firingStates = AlertState::where('server_id', $server->id)->where('state', 'firing')->with('rule')->get();
+        // Use the eager-loaded relation when the caller batched it (see
+        // ServerController::index()'s with('firingAlertStates.rule')) so a
+        // server list doesn't issue two extra queries per row.
+        $firingStates = $server->relationLoaded('firingAlertStates')
+            ? $server->firingAlertStates
+            : AlertState::where('server_id', $server->id)->where('state', 'firing')->with('rule')->get();
         foreach ($firingStates->groupBy(fn ($state) => $state->rule?->severity ?? 'warning') as $severity => $states) {
             $penalty = (self::SEVERITY_PENALTY[$severity] ?? 10) * $states->count();
             $score -= $penalty;

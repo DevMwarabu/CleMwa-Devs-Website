@@ -33,6 +33,14 @@ class ServerLogController extends Controller
 
     private function filtered(Request $request, Server $server)
     {
+        // Validated up front so a malformed date_from/date_to returns a
+        // clean 422 rather than an uncaught Carbon\Exceptions\InvalidFormatException
+        // (Request::date() is documented to throw on unparseable input).
+        $request->validate([
+            'date_from' => 'nullable|date',
+            'date_to' => 'nullable|date',
+        ]);
+
         $query = ServerLog::where('server_id', $server->id)->latest('logged_at');
 
         if ($request->filled('search')) {

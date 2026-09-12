@@ -38,6 +38,16 @@ class Server extends Model
     }
 
     /**
+     * Eager-loadable by list endpoints (`with('firingAlertStates.rule')`) so
+     * HealthScoreCalculator doesn't issue a fresh query per server — see
+     * ServerController::index().
+     */
+    public function firingAlertStates()
+    {
+        return $this->hasMany(AlertState::class)->where('state', 'firing');
+    }
+
+    /**
      * Servers with no heartbeat yet are `unknown`. `warning`/`critical` are
      * not computed here — they depend on resource metrics and the health
      * score, both later phases. This only distinguishes online/offline/unknown.
