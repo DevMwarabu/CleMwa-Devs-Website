@@ -10,6 +10,7 @@ use App\Models\NotificationDelivery;
 use App\Models\NotificationPolicy;
 use App\Models\NotificationSetting;
 use App\Models\Server;
+use App\Models\UptimeCheck;
 use App\Support\MetricRangeQuery;
 use App\Support\NotificationDispatcher;
 use Illuminate\Console\Command;
@@ -20,7 +21,7 @@ class EvaluateAlertRules extends Command
 
     protected $description = 'Evaluate all enabled alert rules and dispatch notifications for anything notification-worthy';
 
-    private const METRIC_KEYS = ['cpu_percent', 'memory_percent', 'disk_percent'];
+    private const SERVER_METRIC_KEYS = ['cpu_percent', 'memory_percent', 'disk_percent'];
 
     /** @var int[] AlertEvent ids created during this run */
     private array $newEventIds = [];
@@ -37,6 +38,20 @@ class EvaluateAlertRules extends Command
         $evaluated = 0;
 
         foreach ($rules as $rule) {
+            if ($rule->uptime_check_id) {
+                $check = UptimeCheck::find($rule->uptime_check_id);
+                if (! $check) {
+                    continue;
+                }
+                $result = $this->evaluateUptime($rule, $check);
+                if ($result !== null) {
+                    $this->transition($rule, null, $check, $result['breached'], $result['value']);
+                    $evaluated++;
+                }
+
+                continue;
+            }
+
             $servers = $rule->server_id
                 ? Server::where('id', $rule->server_id)->get()
                 : Server::all();
@@ -47,12 +62,12 @@ class EvaluateAlertRules extends Command
                     continue; // no data to evaluate against — skip, don't fabricate
                 }
 
-                $this->transition($rule, $server, $result['breached'], $result['value']);
+                $this->transition($rule, $server, null, $result['breached'], $result['value']);
                 $evaluated++;
             }
         }
 
-        $this->info("Evaluated {$evaluated} rule/server pair(s).");
+        $this->info("Evaluated {$evaluated} rule/target pair(s).");
 
         $sent = $this->dispatchNotifications();
         $this->info("Sent {$sent} notification(s).");
@@ -83,7 +98,7 @@ class EvaluateAlertRules extends Command
             return ['breached' => $breached, 'value' => null];
         }
 
-        if (in_array($rule->metric, self::METRIC_KEYS, true)) {
+        if (in_array($rule->metric, self::SERVER_METRIC_KEYS, true)) {
             $server->loadMissing('metric');
             if (! $server->metric) {
                 return null;
@@ -105,6 +120,33 @@ class EvaluateAlertRules extends Command
         return null;
     }
 
+    /**
+     * uptime_check_down: breached when the check's last run failed.
+     * ssl_expiring_soon: breached when the cert expires within `threshold`
+     * days (condition is ignored — "expiring soon" is always "<= N days").
+     */
+    private function evaluateUptime(AlertRule $rule, UptimeCheck $check): ?array
+    {
+        if ($rule->metric === 'uptime_check_down') {
+            if ($check->last_checked_at === null) {
+                return null; // never actually run yet — don't fabricate a breach
+            }
+
+            return ['breached' => $check->last_success === false, 'value' => null];
+        }
+
+        if ($rule->metric === 'ssl_expiring_soon') {
+            if (! $check->ssl_expires_at) {
+                return null;
+            }
+            $daysLeft = now()->diffInDays($check->ssl_expires_at, false);
+
+            return ['breached' => $daysLeft <= (float) $rule->threshold, 'value' => $daysLeft];
+        }
+
+        return null;
+    }
+
     private function compare(float $value, string $condition, float $threshold): bool
     {
         return match ($condition) {
@@ -116,10 +158,10 @@ class EvaluateAlertRules extends Command
         };
     }
 
-    private function transition(AlertRule $rule, Server $server, bool $breached, ?float $value): void
+    private function transition(AlertRule $rule, ?Server $server, ?UptimeCheck $check, bool $breached, ?float $value): void
     {
         $state = AlertState::firstOrCreate(
-            ['alert_rule_id' => $rule->id, 'server_id' => $server->id],
+            ['alert_rule_id' => $rule->id, 'server_id' => $server?->id, 'uptime_check_id' => $check?->id],
             ['state' => 'normal']
         );
 
@@ -136,7 +178,7 @@ class EvaluateAlertRules extends Command
                     $state->state = 'firing';
                     $state->fired_at = $now;
                     $state->save();
-                    $this->logEvent($rule, $server, 'pending', 'firing', $value, $now);
+                    $this->logEvent($rule, $server, $check, 'pending', 'firing', $value, $now);
                 } else {
                     $state->save();
                 }
@@ -152,18 +194,19 @@ class EvaluateAlertRules extends Command
                     'current_value' => $value,
                     'last_evaluated_at' => $now,
                 ]);
-                $this->logEvent($rule, $server, $from, 'resolved', $value, $now);
+                $this->logEvent($rule, $server, $check, $from, 'resolved', $value, $now);
             } else {
                 $state->update(['current_value' => $value, 'last_evaluated_at' => $now]);
             }
         }
     }
 
-    private function logEvent(AlertRule $rule, Server $server, string $from, string $to, ?float $value, $occurredAt): void
+    private function logEvent(AlertRule $rule, ?Server $server, ?UptimeCheck $check, string $from, string $to, ?float $value, $occurredAt): void
     {
         $event = AlertEvent::create([
             'alert_rule_id' => $rule->id,
-            'server_id' => $server->id,
+            'server_id' => $server?->id,
+            'uptime_check_id' => $check?->id,
             'from_state' => $from,
             'to_state' => $to,
             'value_at_transition' => $value,
@@ -172,7 +215,10 @@ class EvaluateAlertRules extends Command
 
         $this->newEventIds[] = $event->id;
 
-        if ($rule->severity === 'critical') {
+        // Incidents (Phase 8) are server-scoped only — an uptime-check-only
+        // alert doesn't open one, a deliberate scope line rather than
+        // extending incidents to a second target type in this same pass.
+        if ($rule->severity === 'critical' && $server) {
             $this->syncIncident($rule, $server, $to, $event, $occurredAt);
         }
     }
@@ -211,7 +257,7 @@ class EvaluateAlertRules extends Command
 
     /**
      * Collects notification-worthy alert states, resolves channels via
-     * NotificationPolicy, groups by (server, channel), sends, and logs.
+     * NotificationPolicy, groups by (target, channel), sends, and logs.
      * Returns the number of delivery attempts made (success or failure).
      */
     private function dispatchNotifications(): int
@@ -231,14 +277,18 @@ class EvaluateAlertRules extends Command
                 continue; // tracked, visible in the UI, just not notified
             }
 
-            $policy = NotificationPolicy::resolveFor($item['rule']->severity, $item['server']);
+            $server = $item['server']; // may be null for uptime-check-only alerts
+            $policy = NotificationPolicy::resolveFor($item['rule']->severity, $server);
             if (! $policy || empty($policy->channels)) {
                 continue; // no policy match — safe default is no notification
             }
 
+            $targetKey = $server ? 'server:'.$server->id : 'uptime_check:'.$item['uptimeCheck']->id;
+
             foreach ($policy->channels as $channel) {
-                $key = $item['server']->id.':'.$channel;
-                $groups[$key]['server'] = $item['server'];
+                $key = $targetKey.':'.$channel;
+                $groups[$key]['server'] = $server;
+                $groups[$key]['uptimeCheck'] = $item['uptimeCheck'];
                 $groups[$key]['channel'] = $channel;
                 $groups[$key]['items'][] = $item;
             }
@@ -254,29 +304,32 @@ class EvaluateAlertRules extends Command
     }
 
     /**
-     * @return array<int, array{rule: AlertRule, server: Server, state: AlertState, event_id: ?int}>
+     * @return array<int, array{rule: AlertRule, server: ?Server, uptimeCheck: ?UptimeCheck, state: AlertState, event_id: ?int}>
      */
     private function collectNotifiableItems(): array
     {
         $items = [];
 
         if (! empty($this->newEventIds)) {
-            $events = AlertEvent::with(['rule', 'server'])
+            $events = AlertEvent::with(['rule', 'server', 'uptimeCheck'])
                 ->whereIn('id', $this->newEventIds)
                 ->whereIn('to_state', ['firing', 'resolved'])
                 ->get();
 
             foreach ($events as $event) {
-                $state = AlertState::where('alert_rule_id', $event->alert_rule_id)->where('server_id', $event->server_id)->first();
+                $state = AlertState::where('alert_rule_id', $event->alert_rule_id)
+                    ->where('server_id', $event->server_id)
+                    ->where('uptime_check_id', $event->uptime_check_id)
+                    ->first();
                 if ($state) {
-                    $items[] = ['rule' => $event->rule, 'server' => $event->server, 'state' => $state, 'event_id' => $event->id];
+                    $items[] = ['rule' => $event->rule, 'server' => $event->server, 'uptimeCheck' => $event->uptimeCheck, 'state' => $state, 'event_id' => $event->id];
                 }
             }
         }
 
         $handledStateIds = collect($items)->pluck('state.id')->all();
 
-        $repeating = AlertState::with(['rule', 'server'])
+        $repeating = AlertState::with(['rule', 'server', 'uptimeCheck'])
             ->where('state', 'firing')
             ->whereNotIn('id', $handledStateIds ?: [0])
             ->get()
@@ -292,11 +345,12 @@ class EvaluateAlertRules extends Command
         foreach ($repeating as $state) {
             $latestFiringEvent = AlertEvent::where('alert_rule_id', $state->alert_rule_id)
                 ->where('server_id', $state->server_id)
+                ->where('uptime_check_id', $state->uptime_check_id)
                 ->where('to_state', 'firing')
                 ->latest('occurred_at')
                 ->first();
 
-            $items[] = ['rule' => $state->rule, 'server' => $state->server, 'state' => $state, 'event_id' => $latestFiringEvent?->id];
+            $items[] = ['rule' => $state->rule, 'server' => $state->server, 'uptimeCheck' => $state->uptimeCheck, 'state' => $state, 'event_id' => $latestFiringEvent?->id];
         }
 
         return $items;
@@ -305,9 +359,11 @@ class EvaluateAlertRules extends Command
     private function sendGroup(NotificationSetting $settings, array $group): void
     {
         $server = $group['server'];
+        $uptimeCheck = $group['uptimeCheck'];
         $channel = $group['channel'];
         $items = $group['items'];
         $eventIds = array_values(array_filter(array_map(fn ($i) => $i['event_id'], $items)));
+        $targetName = $server?->name ?? $uptimeCheck?->name ?? 'unknown target';
 
         // Best-effort display value for the log only — must never throw here;
         // the real "is this channel actually configured" guard lives inside
@@ -318,18 +374,18 @@ class EvaluateAlertRules extends Command
 
         $delivery = [
             'channel' => $channel,
-            'server_id' => $server->id,
+            'server_id' => $server?->id,
             'alert_event_ids' => $eventIds,
             'recipient' => $recipient,
             'attempted_at' => now(),
             'retry_count' => 0,
         ];
 
-        [$status, $error, $retryCount] = $this->attemptWithOneRetry(function () use ($settings, $channel, $server, $items) {
+        [$status, $error, $retryCount] = $this->attemptWithOneRetry(function () use ($settings, $channel, $targetName, $items) {
             if ($channel === 'telegram') {
-                $this->sendTelegramGroup($settings, $server, $items);
+                $this->sendTelegramGroup($settings, $targetName, $items);
             } else {
-                $this->sendEmailGroup($settings, $server, $items);
+                $this->sendEmailGroup($settings, $targetName, $items);
             }
         });
 
@@ -380,31 +436,30 @@ class EvaluateAlertRules extends Command
         return $recipients;
     }
 
-    private function sendEmailGroup(NotificationSetting $settings, Server $server, array $items): void
+    private function sendEmailGroup(NotificationSetting $settings, string $targetName, array $items): void
     {
         $recipients = $this->emailRecipients($settings);
-        $firing = collect($items)->where('state.state', 'firing');
         $subject = count($items) > 1
-            ? count($items).' alerts on '.$server->name
-            : $items[0]['rule']->name.' — '.strtoupper($items[0]['state']->state).' on '.$server->name;
+            ? count($items).' alerts on '.$targetName
+            : $items[0]['rule']->name.' — '.strtoupper($items[0]['state']->state).' on '.$targetName;
 
-        $body = "Server: {$server->name}\n\n";
+        $body = "Target: {$targetName}\n\n";
         foreach ($items as $item) {
             $body .= $this->alertBlock($item)."\n";
         }
-        $body .= "\nDashboard: {$this->dashboardUrl($server)}\n";
+        $body .= "\nDashboard: {$this->dashboardUrl($items[0])}\n";
 
         NotificationDispatcher::sendEmail($settings, $recipients, $subject, $body);
     }
 
-    private function sendTelegramGroup(NotificationSetting $settings, Server $server, array $items): void
+    private function sendTelegramGroup(NotificationSetting $settings, string $targetName, array $items): void
     {
         if (! $settings->telegram_enabled || ! $settings->telegram_bot_token || ! $settings->telegram_chat_id) {
             throw new \RuntimeException('Telegram is not configured.');
         }
 
         $header = count($items) > 1
-            ? "\u{1F6A8} SERVER ALERT — ".count($items)." alerts on {$server->name}\n\n"
+            ? "\u{1F6A8} SERVER ALERT — ".count($items)." alerts on {$targetName}\n\n"
             : "\u{1F6A8} SERVER ALERT\n\n";
 
         $text = $header;
@@ -414,7 +469,7 @@ class EvaluateAlertRules extends Command
         if (count($items) > 20) {
             $text .= '+'.(count($items) - 20)." more\n";
         }
-        $text .= "\nDashboard: {$this->dashboardUrl($server)}";
+        $text .= "\nDashboard: {$this->dashboardUrl($items[0])}";
 
         // Telegram's hard message cap is 4096 characters.
         if (strlen($text) > 4000) {
@@ -443,10 +498,17 @@ class EvaluateAlertRules extends Command
         ]));
     }
 
-    private function dashboardUrl(Server $server): string
+    private function dashboardUrl(array $item): string
     {
         $frontendUrl = rtrim((string) env('FRONTEND_URL', ''), '/');
+        if (! $frontendUrl) {
+            return '(configure FRONTEND_URL to link here)';
+        }
 
-        return $frontendUrl ? "{$frontendUrl}/servers/{$server->id}" : "(configure FRONTEND_URL to link here) server #{$server->id}";
+        if ($item['server']) {
+            return "{$frontendUrl}/servers/{$item['server']->id}";
+        }
+
+        return "{$frontendUrl}/alerts";
     }
 }

@@ -15,6 +15,7 @@ class ServerMetric extends Model
         'network' => 'array',
         'processes' => 'array',
         'services' => 'array',
+        'docker' => 'array',
         'collected_at' => 'datetime',
     ];
 

@@ -55,17 +55,22 @@ class AlertRuleController extends Controller
 
     private function validated(Request $request, ?AlertRule $rule = null): array
     {
-        $metrics = ['cpu_percent', 'memory_percent', 'disk_percent', 'server_offline', 'service_down'];
+        $metrics = [
+            'cpu_percent', 'memory_percent', 'disk_percent', 'server_offline', 'service_down',
+            'uptime_check_down', 'ssl_expiring_soon',
+        ];
 
         $validated = $request->validate([
             'name' => $rule ? 'sometimes|string|max:255' : 'required|string|max:255',
             'description' => 'nullable|string',
             'metric' => [$rule ? 'sometimes' : 'required', Rule::in($metrics)],
             'server_id' => 'nullable|exists:servers,id',
+            'uptime_check_id' => 'nullable|exists:uptime_checks,id',
             'service_name' => 'nullable|string|max:255|required_if:metric,service_down',
             'condition' => ['nullable', Rule::in(['>', '<', '>=', '<='])],
             'threshold' => 'nullable|numeric',
             'for_duration_seconds' => 'nullable|integer|min:0',
+            'notification_repeat_interval_seconds' => 'nullable|integer|min:0',
             'severity' => ['nullable', Rule::in(['info', 'warning', 'high', 'critical'])],
             'enabled' => 'nullable|boolean',
             'labels' => 'nullable|array',
@@ -77,6 +82,12 @@ class AlertRuleController extends Controller
                 'condition' => 'required',
                 'threshold' => 'required|numeric',
             ]);
+        }
+        if ($metric === 'ssl_expiring_soon') {
+            $request->validate(['threshold' => 'required|numeric', 'uptime_check_id' => 'required|exists:uptime_checks,id']);
+        }
+        if ($metric === 'uptime_check_down') {
+            $request->validate(['uptime_check_id' => 'required|exists:uptime_checks,id']);
         }
 
         return $validated;
