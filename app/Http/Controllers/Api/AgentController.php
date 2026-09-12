@@ -44,6 +44,7 @@ class AgentController extends Controller
             'network' => 'nullable|array',
             'processes' => 'nullable|array',
             'services' => 'nullable|array',
+            'docker' => 'nullable|array',
         ]);
 
         $server = $request->user();
@@ -58,6 +59,7 @@ class AgentController extends Controller
                 'network' => $validated['network'] ?? null,
                 'processes' => $validated['processes'] ?? null,
                 'services' => $validated['services'] ?? null,
+                'docker' => $validated['docker'] ?? null,
                 'collected_at' => $collectedAt,
             ]
         );

@@ -27,6 +27,11 @@ class AlertState extends Model
         return $this->belongsTo(Server::class);
     }
 
+    public function uptimeCheck()
+    {
+        return $this->belongsTo(UptimeCheck::class);
+    }
+
     /**
      * Whether an active silence or maintenance window currently suppresses
      * notification for this state — the real `state` column is never
@@ -48,6 +53,10 @@ class AlertState extends Model
 
         if ($silenced) {
             return true;
+        }
+
+        if ($this->server_id === null) {
+            return false; // maintenance windows are server-scoped only (Phase 6); uptime checks (Phase 9) aren't a server
         }
 
         return MaintenanceWindow::query()

@@ -22,7 +22,7 @@ import urllib.error
 import urllib.request
 
 DEFAULT_CONFIG_PATH = "/etc/clemwa-monitoring-agent/config.json"
-AGENT_VERSION = "0.1.0"
+AGENT_VERSION = "0.2.0"
 CPU_SAMPLE_INTERVAL = 0.2  # seconds between the two /proc/stat samples
 
 
@@ -378,6 +378,67 @@ def collect_services(names):
 
 
 # ---------------------------------------------------------------------------
+# Docker (Phase 9) — entirely optional. Returns None (not an empty list) when
+# the `docker` binary isn't present, so the backend can tell "no Docker here"
+# apart from "Docker is here with zero containers" and never fabricate either.
+# ---------------------------------------------------------------------------
+
+def _has_docker():
+    for path in ("/usr/bin/docker", "/usr/local/bin/docker", "/bin/docker"):
+        if os.path.exists(path):
+            return True
+    return False
+
+
+def collect_docker():
+    if not _has_docker():
+        return None
+
+    try:
+        result = subprocess.run(
+            ["docker", "stats", "--no-stream", "--format",
+             "{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=10,
+        )
+        containers = []
+        for line in result.stdout.decode().strip().splitlines():
+            parts = line.split("\t")
+            if len(parts) != 4:
+                continue
+            name, cpu_perc, mem_usage, mem_perc = parts
+            containers.append({
+                "name": name,
+                "cpu_percent": _parse_percent(cpu_perc),
+                "memory_usage": mem_usage.strip(),
+                "memory_percent": _parse_percent(mem_perc),
+            })
+
+        status_result = subprocess.run(
+            ["docker", "ps", "-a", "--format", "{{.Names}}\t{{.Status}}"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=10,
+        )
+        statuses = {}
+        for line in status_result.stdout.decode().strip().splitlines():
+            parts = line.split("\t")
+            if len(parts) == 2:
+                statuses[parts[0]] = parts[1]
+
+        for c in containers:
+            c["status"] = statuses.get(c["name"], "unknown")
+
+        return {"containers": containers, "count": len(containers)}
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
+def _parse_percent(value):
+    try:
+        return float(value.strip().rstrip("%"))
+    except (ValueError, AttributeError):
+        return None
+
+
+# ---------------------------------------------------------------------------
 # Payload + transport
 # ---------------------------------------------------------------------------
 
@@ -400,6 +461,13 @@ def build_payload(config):
         payload["services"] = collect_services(config.get("critical_services"))
     except Exception as exc:  # noqa: BLE001
         log("failed to collect services: %s" % exc)
+
+    try:
+        docker = collect_docker()
+        if docker is not None:
+            payload["docker"] = docker
+    except Exception as exc:  # noqa: BLE001
+        log("failed to collect docker: %s" % exc)
 
     return payload
 

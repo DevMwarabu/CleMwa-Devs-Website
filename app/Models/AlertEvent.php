@@ -24,4 +24,9 @@ class AlertEvent extends Model
     {
         return $this->belongsTo(Server::class);
     }
+
+    public function uptimeCheck()
+    {
+        return $this->belongsTo(UptimeCheck::class);
+    }
 }

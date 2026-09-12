@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\AlertSilenceController;
 use App\Http\Controllers\Api\AuditLogController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DatabaseHealthController;
 use App\Http\Controllers\Api\DropdownOptionController;
 use App\Http\Controllers\Api\FlagshipProductController;
 use App\Http\Controllers\Api\IncidentController;
@@ -30,6 +31,7 @@ use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\TeamMemberController;
 use App\Http\Controllers\Api\TestimonialController;
 use App\Http\Controllers\Api\UploadController;
+use App\Http\Controllers\Api\UptimeCheckController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -208,4 +210,15 @@ Route::middleware(['auth:sanctum', 'user.token'])->group(function () {
         Route::put('/incidents/{incident}', [IncidentController::class, 'update']);
         Route::post('/incidents/{incident}/notes', [IncidentController::class, 'addNote']);
     });
+
+    // Uptime/API/SSL checks + database health — monitoring platform Phase 9
+    Route::middleware('permission:servers.view')->group(function () {
+        Route::get('/uptime-checks', [UptimeCheckController::class, 'index']);
+        Route::get('/uptime-checks/{uptimeCheck}', [UptimeCheckController::class, 'show']);
+        Route::get('/uptime-checks/{uptimeCheck}/history', [UptimeCheckController::class, 'history']);
+        Route::get('/database-health', [DatabaseHealthController::class, 'summary']);
+    });
+    Route::middleware('permission:servers.create')->post('/uptime-checks', [UptimeCheckController::class, 'store']);
+    Route::middleware('permission:servers.edit')->put('/uptime-checks/{uptimeCheck}', [UptimeCheckController::class, 'update']);
+    Route::middleware('permission:servers.delete')->delete('/uptime-checks/{uptimeCheck}', [UptimeCheckController::class, 'destroy']);
 });
