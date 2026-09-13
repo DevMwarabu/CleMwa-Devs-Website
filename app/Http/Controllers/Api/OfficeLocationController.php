@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\OfficeLocation;
+use App\Support\ActivityNotifier;
 use Illuminate\Http\Request;
 
 class OfficeLocationController extends Controller
@@ -37,6 +38,8 @@ class OfficeLocationController extends Controller
     {
         $validated = $request->validate($this->rules());
         $office = OfficeLocation::create($validated);
+        ActivityNotifier::notify("📦 {$request->user()->email} created a new Office Location: \"{$office->name}\"");
+
         return response()->json($office, 201);
     }
 
@@ -49,12 +52,14 @@ class OfficeLocationController extends Controller
     {
         $validated = $request->validate($this->rules());
         $officeLocation->update($validated);
+
         return response()->json($officeLocation);
     }
 
     public function destroy(OfficeLocation $officeLocation)
     {
         $officeLocation->delete();
+
         return response()->json(['message' => 'Office location deleted successfully.']);
     }
 }

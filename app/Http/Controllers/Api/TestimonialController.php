@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Testimonial;
+use App\Support\ActivityNotifier;
 use Illuminate\Http\Request;
 
 class TestimonialController extends Controller
@@ -15,8 +16,8 @@ class TestimonialController extends Controller
         if ($search = $request->query('q')) {
             $query->where(function ($q) use ($search) {
                 $q->where('client_name', 'like', "%{$search}%")
-                  ->orWhere('client_role', 'like', "%{$search}%")
-                  ->orWhere('quote', 'like', "%{$search}%");
+                    ->orWhere('client_role', 'like', "%{$search}%")
+                    ->orWhere('quote', 'like', "%{$search}%");
             });
         }
 
@@ -34,15 +35,17 @@ class TestimonialController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'client_name'      => 'required|string|max:255',
-            'client_role'      => 'required|string|max:255',
-            'quote'            => 'required|string',
+            'client_name' => 'required|string|max:255',
+            'client_role' => 'required|string|max:255',
+            'quote' => 'required|string',
             'client_image_url' => 'nullable|string|max:500',
-            'delay'            => 'nullable|integer',
-            'is_approved'      => 'boolean',
+            'delay' => 'nullable|integer',
+            'is_approved' => 'boolean',
         ]);
 
         $testimonial = Testimonial::create($validated);
+        ActivityNotifier::notify("📦 {$request->user()->email} created a new Testimonial from \"{$testimonial->client_name}\"");
+
         return response()->json($testimonial, 201);
     }
 
@@ -54,21 +57,23 @@ class TestimonialController extends Controller
     public function update(Request $request, Testimonial $testimonial)
     {
         $validated = $request->validate([
-            'client_name'      => 'required|string|max:255',
-            'client_role'      => 'required|string|max:255',
-            'quote'            => 'required|string',
+            'client_name' => 'required|string|max:255',
+            'client_role' => 'required|string|max:255',
+            'quote' => 'required|string',
             'client_image_url' => 'nullable|string|max:500',
-            'delay'            => 'nullable|integer',
-            'is_approved'      => 'boolean',
+            'delay' => 'nullable|integer',
+            'is_approved' => 'boolean',
         ]);
 
         $testimonial->update($validated);
+
         return response()->json($testimonial);
     }
 
     public function destroy(Testimonial $testimonial)
     {
         $testimonial->delete();
+
         return response()->json(['message' => 'Testimonial deleted successfully.']);
     }
 }

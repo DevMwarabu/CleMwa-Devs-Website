@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\TeamMember;
+use App\Support\ActivityNotifier;
 use Illuminate\Http\Request;
 
 class TeamMemberController extends Controller
@@ -34,6 +35,8 @@ class TeamMemberController extends Controller
     {
         $validated = $request->validate($this->rules());
         $member = TeamMember::create($validated);
+        ActivityNotifier::notify("📦 {$request->user()->email} created a new Team Member: \"{$member->name}\"");
+
         return response()->json($member, 201);
     }
 
@@ -46,12 +49,14 @@ class TeamMemberController extends Controller
     {
         $validated = $request->validate($this->rules());
         $teamMember->update($validated);
+
         return response()->json($teamMember);
     }
 
     public function destroy(TeamMember $teamMember)
     {
         $teamMember->delete();
+
         return response()->json(['message' => 'Team member deleted successfully.']);
     }
 }

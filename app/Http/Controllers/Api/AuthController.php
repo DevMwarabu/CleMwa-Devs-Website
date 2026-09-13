@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\ActivityNotifier;
 use App\Support\AuditLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -29,6 +30,7 @@ class AuthController extends Controller
         }
 
         AuditLogger::log('auth.login', 'User', $user->id, [], [], 'success');
+        ActivityNotifier::notify("🔐 {$user->email} logged in (IP: {$request->ip()})");
 
         return response()->json([
             'token' => $user->createToken('mobile-admin')->plainTextToken,
@@ -44,6 +46,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         AuditLogger::log('auth.logout', 'User', $request->user()->id);
+        ActivityNotifier::notify("🚪 {$request->user()->email} logged out");
 
         $request->user()->currentAccessToken()->delete();
 

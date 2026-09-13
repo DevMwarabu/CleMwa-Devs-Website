@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\FlagshipProduct;
+use App\Support\ActivityNotifier;
 use Illuminate\Http\Request;
 
 class FlagshipProductController extends Controller
@@ -15,7 +16,7 @@ class FlagshipProductController extends Controller
         if ($search = $request->query('q')) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
@@ -29,16 +30,18 @@ class FlagshipProductController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'         => 'required|string|max:255',
-            'description'   => 'required|string',
-            'image_url'     => 'nullable|string|max:500',
-            'theme_color'   => 'nullable|string|max:50',
-            'is_live'       => 'boolean',
-            'demo_link'     => 'nullable|string|max:500',
-            'details_link'  => 'nullable|string|max:500',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'image_url' => 'nullable|string|max:500',
+            'theme_color' => 'nullable|string|max:50',
+            'is_live' => 'boolean',
+            'demo_link' => 'nullable|string|max:500',
+            'details_link' => 'nullable|string|max:500',
         ]);
 
         $product = FlagshipProduct::create($validated);
+        ActivityNotifier::notify("📦 {$request->user()->email} created a new Product: \"{$product->title}\"");
+
         return response()->json($product, 201);
     }
 
@@ -50,22 +53,24 @@ class FlagshipProductController extends Controller
     public function update(Request $request, FlagshipProduct $flagshipProduct)
     {
         $validated = $request->validate([
-            'title'         => 'required|string|max:255',
-            'description'   => 'required|string',
-            'image_url'     => 'nullable|string|max:500',
-            'theme_color'   => 'nullable|string|max:50',
-            'is_live'       => 'boolean',
-            'demo_link'     => 'nullable|string|max:500',
-            'details_link'  => 'nullable|string|max:500',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'image_url' => 'nullable|string|max:500',
+            'theme_color' => 'nullable|string|max:50',
+            'is_live' => 'boolean',
+            'demo_link' => 'nullable|string|max:500',
+            'details_link' => 'nullable|string|max:500',
         ]);
 
         $flagshipProduct->update($validated);
+
         return response()->json($flagshipProduct);
     }
 
     public function destroy(FlagshipProduct $flagshipProduct)
     {
         $flagshipProduct->delete();
+
         return response()->json(['message' => 'Product deleted successfully.']);
     }
 }

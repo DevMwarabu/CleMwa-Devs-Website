@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Support\ActivityNotifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -20,10 +21,11 @@ class UploadController extends Controller
 
         $file = $request->file('image');
         $folder = 'projects';
-        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
+        $filename = Str::uuid().'.'.$file->getClientOriginalExtension();
         $path = $file->storeAs($folder, $filename, 'public');
 
         $url = Storage::disk('public')->url($path);
+        ActivityNotifier::notify("🖼️ {$request->user()->email} uploaded a file: {$filename} ({$file->getClientOriginalName()})");
 
         return response()->json([
             'url' => $url,
