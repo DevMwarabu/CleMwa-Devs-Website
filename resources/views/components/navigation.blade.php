@@ -1,11 +1,11 @@
-<header class="fixed top-0 w-full z-50 glass transition-all duration-300" x-data="{ mobileMenuOpen: false }">
+<header class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-sm border-b border-slate-200" x-data="{ mobileMenuOpen: false }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20">
             <!-- Logo -->
             <div class="flex-shrink-0">
-                <a href="/" class="flex items-center gap-2 group">
-                    <img src="/favicon.svg" alt="CleMwa Developers" class="w-10 h-10 rounded-sm group-hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] transition-all">
-                    <span class="font-heading font-bold text-xl text-white tracking-tight">CleMwa<span class="text-slate-400">Devs</span></span>
+                <a href="/" class="flex items-center gap-2">
+                    <img src="/favicon.svg" alt="CleMwa Developers" class="w-9 h-9 rounded-sm">
+                    <span class="font-heading font-bold text-xl text-slate-900 tracking-tight">CleMwa<span class="text-slate-400">Devs</span></span>
                 </a>
             </div>
 
@@ -22,7 +22,7 @@
                     ];
                 @endphp
                 @foreach($links as $link)
-                    <a href="{{ $link['url'] }}" class="text-slate-300 hover:text-white hover:text-glow transition-all text-sm font-medium">
+                    <a href="{{ $link['url'] }}" class="text-slate-600 hover:text-slate-900 transition-colors text-sm font-medium">
                         {{ $link['name'] }}
                     </a>
                 @endforeach
@@ -30,14 +30,14 @@
 
             <!-- CTA -->
             <div class="hidden md:flex items-center space-x-4">
-                <a href="/quote" class="bg-white text-primary-500 hover:bg-slate-200 px-5 py-2.5 rounded-sm text-sm font-bold transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
+                <a href="/quote" class="bg-slate-900 text-white hover:bg-slate-700 px-5 py-2.5 rounded-md text-sm font-semibold transition-colors">
                     Request Quote
                 </a>
             </div>
 
             <!-- Mobile Menu Button -->
             <div class="md:hidden flex items-center">
-                <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-slate-300 hover:text-white focus:outline-none">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-slate-600 hover:text-slate-900 focus:outline-none">
                     <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                     </svg>
@@ -50,22 +50,22 @@
     </div>
 
     <!-- Mobile Menu -->
-    <div x-show="mobileMenuOpen" 
+    <div x-show="mobileMenuOpen"
          x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0 -translate-y-2"
          x-transition:enter-end="opacity-100 translate-y-0"
          x-transition:leave="transition ease-in duration-150"
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 -translate-y-2"
-         class="md:hidden glass border-t border-slate-800/50" style="display: none;">
+         class="md:hidden bg-white border-t border-slate-200" style="display: none;">
         <div class="px-4 pt-2 pb-6 space-y-1">
             @foreach($links as $link)
-                <a href="{{ $link['url'] }}" class="block px-3 py-3 rounded-sm text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800/50">
+                <a href="{{ $link['url'] }}" class="block px-3 py-3 rounded-md text-base font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50">
                     {{ $link['name'] }}
                 </a>
             @endforeach
             <div class="pt-4 flex flex-col gap-3">
-                <a href="/quote" class="block text-center px-3 py-3 rounded-sm text-base font-bold text-primary-500 bg-white hover:bg-slate-200 shadow-lg">
+                <a href="/quote" class="block text-center px-3 py-3 rounded-md text-base font-semibold text-white bg-slate-900 hover:bg-slate-700">
                     Request Quote
                 </a>
             </div>

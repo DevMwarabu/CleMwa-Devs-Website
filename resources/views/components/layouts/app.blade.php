@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
     <head>
         @include('partials.gtag-head')
         @include('partials.gtm-head')
@@ -31,23 +31,9 @@
         <!-- FontAwesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         
-        <!-- Theme Initialization -->
-        <script>
-            if (localStorage.getItem('theme') === 'light') {
-                document.documentElement.classList.remove('dark');
-            }
-        </script>
-        
-
     </head>
-    <body class="bg-primary-500 text-white font-sans antialiased selection:bg-accent-500 selection:text-white min-h-screen flex flex-col relative overflow-x-hidden">
+    <body class="bg-white text-slate-900 font-sans antialiased selection:bg-accent-500 selection:text-white min-h-screen flex flex-col relative overflow-x-hidden">
         @include('partials.gtm-body')
-
-        <!-- Aurora Background -->
-        <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-            <div class="absolute -top-[30%] -left-[10%] w-[70%] h-[70%] rounded-sm bg-accent-500/20 blur-[120px] animate-aurora"></div>
-            <div class="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] rounded-sm bg-accent2-500/20 blur-[120px] animate-aurora" style="animation-delay: -5s;"></div>
-        </div>
 
         <x-navigation />
         
