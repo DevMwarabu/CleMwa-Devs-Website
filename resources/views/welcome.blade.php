@@ -195,7 +195,7 @@
                             @endif
                         </div>
                         <h3 class="text-lg font-bold text-slate-900 mb-2 leading-tight">{{ $project->title }}</h3>
-                        <p class="text-sm text-slate-500 mb-5 line-clamp-3 flex-1">{{ $project->description }}</p>
+                        <p class="text-sm text-slate-500 mb-5 line-clamp-3 flex-1">{{ $project->short_description ?: Str::limit(strip_tags((string) $project->description), 140) }}</p>
                         <div class="flex items-center justify-between mt-auto">
                             <a href="/projects/{{ $project->slug }}" class="inline-flex items-center text-sm text-slate-900 font-medium hover:text-accent-600 transition-colors">
                                 View Study <svg class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
