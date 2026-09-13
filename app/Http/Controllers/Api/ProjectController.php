@@ -95,6 +95,9 @@ class ProjectController extends Controller
             'testimonial_rating' => 'nullable|integer|min:1|max:5',
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
+            'links' => 'nullable|array',
+            'links.*.label' => 'required_with:links|string|max:100',
+            'links.*.url' => 'required_with:links|string|max:500',
         ]);
 
         // Auto-generate slug if not provided
@@ -157,6 +160,9 @@ class ProjectController extends Controller
             'testimonial_rating' => 'nullable|integer|min:1|max:5',
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
+            'links' => 'nullable|array',
+            'links.*.label' => 'required_with:links|string|max:100',
+            'links.*.url' => 'required_with:links|string|max:500',
         ]);
 
         $project->update($validated);

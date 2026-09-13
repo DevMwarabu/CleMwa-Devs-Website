@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
     use HasUuids;
-    
+
     protected $guarded = [];
 
     protected $casts = [
@@ -21,5 +20,6 @@ class Project extends Model
         'stats' => 'array',
         'is_featured' => 'boolean',
         'completion_date' => 'date',
+        'links' => 'array',
     ];
 }

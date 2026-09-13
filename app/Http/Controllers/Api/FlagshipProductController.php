@@ -37,6 +37,9 @@ class FlagshipProductController extends Controller
             'is_live' => 'boolean',
             'demo_link' => 'nullable|string|max:500',
             'details_link' => 'nullable|string|max:500',
+            'links' => 'nullable|array',
+            'links.*.label' => 'required_with:links|string|max:100',
+            'links.*.url' => 'required_with:links|string|max:500',
         ]);
 
         $product = FlagshipProduct::create($validated);
@@ -60,6 +63,9 @@ class FlagshipProductController extends Controller
             'is_live' => 'boolean',
             'demo_link' => 'nullable|string|max:500',
             'details_link' => 'nullable|string|max:500',
+            'links' => 'nullable|array',
+            'links.*.label' => 'required_with:links|string|max:100',
+            'links.*.url' => 'required_with:links|string|max:500',
         ]);
 
         $flagshipProduct->update($validated);

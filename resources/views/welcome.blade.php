@@ -84,6 +84,13 @@
                             <a href="{{ $product->demo_link ?? '#' }}" class="px-6 py-3 bg-{{ $product->theme_color }}-500 hover:bg-{{ $product->theme_color }}-600 text-white rounded-sm font-medium transition-colors shadow-lg shadow-{{ $product->theme_color }}-500/25">Book Demo</a>
                             <a href="{{ $product->details_link ?? '#' }}" class="px-6 py-3 border border-white/20 hover:bg-white/10 text-white rounded-sm font-medium transition-colors">Learn More</a>
                         </div>
+                        @if(!empty($product->links))
+                        <div class="flex flex-wrap gap-3 mt-4">
+                            @foreach($product->links as $link)
+                            <a href="{{ $link['url'] }}" target="_blank" rel="noopener" class="px-4 py-2 text-sm border border-white/15 hover:border-white/30 hover:bg-white/5 text-slate-300 rounded-sm transition-colors">{{ $link['label'] }}</a>
+                            @endforeach
+                        </div>
+                        @endif
                     </div>
                     <div class="w-full md:w-1/2 relative z-10">
                         <img src="{{ $product->image_url }}" alt="{{ $product->title }} Interface" class="rounded-sm border border-white/10 shadow-2xl group-hover:scale-105 transition-transform duration-500">
