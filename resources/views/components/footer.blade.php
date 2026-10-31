@@ -122,15 +122,15 @@
 
             <!-- Products -->
             <div class="lg:col-span-3">
-                <h4 class="text-slate-900 font-bold mb-6 tracking-wide">Products</h4>
+                <h4 class="text-slate-900 font-bold mb-6 tracking-wide">Apps &amp; Solutions</h4>
                 <ul class="space-y-4">
                     @foreach($footerProducts as $product)
-                    <li><a href="{{ $product->details_link ?? '#' }}" class="text-slate-500 hover:text-slate-900 transition-colors">
+                    <li><a href="{{ $product->details_link ?: '/apps-solutions' }}" class="text-slate-500 hover:text-slate-900 transition-colors">
                         {{ $product->title }}
                     </a></li>
                     @endforeach
-                    <li><a href="/products" class="text-accent-500 font-semibold hover:text-accent-600 transition-colors inline-flex items-center group mt-2">
-                        Explore Portfolio <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    <li><a href="/apps-solutions" class="text-accent-500 font-semibold hover:text-accent-600 transition-colors inline-flex items-center group mt-2">
+                        Explore solutions <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </a></li>
                 </ul>
             </div>

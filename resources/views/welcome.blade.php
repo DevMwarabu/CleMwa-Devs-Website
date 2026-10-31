@@ -1,30 +1,64 @@
 <x-layouts.app>
 
     <!-- Hero -->
-    <section class="py-20 md:py-28 bg-white">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
-                Engineering Digital Excellence.
-            </h1>
-            <p class="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-                We design, build and support secure, scalable software — web platforms, mobile apps and cloud systems — for businesses that need more than a website.
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="/quote" class="px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white rounded-md font-semibold transition-colors">
-                    Request a Quote
+    <section class="relative overflow-hidden bg-white py-14 md:py-20">
+        <div class="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-accent-500/5 blur-3xl"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative">
+            <div class="max-w-2xl">
+                <div class="inline-flex items-center gap-2 rounded-full border border-accent-500/20 bg-accent-500/5 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-accent-600 mb-7">
+                    <span class="h-2 w-2 rounded-full bg-accent-500"></span>
+                    Thoughtful software. Real results.
+                </div>
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 tracking-tight leading-[1.05]">
+                    Digital products, built for <span class="text-accent-600">what's next.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-slate-500 max-w-xl mb-9 leading-relaxed">
+                    We design, build and support secure, scalable software — web platforms, mobile apps and cloud systems — for businesses ready to move forward.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="/quote" class="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-accent-500 hover:bg-accent-600 text-white rounded-full font-semibold transition-colors">
+                        Let's talk about your project
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17 17 7M7 7h10v10"/></svg>
+                    </a>
+                    <a href="/portfolio" class="inline-flex items-center justify-center px-7 py-3.5 border border-slate-300 hover:border-slate-400 hover:bg-slate-50 text-slate-900 rounded-full font-semibold transition-colors">
+                        Explore our work
+                    </a>
+                </div>
+
+                @if($featuredProject)
+                <a href="/projects/{{ $featuredProject->slug }}" class="inline-flex items-center gap-2 mt-8 text-sm text-slate-500 hover:text-accent-600 transition-colors">
+                    <span class="px-2.5 py-1 rounded-full bg-accent-500/10 text-accent-600 text-[10px] font-bold uppercase tracking-wider">Featured work</span>
+                    {{ $featuredProject->title }}
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </a>
-                <a href="/portfolio" class="px-8 py-4 border border-slate-300 hover:bg-slate-50 text-slate-900 rounded-md font-semibold transition-colors">
-                    View Our Work
-                </a>
+                @endif
             </div>
 
-            @if($featuredProject)
-            <a href="/projects/{{ $featuredProject->slug }}" class="inline-flex items-center gap-2 mt-10 text-sm text-slate-500 hover:text-slate-900 transition-colors">
-                <span class="px-2 py-0.5 rounded-full bg-accent-500/10 text-accent-600 text-xs font-semibold uppercase tracking-wide">Featured</span>
-                {{ $featuredProject->title }}
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </a>
-            @endif
+            @php($heroImage = $featuredProject?->image_url ?: $products->first()?->image_url)
+            <div class="relative mx-auto w-full max-w-2xl">
+                <div class="aspect-[4/3] overflow-hidden rounded-[2rem] border border-slate-200 bg-gradient-to-br from-blue-50 via-white to-violet-50 shadow-xl shadow-slate-200/60">
+                    @if($heroImage)
+                        <img src="{{ Str::startsWith($heroImage, 'http') ? $heroImage : Storage::url($heroImage) }}" alt="{{ $featuredProject?->title ?? $products->first()?->title ?? 'CleMwa digital solution' }}" class="h-full w-full object-cover">
+                    @else
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="grid grid-cols-2 gap-4 p-8 sm:gap-6 sm:p-12">
+                                <div class="h-28 w-28 rounded-3xl bg-accent-500 shadow-lg shadow-blue-200 sm:h-40 sm:w-40"></div>
+                                <div class="mt-8 h-28 w-28 rounded-full border-[18px] border-violet-200 sm:h-40 sm:w-40 sm:border-[24px]"></div>
+                                <div class="-mt-2 h-28 w-28 rounded-full bg-violet-500 shadow-lg shadow-violet-200 sm:h-40 sm:w-40"></div>
+                                <div class="mt-6 h-28 w-28 rounded-3xl border-2 border-accent-500/30 bg-white/80 sm:h-40 sm:w-40"></div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                <div class="absolute -bottom-5 left-4 sm:-left-5 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-lg">
+                    <p class="text-xs font-medium uppercase tracking-wider text-slate-400">From idea</p>
+                    <p class="mt-1 text-sm font-bold text-slate-900">To launch & beyond</p>
+                </div>
+                <div class="absolute -right-2 top-5 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-lg sm:-right-4">
+                    <p class="text-xs font-semibold text-accent-600">Built around your business</p>
+                    <p class="mt-1 text-xs text-slate-500">People-first. Future-ready.</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -81,44 +115,48 @@
     </section>
 
     <!-- Flagship Products Section -->
+    @if($products->isNotEmpty())
     <section class="py-24 bg-slate-50 border-y border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Our Flagship Products</h2>
-                <p class="text-lg text-slate-500">Ready-to-deploy platforms built to accelerate your business operations and growth.</p>
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+                <div class="max-w-2xl">
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-accent-600 mb-3">Made by CleMwa</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Apps &amp; solutions</h2>
+                    <p class="text-lg text-slate-500">Useful, dependable systems designed to make everyday work simpler.</p>
+                </div>
+                <a href="/apps-solutions" class="inline-flex items-center gap-2 text-sm font-semibold text-accent-600 hover:text-accent-700 transition-colors">
+                    Explore all solutions
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17 17 7M7 7h10v10"/></svg>
+                </a>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 @foreach($products as $product)
-                <div class="bg-white p-8 md:p-10 rounded-xl border border-slate-200 flex flex-col md:flex-row items-center gap-8">
-                    <div class="w-full md:w-1/2">
-                        @if($product->is_live)
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-{{ $product->theme_color }}-500/10 text-{{ $product->theme_color }}-600 text-xs font-bold uppercase tracking-widest mb-4">
-                            <span class="w-2 h-2 rounded-full bg-{{ $product->theme_color }}-500"></span> Live Product
-                        </div>
+                <article class="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+                    <div class="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-blue-50 to-violet-50">
+                        @if($product->image_url)
+                            <img src="{{ Str::startsWith($product->image_url, 'http') ? $product->image_url : Storage::url($product->image_url) }}" alt="{{ $product->title }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy">
+                        @else
+                            <div class="flex h-full items-center justify-center text-5xl font-bold tracking-tight text-accent-500/30">{{ strtoupper(substr($product->title, 0, 2)) }}</div>
                         @endif
+                        <span class="absolute left-5 top-5 rounded-full border border-white/70 bg-white/90 px-3 py-1 text-xs font-semibold {{ $product->is_live ? 'text-emerald-700' : 'text-amber-700' }}">
+                            {{ $product->is_live ? 'Available now' : 'Coming soon' }}
+                        </span>
+                    </div>
+                    <div class="p-7 md:p-8">
                         <h3 class="text-2xl font-bold text-slate-900 mb-3">{{ $product->title }}</h3>
-                        <p class="text-slate-500 mb-6">{{ $product->description }}</p>
-                        <div class="flex flex-wrap gap-3">
-                            <a href="{{ $product->demo_link ?? '#' }}" class="px-5 py-2.5 bg-{{ $product->theme_color }}-500 hover:bg-{{ $product->theme_color }}-600 text-white rounded-md font-medium transition-colors text-sm">Book Demo</a>
-                            <a href="{{ $product->details_link ?? '#' }}" class="px-5 py-2.5 border border-slate-300 hover:bg-slate-50 text-slate-900 rounded-md font-medium transition-colors text-sm">Learn More</a>
-                        </div>
-                        @if(!empty($product->links))
-                        <div class="flex flex-wrap gap-3 mt-3">
-                            @foreach($product->links as $link)
-                            <a href="{{ $link['url'] }}" target="_blank" rel="noopener" class="px-4 py-2 text-sm border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-600 rounded-md transition-colors">{{ $link['label'] }}</a>
-                            @endforeach
-                        </div>
-                        @endif
+                        <p class="text-slate-500 leading-relaxed">{{ Str::limit($product->description, 180) }}</p>
+                        <a href="/apps-solutions" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent-600 hover:text-accent-700">
+                            Explore solution
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17 17 7M7 7h10v10"/></svg>
+                        </a>
                     </div>
-                    <div class="w-full md:w-1/2">
-                        <img src="{{ $product->image_url }}" alt="{{ $product->title }} Interface" class="rounded-lg border border-slate-200">
-                    </div>
-                </div>
+                </article>
                 @endforeach
             </div>
         </div>
     </section>
+    @endif
 
     <!-- Why Choose Us Section -->
     <section class="py-24 bg-white">

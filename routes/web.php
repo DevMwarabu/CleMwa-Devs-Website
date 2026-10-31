@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AppsSolutionsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -40,6 +41,7 @@ use App\Http\Controllers\ProductController;
 
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{slug}', [ProductController::class, 'show']);
+Route::get('/apps-solutions', [AppsSolutionsController::class, 'index'])->name('apps-solutions.index');
 
 use App\Http\Controllers\ContactController;
 
