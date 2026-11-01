@@ -503,8 +503,8 @@ footer button[type="submit"] {
 }
 
 .home-concept .home-work .home-card {
-    border-color: rgb(255 255 255 / 0.2);
-    background: #0a246f;
+    border-color: var(--clemwa-border);
+    background: #fff;
 }
 
 .home-concept .home-card:hover {
@@ -513,29 +513,29 @@ footer button[type="submit"] {
 }
 
 .home-concept .home-work .home-card:hover {
-    border-color: rgb(255 255 255 / 0.52);
+    border-color: rgb(11 92 255 / 0.35);
 }
 
 .home-concept .home-work .home-project-copy {
-    background: linear-gradient(145deg, #123da9 0%, #0a246f 54%, #07144f 100%);
+    background: #fff;
 }
 
 .home-concept .home-work .home-project-copy h3,
 .home-concept .home-work .home-project-copy a {
-    color: #fff;
+    color: var(--clemwa-ink);
 }
 
 .home-concept .home-work .home-project-copy p {
-    color: rgb(232 238 255 / 0.84);
+    color: #475569;
 }
 
 .home-concept .home-work .home-project-copy a[href^="/quote"] {
-    background-color: rgb(255 255 255 / 0.12);
-    color: #fff;
+    background-color: #eaf0ff;
+    color: #1642a5;
 }
 
 .home-concept .home-work .home-project-copy a:hover {
-    color: #c7d5ff;
+    color: #0b5cff;
 }
 
 .home-concept .home-cta a:first-child {
@@ -562,8 +562,6 @@ main > section:first-of-type .inline-flex.uppercase.tracking-widest {
 
 html:not(.dark) .home-concept .home-hero .text-white,
 html:not(.dark) .home-concept .home-work h2,
-html:not(.dark) .home-concept .home-work .home-project-copy h3,
-html:not(.dark) .home-concept .home-work .home-project-copy a,
 html:not(.dark) .home-concept .home-cta h2,
 html:not(.dark) .home-concept .home-cta a:last-child {
     color: #fff !important;
@@ -581,7 +579,6 @@ html:not(.dark) .home-concept .home-cta a[href="/quote"] * {
 }
 
 html:not(.dark) .home-concept .home-work > div > div > p,
-html:not(.dark) .home-concept .home-work .home-project-copy p,
 html:not(.dark) .home-concept .home-cta p {
     color: rgb(232 238 255 / 0.88) !important;
 }
