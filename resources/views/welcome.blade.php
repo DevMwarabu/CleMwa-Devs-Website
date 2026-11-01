@@ -4,11 +4,7 @@
     <section class="home-hero relative overflow-hidden bg-white py-14 md:py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mx-auto max-w-4xl text-center">
-                <span class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-xs font-semibold text-emerald-900">
-                    <span class="h-2 w-2 rounded-full bg-emerald-700"></span>
-                    Software that moves business forward
-                </span>
-                <h1 class="mx-auto mt-6 max-w-4xl text-5xl font-medium leading-[1.05] tracking-tight text-slate-900 md:text-7xl">
+                <h1 class="mx-auto mt-0 max-w-4xl text-5xl font-medium leading-[1.05] tracking-tight text-slate-900 md:text-7xl">
                     Driving growth through <span class="text-accent-500">smart technology.</span>
                 </h1>
                 <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-500 md:text-xl">
@@ -26,27 +22,16 @@
 
                 @if($featuredProject)
                     <a href="/projects/{{ $featuredProject->slug }}" class="mt-6 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-accent-500">
-                        <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-900">Featured work</span>
+                        <span class="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white">Featured work</span>
                         {{ $featuredProject->title }}
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
                     </a>
                 @endif
             </div>
 
-            @php($heroImage = $featuredProject?->image_url)
             <div class="relative mx-auto mt-12 max-w-6xl px-3 sm:mt-16 sm:px-8">
                 <div class="home-hero__art relative aspect-[2/1] overflow-hidden rounded-3xl border border-slate-200 sm:rounded-[2rem]">
-                    @if($heroImage)
-                        <img src="{{ Str::startsWith($heroImage, 'http') ? $heroImage : Storage::url($heroImage) }}" alt="{{ $featuredProject?->title ?? 'CleMwa digital solutions' }}" class="h-full w-full object-cover">
-                    @else
-                        <div class="absolute inset-0 grid grid-cols-3 items-center justify-items-center overflow-hidden px-8">
-                            <div class="h-32 w-32 rotate-[-12deg] rounded-[2rem] bg-accent-500/90 shadow-2xl sm:h-56 sm:w-56"></div>
-                            <div class="relative flex h-40 w-40 items-center justify-center rounded-full border-[20px] border-accent2-500 bg-white/70 sm:h-72 sm:w-72 sm:border-[32px]">
-                                <span class="text-4xl font-semibold text-accent-500 sm:text-7xl">C</span>
-                            </div>
-                            <div class="h-28 w-28 rotate-[12deg] rounded-full bg-accent2-400 shadow-xl sm:h-48 sm:w-48"></div>
-                        </div>
-                    @endif
+                    <img src="{{ asset('images/hero_landing.jpg') }}" alt="CleMwa digital workspace with business management software" class="h-full w-full object-cover" fetchpriority="high" decoding="async">
                 </div>
                 @if($statistics->isNotEmpty())
                     <div class="absolute -left-1 top-8 max-w-40 rounded-2xl bg-accent-500 p-4 text-white shadow-xl sm:-left-2 sm:top-12 sm:max-w-48 sm:p-5">
@@ -65,19 +50,50 @@
     </section>
 
     <!-- Trusted By Section -->
-    @if($partners->isNotEmpty())
+    @if($partners->isNotEmpty() || $products->isNotEmpty() || $solutions->isNotEmpty())
     <section class="home-trusted py-12 bg-white border-y border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p class="text-center text-sm font-semibold text-slate-400 uppercase tracking-widest mb-8">Trusted by innovative companies & partners</p>
-            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+            <p id="trusted-partners-heading" class="text-center text-sm font-semibold text-slate-400 uppercase tracking-widest mb-8">Trusted by innovative companies & partners</p>
+            <div class="trusted-marquee" data-trusted-marquee role="region" aria-labelledby="trusted-partners-heading">
+                <div class="trusted-marquee__track" data-marquee-track>
+                    <div class="trusted-marquee__group" data-marquee-group>
                 @foreach($partners as $partner)
-                <div class="text-lg font-bold text-slate-500 flex items-center gap-2">
-                    <svg class="w-7 h-7 text-{{ $partner->color_theme }}-500" fill="currentColor" viewBox="0 0 24 24">
+                @if(filled($partner->logo_svg))
+                <div class="trusted-marquee__item flex items-center" role="img" aria-label="{{ $partner->name }}">
+                    <svg class="h-10 w-auto max-w-36 text-{{ $partner->color_theme }}-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         {!! $partner->logo_svg !!}
                     </svg>
-                    {{ $partner->name }}
                 </div>
+                @endif
                 @endforeach
+                @foreach($products as $product)
+                @if($product->logo_url)
+                <div class="trusted-marquee__item flex items-center gap-2 text-lg font-bold text-slate-500">
+                    <img
+                        src="{{ Str::startsWith($product->logo_url, 'http') ? $product->logo_url : Storage::url($product->logo_url) }}"
+                        alt="{{ $product->title }} logo"
+                        class="h-10 w-28 object-contain"
+                        loading="lazy"
+                        decoding="async"
+                    >
+                </div>
+                @endif
+                @endforeach
+                @foreach($solutions as $solution)
+                @if($solution->image_url)
+                <div class="trusted-marquee__item flex items-center gap-2 text-lg font-bold text-slate-500">
+                    <img
+                        src="{{ Str::startsWith($solution->image_url, 'http') ? $solution->image_url : Storage::url($solution->image_url) }}"
+                        alt="{{ $solution->title }} logo"
+                        class="h-10 w-28 object-contain"
+                        loading="lazy"
+                        decoding="async"
+                    >
+                </div>
+                @endif
+                @endforeach
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -93,10 +109,28 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($services as $service)
-                <div class="home-card p-8 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all">
-                    <div class="w-14 h-14 rounded-lg bg-{{ $service->color_theme }}-500/10 text-{{ $service->color_theme }}-600 flex items-center justify-center mb-6">
-                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            {!! $service->icon_svg !!}
+                <div class="home-card home-service-card p-8 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all">
+                    <div class="home-service-icon w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-transform group-hover:scale-105">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            @if(filled($service->icon_svg))
+                                {!! $service->icon_svg !!}
+                            @elseif(Str::contains(Str::lower($service->slug . ' ' . $service->title), ['mobile', 'app']))
+                                <rect x="7" y="2.5" width="10" height="19" rx="2" stroke-width="1.8"/>
+                                <path d="M10 5h4m-3 13h2" stroke-width="1.8" stroke-linecap="round"/>
+                            @elseif(Str::contains(Str::lower($service->slug . ' ' . $service->title), ['web', 'website', 'design']))
+                                <rect x="3" y="4" width="18" height="16" rx="2" stroke-width="1.8"/>
+                                <path d="M3 9h18M7 6.5h.01M10 6.5h.01m1 6-2 2 2 2m4-4 2 2-2 2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            @elseif(Str::contains(Str::lower($service->slug . ' ' . $service->title), ['cloud', 'hosting']))
+                                <path d="M7 18h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 9a4.5 4.5 0 0 0 1 9Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="m9 14 3-3 3 3m-3-3v7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            @elseif(Str::contains(Str::lower($service->slug . ' ' . $service->title), ['consult', 'software', 'development', 'engineering']))
+                                <path d="m8 8-4 4 4 4m8-8 4 4-4 4m-3-10-2 12" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            @else
+                                <rect x="4" y="4" width="7" height="7" rx="1.5" stroke-width="1.8"/>
+                                <rect x="13" y="4" width="7" height="7" rx="1.5" stroke-width="1.8"/>
+                                <rect x="4" y="13" width="7" height="7" rx="1.5" stroke-width="1.8"/>
+                                <rect x="13" y="13" width="7" height="7" rx="1.5" stroke-width="1.8"/>
+                            @endif
                         </svg>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-3">{{ $service->title }}</h3>
@@ -143,19 +177,19 @@
                 <div class="hidden lg:block">
                     <div class="grid grid-cols-2 gap-6">
                         <div class="p-8 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-center gap-4">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-plain.svg" alt="Laravel" class="w-16 h-16">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-plain.svg" alt="Laravel" class="w-16 h-16" loading="lazy" decoding="async">
                             <span class="text-slate-900 font-medium">Laravel Core</span>
                         </div>
                         <div class="p-8 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-center gap-4">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" alt="Flutter" class="w-16 h-16">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" alt="Flutter" class="w-16 h-16" loading="lazy" decoding="async">
                             <span class="text-slate-900 font-medium">Cross-Platform</span>
                         </div>
                         <div class="p-8 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-center gap-4">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" class="w-16 h-16">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" class="w-16 h-16" loading="lazy" decoding="async">
                             <span class="text-slate-900 font-medium">Dynamic UIs</span>
                         </div>
                         <div class="p-8 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-center gap-4">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS" class="w-16 h-16">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS" class="w-16 h-16" loading="lazy" decoding="async">
                             <span class="text-slate-900 font-medium">Cloud Native</span>
                         </div>
                     </div>
@@ -166,7 +200,7 @@
 
     <!-- Featured Work Section -->
     <section class="home-work py-24 bg-slate-50 border-y border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10">
             <div class="text-center max-w-2xl mx-auto mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Featured Work</h2>
                 <p class="text-lg text-slate-500">A glimpse into recent work and the difference it makes.</p>
@@ -175,18 +209,18 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($projects as $project)
                 <div class="home-card bg-white overflow-hidden rounded-xl border border-slate-200 hover:shadow-md transition-shadow flex flex-col">
-                    <div class="h-40 w-full bg-slate-100 relative overflow-hidden flex items-center justify-center">
+                    <div class="home-project-art h-40 w-full bg-white relative overflow-hidden flex items-center justify-center">
                         @if($project->image_url)
-                        <div class="absolute inset-0 bg-[url('{{ $project->image_url }}')] bg-cover bg-center"></div>
+                        <img src="{{ Str::startsWith($project->image_url, 'http') ? $project->image_url : Storage::url($project->image_url) }}" alt="{{ $project->title }}" class="relative z-10 h-full w-full object-contain p-3" loading="lazy" decoding="async">
                         @else
-                        <span class="text-slate-400 font-medium">{{ $project->subtitle }}</span>
+                        <span class="relative z-10 px-5 text-center text-slate-400 font-medium">{{ $project->subtitle }}</span>
                         @endif
                     </div>
-                    <div class="p-6 flex flex-col flex-1">
+                    <div class="home-project-copy p-6 flex flex-col flex-1">
                         <div class="flex flex-wrap gap-2 mb-4">
                             @if($project->tags)
                                 @foreach($project->tags as $tag)
-                                <span class="px-2.5 py-1 rounded-full bg-{{ $project->color_theme }}-500/10 text-{{ $project->color_theme }}-600 text-[10px] font-semibold tracking-wide uppercase">{{ $tag }}</span>
+                                <span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 text-[10px] font-semibold tracking-wide uppercase">{{ $tag }}</span>
                                 @endforeach
                             @endif
                         </div>
@@ -249,7 +283,7 @@
                 @foreach($technologies as $tech)
                 <div class="home-card bg-white px-6 py-4 rounded-lg border border-slate-200 flex items-center gap-3">
                     @if($tech->icon_url)
-                        <img src="{{ $tech->icon_url }}" alt="{{ $tech->name }}" class="w-7 h-7">
+                        <img src="{{ $tech->icon_url }}" alt="{{ $tech->name }}" class="w-7 h-7" loading="lazy" decoding="async">
                     @else
                         {!! $tech->icon_svg !!}
                     @endif
@@ -280,7 +314,7 @@
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
                             @if($testimonial->client_image_url)
-                                <img src="{{ $testimonial->client_image_url }}" alt="{{ $testimonial->client_name }}">
+                                <img src="{{ $testimonial->client_image_url }}" alt="{{ $testimonial->client_name }}" loading="lazy" decoding="async">
                             @else
                                 <span class="text-slate-500 font-bold">{{ substr($testimonial->client_name, 0, 1) }}</span>
                             @endif
