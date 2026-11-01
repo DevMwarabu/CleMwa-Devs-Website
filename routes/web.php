@@ -9,7 +9,6 @@ Route::get('/', function () {
     return view('welcome', [
         'services' => \App\Models\Service::orderBy('delay')->take(3)->get(),
         'partners' => \App\Models\Partner::all(),
-        'products' => \App\Models\FlagshipProduct::all(),
         'features' => \App\Models\Feature::orderBy('delay')->get(),
         'projects' => \App\Models\Project::orderBy('delay')->take(4)->get(),
         'processSteps' => \App\Models\ProcessStep::orderBy('step_number')->get(),

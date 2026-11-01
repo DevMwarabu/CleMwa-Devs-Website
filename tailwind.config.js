@@ -25,6 +25,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                heading: ['Raela', 'Figtree', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 // Primary - dark backgrounds
@@ -33,19 +34,19 @@ export default {
                     500: '#0B0B0F',
                     600: '#050507',
                 },
-                // Accent - blue/cyan brand color
+                // Deep teal brand color
                 accent: {
-                    300: '#93c5fd',
-                    400: '#60a5fa',
-                    500: '#3b82f6',
-                    600: '#2563eb',
+                    300: '#b8d7ce',
+                    400: '#4c8577',
+                    500: '#145348',
+                    600: '#0d4038',
                 },
-                // Accent2 - violet/purple secondary
+                // Soft green secondary accent
                 accent2: {
-                    300: '#c4b5fd',
-                    400: '#a78bfa',
-                    500: '#7c3aed',
-                    600: '#6d28d9',
+                    300: '#ddf7c9',
+                    400: '#c9f3ad',
+                    500: '#b6eb91',
+                    600: '#9cda70',
                 },
             },
             animation: {

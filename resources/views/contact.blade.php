@@ -3,7 +3,7 @@
     <x-slot name="meta_description">{{ $settings->seo_description ?? 'Reach out to CleMwa Developers for consultations, support, or partnership opportunities. Let\'s build something amazing together.' }}</x-slot>
 
     {{-- ===================== HERO ===================== --}}
-    <section class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 overflow-hidden bg-[#05050A]">
+    <section class="contact-hero relative pt-32 pb-24 lg:pt-44 lg:pb-32 overflow-hidden bg-[#05050A]">
         <div class="absolute inset-0 bg-grid-slate-400/[0.05] bg-[bottom_1px_center] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
         <div class="absolute top-1/4 left-0 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[120px] pointer-events-none"></div>
         <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none"></div>
@@ -42,12 +42,12 @@
     </section>
 
     {{-- ===================== CONTACT CARDS ===================== --}}
-    <section class="py-12 bg-[#0B0B0F] border-t border-b border-white/5 relative z-20 -mt-10">
+    <section class="contact-cards py-12 bg-[#0B0B0F] border-t border-b border-white/5 relative z-20 -mt-10">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                 
                 {{-- General Inquiries --}}
-                <div class="p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
+                <div class="contact-card p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
                     <div class="w-12 h-12 rounded bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4 group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-envelope text-xl"></i>
                     </div>
@@ -61,7 +61,7 @@
                 </div>
 
                 {{-- Sales --}}
-                <div class="p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
+                <div class="contact-card p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
                     <div class="w-12 h-12 rounded bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4 group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-chart-line text-xl"></i>
                     </div>
@@ -75,7 +75,7 @@
                 </div>
 
                 {{-- Technical Support --}}
-                <div class="p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
+                <div class="contact-card p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
                     <div class="w-12 h-12 rounded bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4 group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-headset text-xl"></i>
                     </div>
@@ -89,7 +89,7 @@
                 </div>
 
                 {{-- Partnerships --}}
-                <div class="p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
+                <div class="contact-card p-6 rounded-sm bg-[#05050A] border border-white/5 hover:border-sky-500/30 transition-colors group">
                     <div class="w-12 h-12 rounded bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4 group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-handshake text-xl"></i>
                     </div>
@@ -110,7 +110,7 @@
     </section>
 
     {{-- ===================== FORM & MAP SECTION ===================== --}}
-    <section class="py-24 bg-[#05050A]" x-data="{
+    <section class="contact-form py-24 bg-[#05050A]" x-data="{
         formType: 'inquiry',
         submitting: false,
         async submitForm(event, type) {
@@ -144,7 +144,7 @@
                 
                 {{-- Form Area --}}
                 <div class="lg:col-span-3 order-2 lg:order-1">
-                    <div class="flex gap-4 mb-8">
+                    <div class="contact-form-tabs flex gap-4 mb-8">
                         <button @click="formType = 'inquiry'" 
                             :class="formType === 'inquiry' ? 'bg-sky-500 text-white' : 'bg-[#0B0B0F] text-slate-400 hover:text-white hover:bg-white/5'"
                             class="px-6 py-3 rounded-sm font-bold text-sm transition-colors border border-white/5 flex-1">
@@ -157,7 +157,7 @@
                         </button>
                     </div>
 
-                    <div class="p-8 md:p-10 rounded-sm bg-[#0B0B0F] border border-white/5 shadow-2xl relative overflow-hidden">
+                    <div class="contact-form-panel p-8 md:p-10 rounded-sm bg-[#0B0B0F] border border-white/5 shadow-2xl relative overflow-hidden">
                         <div class="absolute top-0 right-0 w-64 h-64 bg-sky-500/5 rounded-full blur-[80px] pointer-events-none"></div>
                         
                         {{-- Inquiry Form --}}

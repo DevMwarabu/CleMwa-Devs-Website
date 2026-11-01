@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'Raela';
+    src: url('../fonts/RaelaDemo-Thin.otf') format('opentype');
+    font-style: normal;
+    font-weight: 100;
+    font-display: swap;
+}
+
 /* ==========================================================================
    Light theme
    --------------------------------------------------------------------------
@@ -142,4 +150,252 @@ html:not(.dark) .bg-sky-500.text-white,
 html:not(.dark) .bg-indigo-500.text-white,
 html:not(.dark) .bg-red-500.text-white {
     color: #ffffff;
+}
+
+/* Screenshot-led CleMwa visual system */
+:root {
+    --clemwa-ink: #1d2724;
+    --clemwa-teal: #103f39;
+    --clemwa-teal-deep: #0c302c;
+    --clemwa-mint: #c9f3ad;
+    --clemwa-sky: #eef7fc;
+    --clemwa-border: #e4e9e7;
+}
+
+body {
+    color: var(--clemwa-ink);
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Raela', 'Figtree', sans-serif;
+}
+
+header.fixed {
+    top: 0.75rem;
+}
+
+header.fixed > div > div {
+    border-color: rgb(228 233 231 / 0.9);
+    box-shadow: 0 8px 32px rgb(22 46 39 / 0.07);
+}
+
+header.fixed a[href="/quote"] {
+    background-color: var(--clemwa-teal);
+    color: #fff;
+}
+
+header.fixed a[href="/quote"]:hover {
+    background-color: var(--clemwa-teal-deep);
+}
+
+footer {
+    position: relative;
+    overflow: hidden;
+    border-top: 0;
+    color: rgb(255 255 255 / 0.78);
+    background-color: var(--clemwa-teal-deep);
+    background-image: radial-gradient(rgb(201 243 173 / 0.13) 1px, transparent 1px);
+    background-position: center;
+    background-size: 15px 15px;
+}
+
+footer > div > div:first-child {
+    border-color: rgb(255 255 255 / 0.12);
+    background: rgb(16 63 57 / 0.92);
+}
+
+footer .text-slate-900,
+footer .text-slate-600,
+footer .text-slate-700 {
+    color: #f7fbf8;
+}
+
+footer .text-slate-500,
+footer .text-slate-400 {
+    color: rgb(230 241 235 / 0.7);
+}
+
+footer .border-slate-200,
+footer .border-slate-300 {
+    border-color: rgb(255 255 255 / 0.18);
+}
+
+footer input {
+    border-color: rgb(255 255 255 / 0.2);
+    background-color: rgb(255 255 255 / 0.08);
+    color: white;
+}
+
+footer input::placeholder {
+    color: rgb(230 241 235 / 0.55);
+}
+
+footer button[type="submit"] {
+    background-color: var(--clemwa-mint);
+    color: var(--clemwa-ink);
+}
+
+.home-concept .home-hero {
+    padding-top: 3.5rem;
+    padding-bottom: 5rem;
+}
+
+.home-hero__art {
+    background: linear-gradient(135deg, #d9eae2 0%, #f5f8ee 48%, #cfe2df 100%);
+}
+
+.home-hero__art img {
+    mix-blend-mode: multiply;
+}
+
+.home-concept .home-services,
+.home-concept .home-work,
+.home-concept .home-about,
+.home-concept .home-process,
+.home-concept .home-tech,
+.home-concept .home-testimonials,
+.home-concept .home-cta {
+    position: relative;
+}
+
+.home-concept .home-services,
+.home-concept .home-process,
+.home-concept .home-testimonials {
+    background-color: var(--clemwa-sky);
+    border-color: transparent;
+}
+
+.home-concept .home-about,
+.home-concept .home-tech,
+.home-concept .home-trusted {
+    background-color: #fff;
+    border-color: transparent;
+}
+
+.home-concept .home-work,
+.home-concept .home-cta {
+    overflow: hidden;
+    background-color: var(--clemwa-teal);
+    border-color: transparent;
+    background-image: radial-gradient(rgb(201 243 173 / 0.12) 1px, transparent 1px);
+    background-size: 16px 16px;
+}
+
+.home-concept .home-work h2,
+.home-concept .home-work > div > div > p,
+.home-concept .home-cta h2,
+.home-concept .home-cta p {
+    color: #fff;
+}
+
+.home-concept .home-work > div > div > p,
+.home-concept .home-cta p {
+    color: rgb(232 242 237 / 0.78);
+}
+
+.home-concept .home-card {
+    overflow: hidden;
+    border-color: var(--clemwa-border);
+    border-radius: 1.25rem;
+    box-shadow: 0 2px 8px rgb(20 50 42 / 0.035);
+}
+
+.home-concept .home-work .home-card {
+    border-color: rgb(255 255 255 / 0.55);
+    background: #fff;
+}
+
+.home-concept .home-card:hover {
+    border-color: rgb(20 83 72 / 0.35);
+    box-shadow: 0 16px 36px rgb(20 50 42 / 0.12);
+}
+
+.home-concept .home-work .home-card:hover {
+    border-color: var(--clemwa-mint);
+}
+
+.home-concept .home-cta a:first-child {
+    background-color: var(--clemwa-mint);
+    color: var(--clemwa-ink);
+}
+
+.home-concept .home-cta a:last-child {
+    border-color: rgb(255 255 255 / 0.35);
+    color: white;
+}
+
+.contact-hero {
+    background-color: var(--clemwa-sky);
+}
+
+.contact-hero .text-white {
+    color: var(--clemwa-ink);
+}
+
+.contact-hero .text-slate-400 {
+    color: #5e6f69;
+}
+
+.contact-hero .text-sky-400 {
+    color: var(--clemwa-teal);
+}
+
+.contact-cards,
+.contact-form {
+    background-color: var(--clemwa-sky);
+    border-color: transparent;
+}
+
+.contact-cards .contact-card,
+.contact-form .contact-form-panel,
+.contact-form .contact-form-tabs button {
+    border-color: var(--clemwa-border);
+    border-radius: 1rem;
+    background-color: #fff;
+    box-shadow: 0 8px 28px rgb(20 50 42 / 0.05);
+}
+
+.contact-form .contact-form-tabs button.bg-sky-500,
+.contact-form .contact-form-tabs button.bg-indigo-500 {
+    border-color: var(--clemwa-mint);
+    background-color: var(--clemwa-mint);
+    color: var(--clemwa-ink);
+}
+
+.contact-cards .contact-card .text-white,
+.contact-form .contact-form-panel .text-white {
+    color: var(--clemwa-ink);
+}
+
+.contact-cards .contact-card .text-slate-400,
+.contact-form .contact-form-panel .text-slate-400 {
+    color: #5e6f69;
+}
+
+.contact-form .contact-form-panel input,
+.contact-form .contact-form-panel select,
+.contact-form .contact-form-panel textarea {
+    border-color: var(--clemwa-border);
+    border-radius: 0.625rem;
+    background-color: #f8fbf9;
+    color: var(--clemwa-ink);
+}
+
+.contact-form .contact-form-panel input:focus,
+.contact-form .contact-form-panel select:focus,
+.contact-form .contact-form-panel textarea:focus {
+    border-color: var(--clemwa-teal);
+}
+
+@media (max-width: 640px) {
+    .home-concept .home-hero {
+        padding-top: 2rem;
+        padding-bottom: 3.5rem;
+    }
+
+    .home-concept .home-hero h1 {
+        font-size: clamp(2.5rem, 11vw, 4rem);
+    }
 }

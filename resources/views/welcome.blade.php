@@ -1,70 +1,72 @@
 <x-layouts.app>
-
+    <div class="home-concept">
     <!-- Hero -->
-    <section class="relative overflow-hidden bg-white py-14 md:py-20">
-        <div class="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-accent-500/5 blur-3xl"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative">
-            <div class="max-w-2xl">
-                <div class="inline-flex items-center gap-2 rounded-full border border-accent-500/20 bg-accent-500/5 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-accent-600 mb-7">
-                    <span class="h-2 w-2 rounded-full bg-accent-500"></span>
-                    Thoughtful software. Real results.
-                </div>
-                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 tracking-tight leading-[1.05]">
-                    Digital products, built for <span class="text-accent-600">what's next.</span>
+    <section class="home-hero relative overflow-hidden bg-white py-14 md:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-4xl text-center">
+                <span class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-xs font-semibold text-emerald-900">
+                    <span class="h-2 w-2 rounded-full bg-emerald-700"></span>
+                    Software that moves business forward
+                </span>
+                <h1 class="mx-auto mt-6 max-w-4xl text-5xl font-medium leading-[1.05] tracking-tight text-slate-900 md:text-7xl">
+                    Driving growth through <span class="text-accent-500">smart technology.</span>
                 </h1>
-                <p class="text-lg md:text-xl text-slate-500 max-w-xl mb-9 leading-relaxed">
-                    We design, build and support secure, scalable software — web platforms, mobile apps and cloud systems — for businesses ready to move forward.
+                <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-500 md:text-xl">
+                    We design and develop thoughtful digital solutions that help ambitious businesses work better, grow faster, and reach what's next.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <a href="/quote" class="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-accent-500 hover:bg-accent-600 text-white rounded-full font-semibold transition-colors">
-                        Let's talk about your project
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17 17 7M7 7h10v10"/></svg>
+                <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+                    <a href="/quote" class="inline-flex items-center justify-center gap-2 rounded-full bg-accent-500 px-7 py-3.5 font-semibold text-white transition-colors hover:bg-accent-600">
+                        Get a free consultation
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17 17 7M7 7h10v10"/></svg>
                     </a>
-                    <a href="/portfolio" class="inline-flex items-center justify-center px-7 py-3.5 border border-slate-300 hover:border-slate-400 hover:bg-slate-50 text-slate-900 rounded-full font-semibold transition-colors">
+                    <a href="/portfolio" class="inline-flex items-center justify-center rounded-full border border-slate-300 px-7 py-3.5 font-semibold text-slate-900 transition-colors hover:bg-slate-50">
                         Explore our work
                     </a>
                 </div>
 
                 @if($featuredProject)
-                <a href="/projects/{{ $featuredProject->slug }}" class="inline-flex items-center gap-2 mt-8 text-sm text-slate-500 hover:text-accent-600 transition-colors">
-                    <span class="px-2.5 py-1 rounded-full bg-accent-500/10 text-accent-600 text-[10px] font-bold uppercase tracking-wider">Featured work</span>
-                    {{ $featuredProject->title }}
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                </a>
+                    <a href="/projects/{{ $featuredProject->slug }}" class="mt-6 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-accent-500">
+                        <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-900">Featured work</span>
+                        {{ $featuredProject->title }}
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
+                    </a>
                 @endif
             </div>
 
-            @php($heroImage = $featuredProject?->image_url ?: $products->first()?->image_url)
-            <div class="relative mx-auto w-full max-w-2xl">
-                <div class="aspect-[4/3] overflow-hidden rounded-[2rem] border border-slate-200 bg-gradient-to-br from-blue-50 via-white to-violet-50 shadow-xl shadow-slate-200/60">
+            @php($heroImage = $featuredProject?->image_url)
+            <div class="relative mx-auto mt-12 max-w-6xl px-3 sm:mt-16 sm:px-8">
+                <div class="home-hero__art relative aspect-[2/1] overflow-hidden rounded-3xl border border-slate-200 sm:rounded-[2rem]">
                     @if($heroImage)
-                        <img src="{{ Str::startsWith($heroImage, 'http') ? $heroImage : Storage::url($heroImage) }}" alt="{{ $featuredProject?->title ?? $products->first()?->title ?? 'CleMwa digital solution' }}" class="h-full w-full object-cover">
+                        <img src="{{ Str::startsWith($heroImage, 'http') ? $heroImage : Storage::url($heroImage) }}" alt="{{ $featuredProject?->title ?? 'CleMwa digital solutions' }}" class="h-full w-full object-cover">
                     @else
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="grid grid-cols-2 gap-4 p-8 sm:gap-6 sm:p-12">
-                                <div class="h-28 w-28 rounded-3xl bg-accent-500 shadow-lg shadow-blue-200 sm:h-40 sm:w-40"></div>
-                                <div class="mt-8 h-28 w-28 rounded-full border-[18px] border-violet-200 sm:h-40 sm:w-40 sm:border-[24px]"></div>
-                                <div class="-mt-2 h-28 w-28 rounded-full bg-violet-500 shadow-lg shadow-violet-200 sm:h-40 sm:w-40"></div>
-                                <div class="mt-6 h-28 w-28 rounded-3xl border-2 border-accent-500/30 bg-white/80 sm:h-40 sm:w-40"></div>
+                        <div class="absolute inset-0 grid grid-cols-3 items-center justify-items-center overflow-hidden px-8">
+                            <div class="h-32 w-32 rotate-[-12deg] rounded-[2rem] bg-accent-500/90 shadow-2xl sm:h-56 sm:w-56"></div>
+                            <div class="relative flex h-40 w-40 items-center justify-center rounded-full border-[20px] border-accent2-500 bg-white/70 sm:h-72 sm:w-72 sm:border-[32px]">
+                                <span class="text-4xl font-semibold text-accent-500 sm:text-7xl">C</span>
                             </div>
+                            <div class="h-28 w-28 rotate-[12deg] rounded-full bg-accent2-400 shadow-xl sm:h-48 sm:w-48"></div>
                         </div>
                     @endif
                 </div>
-                <div class="absolute -bottom-5 left-4 sm:-left-5 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-lg">
-                    <p class="text-xs font-medium uppercase tracking-wider text-slate-400">From idea</p>
-                    <p class="mt-1 text-sm font-bold text-slate-900">To launch & beyond</p>
-                </div>
-                <div class="absolute -right-2 top-5 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-lg sm:-right-4">
-                    <p class="text-xs font-semibold text-accent-600">Built around your business</p>
-                    <p class="mt-1 text-xs text-slate-500">People-first. Future-ready.</p>
-                </div>
+                @if($statistics->isNotEmpty())
+                    <div class="absolute -left-1 top-8 max-w-40 rounded-2xl bg-accent-500 p-4 text-white shadow-xl sm:-left-2 sm:top-12 sm:max-w-48 sm:p-5">
+                        <p class="text-xs font-medium text-white/75">{{ $statistics->first()->label }}</p>
+                        <p class="mt-1 text-3xl font-semibold sm:text-4xl">{{ $statistics->first()->value }}</p>
+                    </div>
+                @endif
+                @if($statistics->count() > 1)
+                    <div class="absolute -bottom-3 right-0 max-w-40 rounded-2xl bg-accent-500 p-4 text-white shadow-xl sm:-right-2 sm:max-w-48 sm:p-5">
+                        <p class="text-xs font-medium text-white/75">{{ $statistics->get(1)->label }}</p>
+                        <p class="mt-1 text-3xl font-semibold sm:text-4xl">{{ $statistics->get(1)->value }}</p>
+                    </div>
+                @endif
             </div>
         </div>
     </section>
 
     <!-- Trusted By Section -->
     @if($partners->isNotEmpty())
-    <section class="py-12 bg-slate-50 border-y border-slate-200">
+    <section class="home-trusted py-12 bg-white border-y border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <p class="text-center text-sm font-semibold text-slate-400 uppercase tracking-widest mb-8">Trusted by innovative companies & partners</p>
             <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
@@ -82,16 +84,16 @@
     @endif
 
     <!-- Services Section -->
-    <section class="py-24 bg-white">
+    <section class="home-services py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Enterprise-Grade Solutions</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Services designed to move you forward</h2>
                 <p class="text-lg text-slate-500">A comprehensive suite of software development services designed for modern businesses.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($services as $service)
-                <div class="p-8 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all">
+                <div class="home-card p-8 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all">
                     <div class="w-14 h-14 rounded-lg bg-{{ $service->color_theme }}-500/10 text-{{ $service->color_theme }}-600 flex items-center justify-center mb-6">
                         <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             {!! $service->icon_svg !!}
@@ -114,52 +116,8 @@
         </div>
     </section>
 
-    <!-- Flagship Products Section -->
-    @if($products->isNotEmpty())
-    <section class="py-24 bg-slate-50 border-y border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-                <div class="max-w-2xl">
-                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-accent-600 mb-3">Made by CleMwa</p>
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Apps &amp; solutions</h2>
-                    <p class="text-lg text-slate-500">Useful, dependable systems designed to make everyday work simpler.</p>
-                </div>
-                <a href="/apps-solutions" class="inline-flex items-center gap-2 text-sm font-semibold text-accent-600 hover:text-accent-700 transition-colors">
-                    Explore all solutions
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17 17 7M7 7h10v10"/></svg>
-                </a>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                @foreach($products as $product)
-                <article class="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
-                    <div class="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-blue-50 to-violet-50">
-                        @if($product->image_url)
-                            <img src="{{ Str::startsWith($product->image_url, 'http') ? $product->image_url : Storage::url($product->image_url) }}" alt="{{ $product->title }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy">
-                        @else
-                            <div class="flex h-full items-center justify-center text-5xl font-bold tracking-tight text-accent-500/30">{{ strtoupper(substr($product->title, 0, 2)) }}</div>
-                        @endif
-                        <span class="absolute left-5 top-5 rounded-full border border-white/70 bg-white/90 px-3 py-1 text-xs font-semibold {{ $product->is_live ? 'text-emerald-700' : 'text-amber-700' }}">
-                            {{ $product->is_live ? 'Available now' : 'Coming soon' }}
-                        </span>
-                    </div>
-                    <div class="p-7 md:p-8">
-                        <h3 class="text-2xl font-bold text-slate-900 mb-3">{{ $product->title }}</h3>
-                        <p class="text-slate-500 leading-relaxed">{{ Str::limit($product->description, 180) }}</p>
-                        <a href="/apps-solutions" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent-600 hover:text-accent-700">
-                            Explore solution
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17 17 7M7 7h10v10"/></svg>
-                        </a>
-                    </div>
-                </article>
-                @endforeach
-            </div>
-        </div>
-    </section>
-    @endif
-
     <!-- Why Choose Us Section -->
-    <section class="py-24 bg-white">
+    <section class="home-about py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div>
@@ -207,16 +165,16 @@
     </section>
 
     <!-- Featured Work Section -->
-    <section class="py-24 bg-slate-50 border-y border-slate-200">
+    <section class="home-work py-24 bg-slate-50 border-y border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Featured Work</h2>
-                <p class="text-lg text-slate-500">A glimpse into our recent portfolio of digital products and enterprise solutions.</p>
+                <p class="text-lg text-slate-500">A glimpse into recent work and the difference it makes.</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($projects as $project)
-                <div class="bg-white overflow-hidden rounded-xl border border-slate-200 hover:shadow-md transition-shadow flex flex-col">
+                <div class="home-card bg-white overflow-hidden rounded-xl border border-slate-200 hover:shadow-md transition-shadow flex flex-col">
                     <div class="h-40 w-full bg-slate-100 relative overflow-hidden flex items-center justify-center">
                         @if($project->image_url)
                         <div class="absolute inset-0 bg-[url('{{ $project->image_url }}')] bg-cover bg-center"></div>
@@ -256,7 +214,7 @@
     </section>
 
     <!-- Development Process Section -->
-    <section class="py-24 bg-white">
+    <section class="home-process py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-20">
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Our Development Process</h2>
@@ -267,7 +225,7 @@
                 <div class="hidden lg:block absolute top-10 left-12 right-12 h-px bg-slate-200 -z-10"></div>
 
                 @foreach($processSteps as $step)
-                <div class="flex flex-col items-center text-center">
+                <div class="home-card flex flex-col items-center text-center rounded-2xl bg-white p-5">
                     <div class="w-20 h-20 rounded-full bg-white border border-slate-200 flex items-center justify-center mb-6 text-slate-900">
                         <span class="text-2xl font-bold">0{{ $step->step_number }}</span>
                     </div>
@@ -280,7 +238,7 @@
     </section>
 
     <!-- Technology Stack Section -->
-    <section class="py-24 bg-slate-50 border-y border-slate-200">
+    <section class="home-tech py-24 bg-slate-50 border-y border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Technologies We Master</h2>
@@ -289,7 +247,7 @@
 
             <div class="flex flex-wrap justify-center items-center gap-4 max-w-5xl mx-auto">
                 @foreach($technologies as $tech)
-                <div class="bg-white px-6 py-4 rounded-lg border border-slate-200 flex items-center gap-3">
+                <div class="home-card bg-white px-6 py-4 rounded-lg border border-slate-200 flex items-center gap-3">
                     @if($tech->icon_url)
                         <img src="{{ $tech->icon_url }}" alt="{{ $tech->name }}" class="w-7 h-7">
                     @else
@@ -302,22 +260,8 @@
         </div>
     </section>
 
-    <!-- Statistics Section -->
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                @foreach($statistics as $stat)
-                <div class="p-8 rounded-xl border border-slate-200 text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-slate-900 mb-2">{{ $stat->value }}</div>
-                    <p class="text-slate-500 font-medium tracking-wide uppercase text-sm">{{ $stat->label }}</p>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
     <!-- Testimonials Section -->
-    <section class="py-24 bg-slate-50 border-y border-slate-200">
+    <section class="home-testimonials py-24 bg-slate-50 border-y border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Client Success Stories</h2>
@@ -326,7 +270,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($testimonials as $testimonial)
-                <div class="bg-white p-8 rounded-xl border border-slate-200">
+                <div class="home-card bg-white p-8 rounded-xl border border-slate-200">
                     <div class="flex items-center gap-1 mb-6 text-yellow-500">
                         @for($i = 0; $i < 5; $i++)
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -353,10 +297,10 @@
     </section>
 
     <!-- Call to Action -->
-    <section class="py-24 bg-accent-500">
+    <section class="home-cta py-24 bg-accent-500">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Let's Build Your Next Great Solution</h2>
-            <p class="text-lg text-white/90 mb-10 max-w-2xl mx-auto">Ready to transform your business with enterprise-grade software? Our engineering team is ready to tackle your most complex challenges.</p>
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Ready to build something better?</h2>
+            <p class="text-lg text-white/90 mb-10 max-w-2xl mx-auto">Tell us what you are working on. We will help you find the right next step.</p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="/quote" class="px-8 py-4 bg-white text-accent-600 hover:bg-slate-100 rounded-md font-semibold transition-colors">Request a Quote</a>
                 <a href="/contact" class="px-8 py-4 border border-white/40 hover:bg-white/10 text-white rounded-md font-semibold transition-colors">Book Consultation</a>
@@ -364,4 +308,5 @@
         </div>
     </section>
 
+    </div>
 </x-layouts.app>
