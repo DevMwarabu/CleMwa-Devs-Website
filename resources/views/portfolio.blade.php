@@ -3,7 +3,7 @@
     <x-slot name="meta_description">{{ $settings->seo_description ?? 'Discover how CleMwa Developers transforms ideas into secure, scalable, and innovative digital solutions that help businesses grow and succeed.' }}</x-slot>
 
     {{-- ===================== HERO ===================== --}}
-    <section class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 overflow-hidden bg-[#05050A]">
+    <section class="image-hero image-hero--portfolio relative pt-32 pb-24 lg:pt-44 lg:pb-32 overflow-hidden bg-[#05050A]">
         <div class="absolute inset-0 bg-grid-slate-400/[0.05] bg-[bottom_1px_center] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
         <div class="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-sky-500/10 to-transparent blur-3xl rounded-full"></div>
         <div class="absolute bottom-0 left-1/4 w-1/3 h-1/2 bg-indigo-500/5 rounded-full blur-3xl"></div>
@@ -74,53 +74,49 @@
 
     {{-- ===================== FEATURED PROJECTS ===================== --}}
     @if($featuredProjects->count() > 0)
-    <section class="py-24 bg-[#05050A] border-t border-white/5 relative overflow-hidden">
-        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1/3 aspect-square bg-sky-500/5 rounded-full blur-3xl"></div>
-        <div class="container mx-auto px-4 relative z-10">
+    <section class="portfolio-featured py-20 bg-slate-50 border-t border-slate-200 relative overflow-hidden">
+        <div class="mx-auto max-w-6xl px-6 sm:px-8 lg:px-10 relative z-10">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-xs font-bold tracking-widest text-sky-500 uppercase mb-3">Highlight Reel</h2>
-                <h3 class="text-3xl md:text-5xl font-bold text-white mb-6">Featured Projects</h3>
-                <p class="text-lg text-slate-400">A selection of our most impactful and innovative work across various industries.</p>
+                <h2 class="text-xs font-bold tracking-widest text-blue-700 uppercase mb-3">Selected work</h2>
+                <h3 class="text-3xl md:text-5xl font-bold text-slate-900 mb-6">Featured projects</h3>
+                <p class="text-lg text-slate-600">A selection of our most impactful work across different industries.</p>
             </div>
             
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 @foreach($featuredProjects as $project)
-                <a href="/projects/{{ $project->slug }}" class="group block relative rounded-md overflow-hidden bg-[#0B0B0F] border border-white/10 hover:border-sky-500/30 transition-all shadow-2xl">
-                    <div class="relative aspect-[4/3] overflow-hidden bg-slate-900">
+                <a href="/projects/{{ $project->slug }}" class="group flex flex-col overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-slate-100">
                         @if($project->image_url)
-                            <img src="{{ Str::startsWith($project->image_url, 'http') ? $project->image_url : Storage::url($project->image_url) }}" alt="{{ $project->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                            <img src="{{ Str::startsWith($project->image_url, 'http') ? $project->image_url : Storage::url($project->image_url) }}" alt="{{ $project->title }}" class="w-full h-full object-contain p-6 sm:p-8" loading="lazy" decoding="async">
+                        @else
+                            <div class="flex h-full items-center justify-center text-5xl font-semibold text-slate-300">{{ strtoupper(substr($project->title, 0, 1)) }}</div>
                         @endif
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
                         
-                        {{-- Badges --}}
-                        <div class="absolute top-6 left-6 flex flex-wrap gap-2">
+                        <div class="absolute top-4 left-4 flex flex-wrap gap-2">
                             @if($project->industry)
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-white text-xs font-semibold tracking-wide border border-white/20 uppercase">
+                            <span class="px-3 py-1 rounded-full bg-white/95 text-slate-700 text-xs font-semibold tracking-wide border border-slate-200 uppercase">
                                 {{ $project->industry }}
                             </span>
                             @endif
                             @if($project->completion_year)
-                            <span class="px-3 py-1 rounded-full bg-sky-500/20 backdrop-blur-md text-sky-300 text-xs font-semibold tracking-wide border border-sky-500/20">
+                            <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold tracking-wide border border-blue-100">
                                 {{ $project->completion_year }}
                             </span>
                             @endif
                         </div>
-
-                        {{-- Content --}}
-                        <div class="absolute bottom-6 left-6 right-6">
-                            <h4 class="text-2xl md:text-3xl font-bold text-white mb-2 group-hover:text-sky-400 transition-colors">{{ $project->title }}</h4>
-                            @if($project->short_description)
-                                <p class="text-slate-300 text-sm md:text-base line-clamp-2 mb-4">{{ $project->short_description }}</p>
-                            @endif
-                            
-                            @if($project->technologies && count($project->technologies) > 0)
-                            <div class="flex flex-wrap gap-2 mt-auto">
-                                @foreach(array_slice($project->technologies, 0, 4) as $tech)
-                                <span class="px-2 py-1 rounded bg-black/40 text-slate-300 text-xs font-medium border border-white/10">{{ $tech }}</span>
-                                @endforeach
-                            </div>
-                            @endif
+                    </div>
+                    <div class="flex flex-col flex-grow p-6 sm:p-7">
+                        <h4 class="text-xl md:text-2xl font-bold text-slate-900 mb-2 group-hover:text-blue-700 transition-colors">{{ $project->title }}</h4>
+                        @if($project->short_description)
+                            <p class="text-sm md:text-base text-slate-600 leading-relaxed line-clamp-2 mb-5">{{ $project->short_description }}</p>
+                        @endif
+                        @if($project->technologies && count($project->technologies) > 0)
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            @foreach(array_slice($project->technologies, 0, 4) as $tech)
+                            <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium">{{ $tech }}</span>
+                            @endforeach
                         </div>
+                        @endif
                     </div>
                 </a>
                 @endforeach
@@ -130,20 +126,20 @@
     @endif
 
     {{-- ===================== FULL PORTFOLIO GRID ===================== --}}
-    <section class="py-24 bg-[#0B0B0F] border-t border-white/5" x-data="{ activeFilter: 'all', filterType: 'category' }">
-        <div class="container mx-auto px-4">
+    <section class="portfolio-grid py-20 bg-white border-t border-slate-200" x-data="{ activeFilter: 'all', filterType: 'category' }">
+        <div class="mx-auto max-w-6xl px-6 sm:px-8 lg:px-10">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
                 <div class="max-w-2xl">
-                    <h2 class="text-xs font-bold tracking-widest text-sky-500 uppercase mb-3">All Projects</h2>
-                    <h3 class="text-3xl md:text-5xl font-bold text-white mb-4">Complete Portfolio</h3>
-                    <p class="text-lg text-slate-400">Explore our diverse range of successful deliveries.</p>
+                    <h2 class="text-xs font-bold tracking-widest text-blue-700 uppercase mb-3">Our work</h2>
+                    <h3 class="text-3xl md:text-5xl font-bold text-slate-900 mb-4">All projects</h3>
+                    <p class="text-lg text-slate-600">Explore our work across industries and technologies.</p>
                 </div>
 
                 {{-- Filter Controls --}}
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <div class="flex items-center gap-2 p-1 bg-black/30 rounded-sm border border-white/5">
-                        <button @click="filterType = 'category'; activeFilter = 'all'" :class="filterType === 'category' ? 'bg-[#1a1a24] text-white shadow-sm' : 'text-slate-400 hover:text-white'" class="px-4 py-2 text-sm font-medium rounded-md transition-all">Type</button>
-                        <button @click="filterType = 'industry'; activeFilter = 'all'" :class="filterType === 'industry' ? 'bg-[#1a1a24] text-white shadow-sm' : 'text-slate-400 hover:text-white'" class="px-4 py-2 text-sm font-medium rounded-md transition-all">Industry</button>
+                    <div class="flex items-center gap-1 p-1 bg-slate-100 rounded-full border border-slate-200">
+                        <button @click="filterType = 'category'; activeFilter = 'all'" :class="filterType === 'category' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'" class="px-4 py-2 text-sm font-medium rounded-full transition-all">Type</button>
+                        <button @click="filterType = 'industry'; activeFilter = 'all'" :class="filterType === 'industry' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'" class="px-4 py-2 text-sm font-medium rounded-full transition-all">Industry</button>
                     </div>
                 </div>
             </div>
@@ -151,7 +147,7 @@
             {{-- Dynamic Filter Badges --}}
             <div class="flex flex-wrap gap-2 mb-10 min-h-[40px]">
                 <button @click="activeFilter = 'all'"
-                    :class="activeFilter === 'all' ? 'bg-sky-500 text-white border-sky-500' : 'bg-transparent text-slate-400 border-white/10 hover:border-sky-500/50 hover:text-white'"
+                    :class="activeFilter === 'all' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300 hover:text-blue-700'"
                     class="px-4 py-1.5 rounded-full border text-xs font-semibold transition-all">
                     All
                 </button>
@@ -159,7 +155,7 @@
                 {{-- Categories --}}
                 @foreach($categories as $category)
                 <button x-show="filterType === 'category'" @click="activeFilter = '{{ Str::slug($category) }}'"
-                    :class="activeFilter === '{{ Str::slug($category) }}' ? 'bg-sky-500 text-white border-sky-500' : 'bg-transparent text-slate-400 border-white/10 hover:border-sky-500/50 hover:text-white'"
+                    :class="activeFilter === '{{ Str::slug($category) }}' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300 hover:text-blue-700'"
                     class="px-4 py-1.5 rounded-full border text-xs font-semibold transition-all">
                     {{ $category }}
                 </button>
@@ -168,7 +164,7 @@
                 {{-- Industries --}}
                 @foreach($industries as $industry)
                 <button x-show="filterType === 'industry'" @click="activeFilter = '{{ Str::slug($industry) }}'"
-                    :class="activeFilter === '{{ Str::slug($industry) }}' ? 'bg-sky-500 text-white border-sky-500' : 'bg-transparent text-slate-400 border-white/10 hover:border-sky-500/50 hover:text-white'"
+                    :class="activeFilter === '{{ Str::slug($industry) }}' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300 hover:text-blue-700'"
                     class="px-4 py-1.5 rounded-full border text-xs font-semibold transition-all">
                     {{ $industry }}
                 </button>
@@ -185,22 +181,22 @@
                      x-transition:enter-start="opacity-0 scale-95"
                      x-transition:enter-end="opacity-100 scale-100"
                      class="group">
-                    <a href="/projects/{{ $project->slug }}" class="flex flex-col h-full group">
+                    <a href="/projects/{{ $project->slug }}" class="portfolio-project-card flex flex-col h-full group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg">
                         @if($project->image_url)
-                        <div class="aspect-video overflow-hidden rounded-md bg-slate-900 relative mb-5">
-                            <img src="{{ Str::startsWith($project->image_url, 'http') ? $project->image_url : Storage::url($project->image_url) }}" alt="{{ $project->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy">
+                        <div class="aspect-video overflow-hidden bg-slate-100 relative">
+                            <img src="{{ Str::startsWith($project->image_url, 'http') ? $project->image_url : Storage::url($project->image_url) }}" alt="{{ $project->title }}" class="w-full h-full object-contain p-6" loading="lazy" decoding="async">
                             @if($project->status === 'ongoing')
-                            <div class="absolute top-4 right-4 px-2 py-1 bg-amber-500/90 text-black text-[10px] font-black uppercase tracking-wider rounded">Ongoing</div>
+                            <div class="absolute top-4 right-4 px-3 py-1 bg-white text-amber-700 text-[10px] font-bold uppercase tracking-wider rounded-full border border-amber-200">Ongoing</div>
                             @endif
                         </div>
                         @endif
-                        <div class="flex flex-col flex-grow">
+                        <div class="flex flex-col flex-grow p-5">
                             <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">{{ $project->project_type }}</span>
+                                <span class="text-xs font-semibold text-blue-700 uppercase tracking-wider">{{ $project->project_type }}</span>
                                 <span class="text-xs text-slate-500 font-medium">{{ $project->completion_year }}</span>
                             </div>
-                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-sky-400 transition-colors">{{ $project->title }}</h4>
-                            <p class="text-sm text-slate-400 line-clamp-2">{{ $project->short_description ?? Str::limit(strip_tags($project->description ?? ''), 100) }}</p>
+                            <h4 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-700 transition-colors">{{ $project->title }}</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed line-clamp-2">{{ $project->short_description ?? Str::limit(strip_tags($project->description ?? ''), 100) }}</p>
                         </div>
                     </a>
                 </div>
@@ -221,11 +217,15 @@
             <div class="flex flex-wrap justify-center gap-6 md:gap-10 pt-4 max-w-5xl mx-auto">
                 @foreach($technologies as $tech)
                 <div class="flex flex-col items-center gap-3 group">
-                    <div class="w-20 h-20 rounded-md bg-[#0B0B0F] border border-white/5 flex items-center justify-center group-hover:border-sky-500/50 group-hover:-translate-y-1 transition-all shadow-lg">
+                    <div class="technology-mark w-20 h-20 rounded-md bg-[#0B0B0F] border border-white/5 flex items-center justify-center group-hover:border-sky-500/50 group-hover:-translate-y-1 transition-all shadow-lg" data-technology="{{ Str::slug($tech->name) }}">
                         @if($tech->icon_url)
-                            <img src="{{ Str::startsWith($tech->icon_url, 'http') ? $tech->icon_url : Storage::url($tech->icon_url) }}" alt="{{ $tech->name }}" class="w-10 h-10 object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all" loading="lazy">
+                            <img src="{{ Str::startsWith($tech->icon_url, 'http') ? $tech->icon_url : Storage::url($tech->icon_url) }}" alt="{{ $tech->name }}" class="w-10 h-10 object-contain transition-transform group-hover:scale-110" loading="lazy" decoding="async">
                         @else
-                            <i class="{{ $tech->icon_class ?? 'fa-solid fa-microchip' }} text-2xl text-slate-500 group-hover:text-sky-500 transition-colors"></i>
+                            @if($tech->icon_class)
+                                <i class="{{ $tech->icon_class }} text-2xl text-slate-500 group-hover:text-sky-500 transition-colors"></i>
+                            @else
+                                <svg class="h-7 w-7 text-slate-500 transition-colors group-hover:text-sky-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m8 8-4 4 4 4m8-8 4 4-4 4m-3-10-2 12" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            @endif
                         @endif
                     </div>
                     <span class="text-sm font-medium text-slate-400 group-hover:text-white transition-colors">{{ $tech->name }}</span>
