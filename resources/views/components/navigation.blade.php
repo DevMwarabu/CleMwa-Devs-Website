@@ -4,8 +4,7 @@
             <!-- Logo -->
             <div class="flex-shrink-0">
                 <a href="/" class="flex items-center gap-2">
-                    <img src="/favicon.svg" alt="CleMwa Developers" class="w-9 h-9 rounded-sm">
-                    <span class="font-heading font-bold text-xl text-slate-900 tracking-tight">CleMwa<span class="text-slate-400">Devs</span></span>
+                    <img src="{{ asset('images/clemwa_logo.png') }}" alt="CleMwa Developers" class="h-9 w-auto max-w-[190px] object-contain" fetchpriority="high" decoding="async">
                 </a>
             </div>
 
@@ -17,7 +16,7 @@
                         ['name' => 'About', 'url' => '/about'],
                         ['name' => 'Services', 'url' => '/services'],
                         ['name' => 'Portfolio', 'url' => '/portfolio'],
-                        ['name' => 'Apps & Solutions', 'url' => '/apps-solutions'],
+                        ['name' => 'Projects', 'url' => '/apps-solutions'],
                         ['name' => 'Contact', 'url' => '/contact'],
                     ];
                 @endphp
